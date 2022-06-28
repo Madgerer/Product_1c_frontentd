@@ -2,37 +2,21 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageKeys} from "../../../LocalStorageKeys";
 import {IThunkExtraParam} from "../../../app/App";
 import {useState} from "react";
+import {loginThunk} from "./thunks";
 
 export type AuthState = {
     username: string | null;
     token: string | null;
+    error: boolean;
+    errorText: string
 };
 
 const INITIAL_STATE: AuthState = {
     username: window.localStorage.getItem(LocalStorageKeys.UsernameKey),
-    token: window.localStorage.getItem(LocalStorageKeys.TokenKey)
+    token: window.localStorage.getItem(LocalStorageKeys.TokenKey),
+    error: false,
+    errorText: ""
 }
-
-const loginThunk = createAsyncThunk<string, { username: string, password:string }, { extra: IThunkExtraParam }>(
-    'users/fetchByIdStatus',
-    async (arg, thunkAPI) => {
-        try {
-
-        }
-        catch (e) {
-
-            return thunkAPI.rejectWithValue()
-        }
-        const res = await thunkAPI.extra.api.auth.login(arg.username, arg.password);
-        thunkAPI.dispatch(actions.setCredentials({
-            token: res.data,
-            username: arg.username
-        }))
-        return "";
-    }
-)
-
-
 
 const authSlice = createSlice({
     name: "Auth",
@@ -43,7 +27,18 @@ const authSlice = createSlice({
             state.token = action.payload.token;
             return state;
         }
-    }
+    },
+   /* extraReducers: builder => {
+        builder.addCase(loginThunk.rejected, () => ({
+            error: true,
+            token: null,
+            username: null,
+            errorText: ""
+        }))
+            .addCase(loginThunk.fulfilled, () => ({
+                error: false
+            }))
+    }*/
 })
 
 const reducer = authSlice.reducer;

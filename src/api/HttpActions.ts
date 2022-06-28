@@ -1,10 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import {IApplicationResponse} from "./baseTypes";
 
-export interface IApplicationResponse<T> {
-    data: T | null;
-    status: number;
-    success: boolean
-}
 
 /**
  * Класс обертка на axios для обработки реквест параметров.
@@ -29,15 +25,6 @@ class HttpActions {
             fullUrl += `?${paramsArray.join('&')}`;
         }
         return fullUrl;
-    }
-
-    static getErrorObject<T>(error: AxiosError): IApplicationResponse<T> {
-        const { response } = error;
-        return {
-            success: false,
-            status: response!.status,
-            data: null
-        };
     }
 
     /** Функция выполняет Get запрос на сервер */
@@ -74,8 +61,21 @@ class HttpActions {
         return {
             status: response.status,
             data: response?.data,
-            success: !isFailure
+            success: !isFailure,
+            exception: null
         }
+    }
+
+    static getErrorObject<T>(error: AxiosError): IApplicationResponse<T> {
+        const { response } = error;
+        return {
+            success: false,
+            status: response!.status,
+            data: null,
+            exception: {
+                text: JSON.stringify(error.response?.data)
+            }
+        };
     }
 }
 

@@ -1,8 +1,12 @@
 import {useState} from "react";
-import {AlphabeticalAndNumericRestrictionsAllStr} from "../../utils/regexp-utlis"
+import {AlphabeticalAndNumericRestrictionsAllStr} from "../../utils/regexpUtlis"
 import './login.scss'
 import {stat} from "fs";
-import {Api} from "../../api/Api";
+import {ApiGateway} from "../../api/ApiGateway";
+import {useDispatch} from "react-redux";
+import {actions} from "../../redux/reducers/auth";
+import Api from "../../api";
+import {hashPassword} from "../../utils/passwordHasher";
 
 interface ILoginState {
     username: string;
@@ -35,6 +39,7 @@ const INITIAL_STATE: ILoginState = {
 function Login() {
     const [state, setState] = useState<ILoginState>({...INITIAL_STATE})
     const regex = AlphabeticalAndNumericRestrictionsAllStr();
+    const dispatch = useDispatch();
 
     const setPassword = (newPass: string) => {
         const status = checkPassword(newPass);
@@ -73,6 +78,11 @@ function Login() {
         const isDataValid = isPasswordOk && isUsernameOk
         if(isDataValid) {
             setState({...state, isLoading: true});
+            const passwordHash = await hashPassword(state.password);
+            const response = await Api.auth.login(state.username, passwordHash);
+            if(!response.success) {
+                alert("Login incorrect")
+            }
         }
     }
 

@@ -6,13 +6,14 @@ import {AppState} from "../redux/reducers";
 import {ProtectedRoute} from "./ProtectedRoute";
 import Login from "./login/Login";
 import Api from "../api";
+import {ApiGateway} from "../api/ApiGateway";
 
 export interface IThunkExtraParam {
-    api: Api;
+    api: ApiGateway;
 }
 
 const extra = {
-    api: new Api('')
+    api: Api
 }
 
 export class App extends React.Component {

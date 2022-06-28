@@ -1,12 +1,11 @@
-import queryTypes, {ActionType} from "./queryTypes";
-import HttpActions, {IApplicationResponse} from './HttpActions';
-import {AxiosResponse} from "axios";
+import queryTypes, {ActionType, IApplicationResponse} from "./baseTypes";
+import HttpActions from './HttpActions';
 
 export default class BaseApi {
-    baseUrl = '';
+    baseUrl: string;
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor() {
+        this.baseUrl = process.env.REACT_APP_SERVER_API === undefined ? "http://localhost:5000" : process.env.REACT_APP_SERVER_API;
     }
 
     async sendQuery<T>(url: string, data: object, method: ActionType): Promise<IApplicationResponse<T>> {

@@ -1,3 +1,4 @@
-import {Api} from "./Api";
+import {ApiGateway} from "./ApiGateway";
 
-export  default Api;
+const Api = new ApiGateway();
+export default Api;
