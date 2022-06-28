@@ -1,13 +1,11 @@
 import {useState} from "react";
 import {AlphabeticalAndNumericRestrictionsAllStr} from "../../utils/regexpUtlis"
-import './login.scss'
-import {stat} from "fs";
-import {ApiGateway} from "../../api/ApiGateway";
 import {useDispatch} from "react-redux";
 import {actions} from "../../redux/reducers/auth";
 import Api from "../../api";
 import {hashPassword} from "../../utils/passwordHasher";
 import {TokenProvider} from "../../api/TokenProvider";
+import './login.scss'
 
 interface ILoginState {
     username: string;
@@ -22,6 +20,7 @@ enum InputStatus {
     RestrictedSymbolsNotAllowed = "Use only alphabetical and numerical characters",
     PasswordLengthNotOkay = "Length should be 3-20 characters",
     UsernameLengthNotOkay = "Length should be 3-20 characters",
+    Empty = ""
 }
 
 enum InputType {
@@ -32,8 +31,8 @@ enum InputType {
 const INITIAL_STATE: ILoginState = {
     username: "",
     password: "",
-    usernameStatus: InputStatus.AllOkay,
-    passwordStatus: InputStatus.AllOkay,
+    usernameStatus: InputStatus.Empty,
+    passwordStatus: InputStatus.Empty,
     isLoading: false
 }
 
@@ -73,16 +72,26 @@ function Login() {
         }
     }
 
-    async function LogIn() {
+    const isAllFieldsOk = (): boolean => {
         const isUsernameOk = state.usernameStatus === InputStatus.AllOkay;
         const isPasswordOk = state.passwordStatus === InputStatus.AllOkay;
         const isDataValid = isPasswordOk && isUsernameOk
+        return isDataValid;
+    }
+
+    async function LogIn() {
+        const isDataValid = isAllFieldsOk();
         if(isDataValid) {
+
             setState({...state, isLoading: true});
-            const passwordHash = await hashPassword(state.password);
+            await setTimeout(args => {}, 1000)
+
+            const passwordHash = hashPassword(state.password);
             const response = await Api.auth.login(state.username, passwordHash);
+
+            setState({...state, isLoading: false});
             if(!response.success) {
-                alert("Login incorrect")
+                alert("Login or password incorrect")
             }
             else {
                 TokenProvider.set(response.data!)
@@ -91,23 +100,30 @@ function Login() {
                     username: state.username
                 }))
             }
-
         }
     }
 
-    return <div className="form-wrapper">
-        <form className="login-form" onSubmit={LogIn}>
+    const isButtonDisabled = !isAllFieldsOk() || state.isLoading;
+    const usernameErrorClass = state.usernameStatus !== InputStatus.AllOkay && state.username.length !== 0 ? "--show" : "";
+    const passwordErrorClass = state.passwordStatus !== InputStatus.AllOkay && state.password.length !== 0 ? "--show" : ""
+    const buttonText = state.isLoading ? "Loading" : "Submit";
+
+    return <div className="login-form-wrapper">
+        <form className="login-form" onSubmit={event => {
+            event.preventDefault();
+            LogIn();
+        }}>
             <div className="form-group">
                 <label htmlFor="exampleInputEmail1">User name</label>
                 <input className="form-control login-username" type="text" placeholder="Username" id="username" onChange={(s) => setUsername(s.currentTarget.value)}/>
-                <span className={`login-error ${state.usernameStatus !== InputStatus.AllOkay && state.username.length !== 0 ? "--show" : ""}`}>{state.usernameStatus}</span>
+                <span className={`login-error ${usernameErrorClass}`}>{state.usernameStatus}</span>
             </div>
             <div className="form-group">
                 <label htmlFor="exampleInputPassword1">Password</label>
                 <input type="password" className="form-control login-password" id="password" placeholder="Password" onChange={(s) => setPassword(s.currentTarget.value)}/>
-                <span className={`login-error ${state.passwordStatus !== InputStatus.AllOkay && state.password.length !== 0 ? "--show" : ""}`}>{state.passwordStatus}</span>
+                <span className={`login-error ${passwordErrorClass}`}>{state.passwordStatus}</span>
             </div>
-            <button id="submit" type="button" className="btn btn-dark">Submit</button>
+            <button id="submit" disabled={isButtonDisabled} type="submit" className={"btn btn-dark"}>{buttonText}</button>
         </form>
     </div>
 }

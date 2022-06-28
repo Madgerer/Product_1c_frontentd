@@ -1,9 +1,10 @@
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs'
 
-export async function hashPassword(password: string): Promise<string> {
-    const saltOrRounds = process.env.REACT_APP_PASSWORD_SALT === undefined
-        ? "120123dasdqawezcz"
-        : process.env.REACT_APP_PASSWORD_SALT;
-    const hash = await bcrypt.hash(password, saltOrRounds);
+export function hashPassword(password: string): string {
+    const saltSeed: number = process.env.REACT_APP_PASSWORD_SALT_SEED === undefined
+        ? 180
+        : Number(process.env.REACT_APP_PASSWORD_SALT_SEED);
+    const salt = bcrypt.genSaltSync(saltSeed);
+    const hash = bcrypt.hashSync(password, salt);
     return hash;
 }

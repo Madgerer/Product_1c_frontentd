@@ -1,25 +1,24 @@
 import {Navigate, Route, Routes,} from "react-router-dom";
 import {Provider, useDispatch, useSelector} from "react-redux";
-import configureAppStore from "../redux/configureStore";
 import React from "react";
 import {AppState} from "../redux/reducers";
 import {ProtectedRoute} from "./ProtectedRoute";
-import Login from "./login/Login";
-import Api from "../api";
 import {ApiGateway} from "../api/ApiGateway";
+import Login from "./login/Login";
+import configureAppStore from "../redux/configureStore";
 
 export interface IThunkExtraParam {
     api: ApiGateway;
 }
-
+/*
 const extra = {
     api: Api
-}
+}*/
 
 export class App extends React.Component {
     render() {
         return (
-            <Provider store={configureAppStore({}, extra)}>
+            <Provider store={configureAppStore({}, /*extra*/)}>
                 <MainRouter></MainRouter>
             </Provider>
         );
@@ -32,14 +31,13 @@ function MainRouter() {
 
     return (<Routes>
         <Route path="login" element={<Login/>}/>
-        <Route path="home" element={<Home/>}/>
-        <Route path="protected" element={
+        <Route path="/" element={
             <ProtectedRoute isLogged={isLogged}>
                 <ProtectedShit/>
             </ProtectedRoute>
         }>
         </Route>
-        <Route path="*" element={<Navigate to="home" replace />}/>
+        <Route path="*" element={<Navigate to="/" replace />}/>
     </Routes>);
 }
 

@@ -1,14 +1,12 @@
-import {LocalStorageKeys} from "../LocalStorageKeys";
+import {LocalStorageKeys} from "../../../v1/product-1c-frontend/src/LocalStorageKeys";
 
 export class TokenProvider {
     static get(): string {
-        let token = localStorage.getItem(LocalStorageKeys.TokenKey);
-        if(token === null)
-            throw "Unauthorized";
-        return token;
+        throw "Unauthorized";
+
     }
 
     static set(token: string) {
-        localStorage.setItem(LocalStorageKeys.TokenKey, token);
+        //localStorage.setItem(LocalStorageKeys.TokenKey, token);
     }
 }

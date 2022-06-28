@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {IThunkExtraParam} from "../../../app/App";
+//import {IThunkExtraParam} from "../../../app/App";
 import {actions} from "./index";
 import {IQueryException} from "../../../api/baseTypes";
 
@@ -10,7 +10,8 @@ interface ILoginThunkRes {
     exception: IQueryException | null
 }
 
-export const loginThunk = createAsyncThunk<ILoginThunkRes, { username: string, password:string }, { extra: IThunkExtraParam }>(
+/*
+export const loginThunk = createAsyncThunk<ILoginThunkRes, { username: string, password:string }/!*, { extra: IThunkExtraParam }*!/>(
     'auth/login',
     async (arg, thunkAPI) => {
         const res = await thunkAPI.extra.api.auth.login(arg.username, arg.password);
@@ -31,4 +32,4 @@ export const loginThunk = createAsyncThunk<ILoginThunkRes, { username: string, p
             exception: null
         };
     }
-)
+)*/
