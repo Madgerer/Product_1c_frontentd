@@ -7,7 +7,7 @@ export default class AuthApi extends BaseApi {
         const response = this.sendQuery<string>('/auth/api', {
             login: login,
             password: password
-        }, actionTypes.get);
+        }, actionTypes.get, false);
         return response;
     }
 }

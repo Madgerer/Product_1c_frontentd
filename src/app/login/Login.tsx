@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {actions} from "../../redux/reducers/auth";
 import Api from "../../api";
 import {hashPassword} from "../../utils/passwordHasher";
+import {TokenProvider} from "../../api/TokenProvider";
 
 interface ILoginState {
     username: string;
@@ -73,8 +74,8 @@ function Login() {
     }
 
     async function LogIn() {
-        const isUsernameOk = state.usernameStatus == InputStatus.AllOkay;
-        const isPasswordOk = state.passwordStatus == InputStatus.AllOkay;
+        const isUsernameOk = state.usernameStatus === InputStatus.AllOkay;
+        const isPasswordOk = state.passwordStatus === InputStatus.AllOkay;
         const isDataValid = isPasswordOk && isUsernameOk
         if(isDataValid) {
             setState({...state, isLoading: true});
@@ -83,11 +84,19 @@ function Login() {
             if(!response.success) {
                 alert("Login incorrect")
             }
+            else {
+                TokenProvider.set(response.data!)
+                dispatch(actions.setCredentials({
+                    token: response.data,
+                    username: state.username
+                }))
+            }
+
         }
     }
 
     return <div className="form-wrapper">
-        <form action="" className="login-form">
+        <form className="login-form" onSubmit={LogIn}>
             <div className="form-group">
                 <label htmlFor="exampleInputEmail1">User name</label>
                 <input className="form-control login-username" type="text" placeholder="Username" id="username" onChange={(s) => setUsername(s.currentTarget.value)}/>

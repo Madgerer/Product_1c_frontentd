@@ -1,5 +1,6 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, {AxiosError, AxiosRequestHeaders, AxiosResponse} from 'axios';
 import {IApplicationResponse} from "./baseTypes";
+import {TokenProvider} from "./TokenProvider";
 
 
 /**
@@ -28,30 +29,31 @@ class HttpActions {
     }
 
     /** Функция выполняет Get запрос на сервер */
-    static async get<T>(url: string, data: object): Promise<IApplicationResponse<T>> {
+    static async get<T>(url: string, data: object, authorized: boolean): Promise<IApplicationResponse<T>> {
         const urlWithArguments = HttpActions.getFullUrl(url, data);
-        return axios.get(urlWithArguments)
+
+        return axios.get(urlWithArguments, {headers: this.getHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch((e) => HttpActions.getErrorObject(e));
     }
 
     /** Функция выполняет Post запрос на сервер **/
-    static post<T>(url: string, data: object): Promise<IApplicationResponse<T>>  {
-        return axios.post(url, data)
+    static post<T>(url: string, data: object, authorized: boolean): Promise<IApplicationResponse<T>>  {
+        return axios.post(url, data, {headers: this.getHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch((e) => HttpActions.getErrorObject(e));
     }
 
     /** Функция выполняет Put запрос на сервер */
-    static put<T>(url: string, data: object): Promise<IApplicationResponse<T>>  {
-        return axios.put(url, data)
+    static put<T>(url: string, data: object, authorized: boolean): Promise<IApplicationResponse<T>>  {
+        return axios.put(url, data, {headers: this.getHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch((e) => HttpActions.getErrorObject(e));
     }
 
     /** Функция выполняет Remove запрос на сервер */
-    static delete<T>(url: string, data: object): Promise<IApplicationResponse<T>>  {
-        return axios.delete(url, data)
+    static delete<T>(url: string, data: object, authorized: boolean): Promise<IApplicationResponse<T>>  {
+        return axios.delete(url, {headers: this.getHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch((e) => HttpActions.getErrorObject(e));
     }
@@ -76,6 +78,12 @@ class HttpActions {
                 text: JSON.stringify(error.response?.data)
             }
         };
+    }
+
+    static getHeaders(authorized: boolean): AxiosRequestHeaders {
+        return authorized ? {
+            "Authorization": TokenProvider.get()
+        } : {};
     }
 }
 
