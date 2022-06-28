@@ -30,9 +30,10 @@ function MainRouter() {
     const isLogged = authState.token != null && authState.username != null;
 
     return (<Routes>
-        <Route path="login" element={<Login/>}/>
+        <Route path="login" element={<Login/>}>
+        </Route>
         <Route path="/" element={
-            <ProtectedRoute isLogged={isLogged}>
+            <ProtectedRoute isLogged={isLogged} shouldBeLogged={true}>
                 <ProtectedShit/>
             </ProtectedRoute>
         }>

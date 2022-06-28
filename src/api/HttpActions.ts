@@ -1,6 +1,7 @@
-import axios, {AxiosError, AxiosRequestHeaders, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse} from 'axios';
 import {IApplicationResponse} from "./baseTypes";
-import {TokenProvider} from "./TokenProvider";
+import {LocalStorageProvider} from "./LocalStorageProvider";
+
 
 
 /**
@@ -59,11 +60,11 @@ class HttpActions {
     }
 
     static processResponse<T>(response: AxiosResponse<T>): IApplicationResponse<T>{
-        const isFailure = [200, 201].indexOf(response?.status) !== -1
+        const isSuccess = [200, 201].indexOf(response?.status) !== -1
         return {
             status: response.status,
             data: response?.data,
-            success: !isFailure,
+            success: isSuccess,
             exception: null
         }
     }
@@ -80,10 +81,23 @@ class HttpActions {
         };
     }
 
+    static getConfig(authorized: boolean): AxiosRequestConfig {
+        const headers = this.getHeaders(authorized);
+        return {
+            headers: headers,
+            withCredentials: true
+        };
+    }
+
     static getHeaders(authorized: boolean): AxiosRequestHeaders {
-        return authorized ? {
-            "Authorization": TokenProvider.get()
-        } : {};
+        let headers = {
+            "content-type": "application/json",
+            "accept" : "application/json",
+            "Access-Control-Allow-Origin": "*"
+        }
+        if(authorized)
+            headers["authorization"] = LocalStorageProvider.getToken()
+        return headers;
     }
 }
 

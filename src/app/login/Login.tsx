@@ -1,11 +1,17 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {AlphabeticalAndNumericRestrictionsAllStr} from "../../utils/regexpUtlis"
-import {useDispatch} from "react-redux";
-import {actions} from "../../redux/reducers/auth";
+import {useDispatch, useSelector} from "react-redux";
+import {actions, AuthState} from "../../redux/reducers/auth";
 import Api from "../../api";
 import {hashPassword} from "../../utils/passwordHasher";
-import {TokenProvider} from "../../api/TokenProvider";
+import {LocalStorageProvider} from "../../api/LocalStorageProvider";
 import './login.scss'
+import {useNavigate} from "react-router-dom";
+import {useLocation} from "react-router";
+import {IHistoryState} from "../ProtectedRoute";
+import {IApplicationResponse} from "../../api/baseTypes";
+import AppRoutes from "../AppRoutes";
+import {AppState} from "../../redux/reducers";
 
 interface ILoginState {
     username: string;
@@ -37,6 +43,16 @@ const INITIAL_STATE: ILoginState = {
 }
 
 function Login() {
+    let location = useLocation();
+    const navigate = useNavigate();
+    const globalAuthState = useSelector<AppState, AuthState>(s => s.authState)
+
+    /**On mount we check that user already logged and redirect to index, called once**/
+    useEffect(() => {
+        navigateToIndexIfUsersAlreadyLogged();
+    }, []);
+
+    const history = location.state as IHistoryState;
     const [state, setState] = useState<ILoginState>({...INITIAL_STATE})
     const regex = AlphabeticalAndNumericRestrictionsAllStr();
     const dispatch = useDispatch();
@@ -75,8 +91,22 @@ function Login() {
     const isAllFieldsOk = (): boolean => {
         const isUsernameOk = state.usernameStatus === InputStatus.AllOkay;
         const isPasswordOk = state.passwordStatus === InputStatus.AllOkay;
-        const isDataValid = isPasswordOk && isUsernameOk
-        return isDataValid;
+        return isPasswordOk && isUsernameOk;
+    }
+
+    const navigateToIndexIfUsersAlreadyLogged = () =>  {
+        if(globalAuthState.username != null && globalAuthState.token != null)
+            navigate(AppRoutes.Index)
+    }
+
+    const navigateToPreviousPage = () => {
+        let to: string;
+        if(history === undefined) {
+            to = AppRoutes.Index;
+        } else {
+            to = history?.from === location.pathname ? AppRoutes.Index : history?.from
+        }
+        navigate(to);
     }
 
     async function LogIn() {
@@ -84,23 +114,39 @@ function Login() {
         if(isDataValid) {
 
             setState({...state, isLoading: true});
-            await setTimeout(args => {}, 1000)
 
-            const passwordHash = hashPassword(state.password);
-            const response = await Api.auth.login(state.username, passwordHash);
+            try {
+                const passwordHash = hashPassword(state.password);
+                const response = await Api.auth.login(state.username, passwordHash);
+                setState({...state, isLoading: false});
 
-            setState({...state, isLoading: false});
-            if(!response.success) {
-                alert("Login or password incorrect")
+                if(!response.success) {
+                    handleError(response);
+                }
+                else {
+                    LocalStorageProvider.setToken(response.data!)
+                    LocalStorageProvider.setUser(state.username)
+                    dispatch(actions.setCredentials({
+                        token: response.data,
+                        username: state.username
+                    }))
+                    navigateToPreviousPage();
+                }
             }
-            else {
-                TokenProvider.set(response.data!)
-                dispatch(actions.setCredentials({
-                    token: response.data,
-                    username: state.username
-                }))
+            catch (e) {
+                alert("Unexpected error: " + e);
+                setState({...state, isLoading: false});
             }
         }
+    }
+
+    function handleError(response: IApplicationResponse<string>) {
+        if(response.status === 500)
+            alert("Server error")
+        else if(response.status === 404)
+            alert("Server not available")
+        else
+            alert("Login or password incorrect")
     }
 
     const isButtonDisabled = !isAllFieldsOk() || state.isLoading;

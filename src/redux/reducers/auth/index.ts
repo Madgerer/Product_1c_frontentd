@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {LocalStorageKeys} from "../../../LocalStorageKeys";
+import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
 
 export type AuthState = {
     username: string | null;
@@ -7,8 +7,8 @@ export type AuthState = {
 };
 
 const INITIAL_STATE: AuthState = {
-    username: window.localStorage.getItem(LocalStorageKeys.UsernameKey),
-    token: window.localStorage.getItem(LocalStorageKeys.TokenKey),
+    username: LocalStorageProvider.getToken(),
+    token: LocalStorageProvider.getUser(),
 }
 
 const authSlice = createSlice({

@@ -3,9 +3,9 @@ import actionTypes, {IApplicationResponse} from "../baseTypes";
 
 export default class AuthApi extends BaseApi {
     
-    async login(login: string, password: string): Promise<IApplicationResponse<string>> {
-        const response = this.sendQuery<string>('/auth/api', {
-            login: login,
+    async login(username: string, password: string): Promise<IApplicationResponse<string>> {
+        const response = this.sendQuery<string>('/api/auth/', {
+            username: username,
             password: password
         }, actionTypes.get, false);
         return response;
