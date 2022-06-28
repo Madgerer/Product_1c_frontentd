@@ -4,11 +4,21 @@ import configureAppStore from "../redux/configureStore";
 import React from "react";
 import {AppState} from "../redux/reducers";
 import {ProtectedRoute} from "./ProtectedRoute";
+import Login from "./login/Login";
+import Api from "../api";
+
+export interface IThunkExtraParam {
+    api: Api;
+}
+
+const extra = {
+    api: new Api('')
+}
 
 export class App extends React.Component {
     render() {
         return (
-            <Provider store={configureAppStore({})}>
+            <Provider store={configureAppStore({}, extra)}>
                 <MainRouter></MainRouter>
             </Provider>
         );
@@ -38,15 +48,4 @@ function Home() {
 
 function ProtectedShit() {
     return <div>ProtectedShit</div>;
-}
-
-function Login() {
-    const authState = useSelector((state: AppState) => state.authState)
-    return <div>
-        {authState.username},{authState.token}
-    </div>;
-}
-
-interface IMainRouterState {
-    isLogged: boolean;
 }
