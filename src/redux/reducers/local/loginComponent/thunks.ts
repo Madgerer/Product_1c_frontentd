@@ -20,6 +20,7 @@ export const loginThunk = createAsyncThunk<string,
 
             thunkAPI.dispatch(actions.setLoading(false))
             thunkAPI.dispatch(authActions.setCredentials({username: args.username, token: response.data!}))
+            thunkAPI.dispatch(actions.clearAfterLogin())
 
             return response.data!
         } catch (e) {

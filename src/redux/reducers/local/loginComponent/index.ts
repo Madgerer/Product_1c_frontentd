@@ -61,6 +61,14 @@ const loginComponentSlice = createSlice({
             }
             state.usernameInputStatus = status;
             return state;
+        },
+        clearAfterLogin(state: LoginComponentState, action: Action) {
+            state.password = "";
+            state.username = "";
+            state.usernameInputStatus = InputStatus.Empty;
+            state.passwordInputStatus = InputStatus.Empty;
+            state.isLoginDisabled = true;
+            state.errorText = null;
         }
     },
     extraReducers: builder => {
