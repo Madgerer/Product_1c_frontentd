@@ -1,15 +1,8 @@
 import {useState} from "react";
+import LanguageSelector from "./LanguageSelector";
 
-interface INavbarState {
-    languages: string[]
-}
-
-const INITIAL_STATE: INavbarState = {
-    languages: ["Английский", "Русский"]
-}
 
 function Navbar() {
-    const [state, setState] = useState<INavbarState>({...INITIAL_STATE})
 
     return <div className={"row"}>
         <div className={"item col-md-12 navbar-container"}>
@@ -34,25 +27,7 @@ function Navbar() {
                         </li>
                     </ul>
                     <form className="form-inline">
-                        <div className="form-group input-group-sm navbar-select-container">
-                            <select className="form-control navbar-select" id="langSelect">
-                                <option value="1">Английский</option>
-                                <option value="2">Немецкий</option>
-                                <option value="3">Польский</option>
-                                <option value="4">Латышский</option>
-                                <option value="5">Чешский</option>
-                                <option value="6">Венгерский</option>
-                                <option value="7">Румынский</option>
-                                <option value="8">Французский</option>
-                                <option value="9">Итальянский</option>
-                                <option value="10">Испанский</option>
-                                <option value="11" selected={true}>Русский</option>
-                                <option value="12">Литовский</option>
-                                <option value="13">Эстонский</option>
-                                <option value="14">Украинский</option>
-                                <option value="15">Болгарский</option>
-                            </select>
-                        </div>
+                        <LanguageSelector/>
                      {/*   <div className="form-group" style="margin-left:10px">
                             <button type="button" title="Выйти из системы" id="logOut"
                                     className="btn btn-danger btn-sm"><i className="fa fa-sign-out"

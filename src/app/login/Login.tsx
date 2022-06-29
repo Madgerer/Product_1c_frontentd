@@ -1,51 +1,20 @@
-import {useEffect, useState} from "react";
-import {AlphabeticalAndNumericRestrictionsAllStr} from "../../utils/regexpUtlis"
+import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {actions, AuthState} from "../../redux/reducers/auth";
-import Api from "../../api";
-import {hashPassword} from "../../utils/passwordHasher";
-import {LocalStorageProvider} from "../../api/LocalStorageProvider";
 import './login.scss'
 import {useNavigate} from "react-router-dom";
 import {useLocation} from "react-router";
 import {IHistoryState} from "../ProtectedRoute";
-import {IApplicationResponse} from "../../api/baseTypes";
 import AppRoutes from "../AppRoutes";
 import {AppState} from "../../redux/reducers";
-
-interface ILoginState {
-    username: string;
-    password: string;
-    usernameStatus: InputStatus,
-    passwordStatus: InputStatus,
-    isLoading: boolean
-}
-
-enum InputStatus {
-    AllOkay = "All okay",
-    RestrictedSymbolsNotAllowed = "Use only alphabetical and numerical characters",
-    PasswordLengthNotOkay = "Length should be 3-20 characters",
-    UsernameLengthNotOkay = "Length should be 3-20 characters",
-    Empty = ""
-}
-
-enum InputType {
-    Username,
-    Password
-}
-
-const INITIAL_STATE: ILoginState = {
-    username: "",
-    password: "",
-    usernameStatus: InputStatus.Empty,
-    passwordStatus: InputStatus.Empty,
-    isLoading: false
-}
+import {actions, InputStatus, LoginComponentState} from "../../redux/reducers/local/loginComponent";
+import {AuthState} from "../../redux/reducers/auth";
+import {loginThunk} from "../../redux/reducers/local/loginComponent/thunks";
 
 function Login() {
     let location = useLocation();
     const navigate = useNavigate();
-    const globalAuthState = useSelector<AppState, AuthState>(s => s.authState)
+    const authState = useSelector<AppState, AuthState>(s => s.authState)
+    const local = useSelector<AppState, LoginComponentState>(x => x.local.loginComponent);
 
     /**On mount we check that user already logged and redirect to index, called once**/
     useEffect(() => {
@@ -53,49 +22,18 @@ function Login() {
     }, []);
 
     const history = location.state as IHistoryState;
-    const [state, setState] = useState<ILoginState>({...INITIAL_STATE})
-    const regex = AlphabeticalAndNumericRestrictionsAllStr();
     const dispatch = useDispatch();
 
     const setPassword = (newPass: string) => {
-        const status = checkPassword(newPass);
-        setState({...state, password: newPass, passwordStatus: status})
-    }
-    const checkPassword = (pass: string): InputStatus => {
-        return validateString(pass, 3, 20, regex, InputType.Password);
+        dispatch(actions.passwordChanged(newPass));
     }
 
     const setUsername = (username: string) => {
-        const status = checkUsername(username);
-        setState({...state, username: username, usernameStatus: status})
-    }
-    const checkUsername = (username: string): InputStatus => {
-        return validateString(username, 3, 20, regex, InputType.Username);
-    }
-
-    const validateString = (str: string, minLength: number, maxLength: number, regexp: RegExp, inputType: InputType) => {
-        const noRestricted = regexp.test(str);
-        if(!noRestricted)
-            return InputStatus.RestrictedSymbolsNotAllowed;
-        if(str.length >= minLength && str.length <= maxLength)
-            return InputStatus.AllOkay;
-        switch (inputType)
-        {
-            case InputType.Password:
-                return InputStatus.PasswordLengthNotOkay;
-            case InputType.Username:
-                return InputStatus.UsernameLengthNotOkay;
-        }
-    }
-
-    const isAllFieldsOk = (): boolean => {
-        const isUsernameOk = state.usernameStatus === InputStatus.AllOkay;
-        const isPasswordOk = state.passwordStatus === InputStatus.AllOkay;
-        return isPasswordOk && isUsernameOk;
+        dispatch(actions.usernameChanged(username));
     }
 
     const navigateToIndexIfUsersAlreadyLogged = () =>  {
-        if(globalAuthState.username != null && globalAuthState.token != null)
+        if(authState.username != null && authState.token != null)
             navigate(AppRoutes.Index)
     }
 
@@ -110,47 +48,15 @@ function Login() {
     }
 
     async function LogIn() {
-        const isDataValid = isAllFieldsOk();
-        if(isDataValid) {
-
-            setState({...state, isLoading: true});
-
-            try {
-                const passwordHash = hashPassword(state.password);
-                const response = await Api.auth.login(state.username, passwordHash);
-                setState({...state, isLoading: false});
-
-                if(!response.success) {
-                    handleError(response);
-                }
-                else {
-                    dispatch(actions.setCredentials({
-                        token: response.data,
-                        username: state.username
-                    }))
-                    navigateToPreviousPage();
-                }
-            }
-            catch (e) {
-                alert("Unexpected error: " + e);
-                setState({...state, isLoading: false});
-            }
-        }
+       dispatch(loginThunk({username: local.username, password: local.password}))
+       navigateToPreviousPage();
     }
 
-    function handleError(response: IApplicationResponse<string>) {
-        if(response.status === 500)
-            alert("Server error")
-        else if(response.status === 404)
-            alert("Server not available")
-        else
-            alert("Login or password incorrect")
-    }
-
-    const isButtonDisabled = !isAllFieldsOk() || state.isLoading;
-    const usernameErrorClass = state.usernameStatus !== InputStatus.AllOkay && state.username.length !== 0 ? "--show" : "";
-    const passwordErrorClass = state.passwordStatus !== InputStatus.AllOkay && state.password.length !== 0 ? "--show" : ""
-    const buttonText = state.isLoading ? "Loading" : "Submit";
+    const isButtonDisabled = local.isLoginDisabled || local.isLoading;
+    const usernameErrorClass = `login-error ${local.usernameInputStatus !== InputStatus.AllOkay && local.username.length !== 0 ? "--show" : ""}`;
+    const passwordErrorClass = `login-error ${local.passwordInputStatus !== InputStatus.AllOkay && local.password.length !== 0 ? "--show" : ""}`;
+    const buttonText = local.isLoading ? "Loading" : "Submit";
+    const onLoginErrorClass = `login-error ${local.errorText !== null ? "--show" : ""}`;
 
     return <div className="login-form-wrapper">
         <form className="login-form" onSubmit={event => {
@@ -159,15 +65,16 @@ function Login() {
         }}>
             <div className="form-group">
                 <label htmlFor="exampleInputEmail1">User name</label>
-                <input className="form-control login-username" type="text" placeholder="Username" id="username" onChange={(s) => setUsername(s.currentTarget.value)}/>
-                <span className={`login-error ${usernameErrorClass}`}>{state.usernameStatus}</span>
+                <input className="form-control login-username" type="text" placeholder="Username" id="username" onChange={(s) => setUsername(s.currentTarget.value)} value={local.username}/>
+                <span className={usernameErrorClass}>{local.usernameInputStatus}</span>
             </div>
             <div className="form-group">
                 <label htmlFor="exampleInputPassword1">Password</label>
-                <input type="password" className="form-control login-password" id="password" placeholder="Password" onChange={(s) => setPassword(s.currentTarget.value)}/>
-                <span className={`login-error ${passwordErrorClass}`}>{state.passwordStatus}</span>
+                <input type="password" className="form-control login-password" id="password" placeholder="Password" onChange={(s) => setPassword(s.currentTarget.value)} value={local.password}/>
+                <span className={passwordErrorClass}>{local.passwordInputStatus}</span>
             </div>
             <button id="submit" disabled={isButtonDisabled} type="submit" className={"btn btn-dark"}>{buttonText}</button>
+            <div className={onLoginErrorClass}>{local.errorText}</div>
         </form>
     </div>
 }

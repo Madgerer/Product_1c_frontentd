@@ -1,11 +1,6 @@
 import axios, {AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse} from 'axios';
 import {IApplicationResponse} from "./baseTypes";
 import {LocalStorageProvider} from "./LocalStorageProvider";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
-import {isNull} from "lodash";
-
-
 
 /**
  * Класс обертка на axios для обработки реквест параметров.
@@ -76,10 +71,10 @@ class HttpActions {
         const { response } = error;
         return {
             success: false,
-            status: response!.status,
+            status: error.status !== undefined ? Number(error.code) : -1,
             data: null,
             exception: {
-                text: JSON.stringify(error.response?.data)
+                text: JSON.stringify(error.response?.data) ?? "Connection_Error"
             }
         };
     }

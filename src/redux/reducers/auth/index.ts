@@ -1,9 +1,11 @@
 import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
+import {useDispatch} from "react-redux";
 
 export type AuthState = {
     username: string | null;
     token: string | null;
+
 };
 
 const INITIAL_STATE: AuthState = {
@@ -15,7 +17,7 @@ const authSlice = createSlice({
     name: "Auth",
     initialState: INITIAL_STATE,
     reducers: {
-        setCredentials(state: AuthState, action: PayloadAction<AuthState>) {
+        setCredentials(state: AuthState, action: PayloadAction<{username: string, token: string}>) {
             LocalStorageProvider.setToken(action.payload.token!)
             LocalStorageProvider.setUser(action.payload.username!)
             state.username = action.payload.username;
@@ -27,6 +29,7 @@ const authSlice = createSlice({
             LocalStorageProvider.removeUser()
             state.username = null
             state.token = null
+            return state;
         }
     }
 })

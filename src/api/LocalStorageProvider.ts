@@ -1,5 +1,5 @@
 import {LocalStorageKeys} from "../LocalStorageKeys";
-import {ILanguage} from "../redux/reducers/languages";
+import {ILanguage} from "../redux/reducers/languages/types";
 
 export class LocalStorageProvider {
     static getToken(): string | null {

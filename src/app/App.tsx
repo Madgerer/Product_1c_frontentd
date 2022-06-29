@@ -6,15 +6,10 @@ import {ProtectedRoute} from "./ProtectedRoute";
 import {ApiGateway} from "../api/ApiGateway";
 import Login from "./login/Login";
 import configureAppStore from "../redux/configureStore";
-import Layout from "./layout/Layout";
 
 export interface IThunkExtraParam {
     api: ApiGateway;
 }
-/*
-const extra = {
-    api: Api
-}*/
 
 export class App extends React.Component {
     render() {
@@ -30,9 +25,7 @@ function MainRouter() {
     const authState = useSelector((state: AppState) => state.authState)
     const isLogged = authState.token != null && authState.username != null;
 
-    return <Layout/>
-
-    /*return (<Routes>
+    return (<Routes>
         <Route path="login" element={<Login/>}>
         </Route>
         <Route path="/" element={
@@ -42,7 +35,9 @@ function MainRouter() {
         }>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />}/>
-    </Routes>);*/
+    </Routes>);
+
+    /**/
 }
 
 function ProtectedShit() {
