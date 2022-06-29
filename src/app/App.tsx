@@ -31,18 +31,12 @@ function MainRouter() {
         </Route>
         <Route path="/" element={
             <ProtectedRoute isLogged={isLogged} shouldBeLogged={true}>
-                <ProtectedShit/>
+                <Layout/>
             </ProtectedRoute>
         }>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />}/>
     </Routes>)
 
-    return <Layout/>;
-
     /**/
-}
-
-function ProtectedShit() {
-    return <div>ProtectedShit</div>;
 }

@@ -21,8 +21,8 @@ const languageSlice = createSlice({
     name: "languages",
     initialState: INITIAL_STATE,
     reducers: {
-        setSelected(state: LanguageState, action: PayloadAction<ILanguage>){
-            state.selectedLanguage = action.payload;
+        setSelected(state: LanguageState, action: PayloadAction<number>){
+            state.selectedLanguage = state.languages.find(x => x.id === action.payload) ?? state.selectedLanguage;
             return state;
         }
     },
