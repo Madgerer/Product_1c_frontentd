@@ -124,8 +124,6 @@ function Login() {
                     handleError(response);
                 }
                 else {
-                    LocalStorageProvider.setToken(response.data!)
-                    LocalStorageProvider.setUser(state.username)
                     dispatch(actions.setCredentials({
                         token: response.data,
                         username: state.username

@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
 
 export type AuthState = {
@@ -16,9 +16,17 @@ const authSlice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         setCredentials(state: AuthState, action: PayloadAction<AuthState>) {
+            LocalStorageProvider.setToken(action.payload.token!)
+            LocalStorageProvider.setUser(action.payload.username!)
             state.username = action.payload.username;
             state.token = action.payload.token;
             return state;
+        },
+        clearCredentials(state: AuthState, action: Action) {
+            LocalStorageProvider.removeToken()
+            LocalStorageProvider.removeUser()
+            state.username = null
+            state.token = null
         }
     }
 })

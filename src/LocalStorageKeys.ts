@@ -1,4 +1,6 @@
 export const enum LocalStorageKeys {
     TokenKey = "Token",
-    UsernameKey = "Username"
+    UsernameKey = "Username",
+    LanguageIdKey = "LanguageId",
+    LanguageNameKey = "LanguageName"
 }
