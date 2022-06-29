@@ -1,5 +1,6 @@
 import queryTypes, {ActionType, IApplicationResponse} from "./baseTypes";
 import HttpActions from './HttpActions';
+import {isNull} from "lodash";
 
 export default class BaseApi {
     baseUrl: string;
@@ -10,7 +11,7 @@ export default class BaseApi {
             this.baseUrl = this.baseUrl.substring(0, this.baseUrl.length - 1)
     }
 
-    protected async sendQuery<T>(url: string, data: object, method: ActionType, authorized: boolean): Promise<IApplicationResponse<T>> {
+    protected async sendQuery<T>(url: string, data: object | null, method: ActionType, authorized: boolean): Promise<IApplicationResponse<T>> {
         url = this.baseUrl + url;
         const responseMethods = {
             [queryTypes.post]: async () => HttpActions.post<T>(url, data, authorized),
