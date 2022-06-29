@@ -1,15 +1,12 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
+import {ILanguage} from "./types";
 
 export type LanguageState = {
     languages: ILanguage[]
     selectedLanguage: ILanguage
 };
 
-export interface ILanguage {
-    id: number;
-    name: string;
-}
 
 const INITIAL_STATE: LanguageState = {
     languages: [{id: 11, name: "Русский"}],
@@ -20,15 +17,14 @@ const INITIAL_STATE: LanguageState = {
 }
 
 const languageSlice = createSlice({
-    name: "Auth",
+    name: "languages",
     initialState: INITIAL_STATE,
     reducers: {
-        updateLanguages(state: LanguageState, action: PayloadAction<ILanguage[]>){
+        setLanguagesList(state: LanguageState, action: PayloadAction<ILanguage[]>){
             state.languages = action.payload;
             return state;
         }
     },
-
 })
 
 const reducer = languageSlice.reducer;
