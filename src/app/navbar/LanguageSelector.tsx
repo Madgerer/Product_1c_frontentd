@@ -6,36 +6,23 @@ import {actions, reducer, caseReduces} from "../../redux/reducers/languages";
 import exp from "constants";
 import {useEffect} from "react";
 import {uploadLanguagesThunk} from "../../redux/reducers/languages/thunk";
+import {isUndefined} from "lodash";
 
 function LanguageSelector() {
-    const languageState = useSelector<AppState, LanguageState>(s => s.languageState);
+    const state = useSelector<AppState, LanguageState>(s => s.languageState);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(uploadLanguagesThunk())
     },[])
+    const selected = state.languages.find(x => x.id === state.selectedLanguage.id)
+    if(isUndefined(selected)) {
+        dispatch(actions.setSelected(state.languages[0]))
+    }
 
     return <div className="form-group input-group-sm navbar-select-container">
-        <select className="form-control navbar-select" id="langSelect">
-            {languageState.languages.map((lang, i) => {
-                const selected = lang.id === languageState.selectedLanguage.id;
-                return <option value={lang.id} selected={selected}>{lang.name}</option>
-            })}
-            {/*<option value="1">Английский</option>
-            <option value="2">Немецкий</option>
-            <option value="3">Польский</option>
-            <option value="4">Латышский</option>
-            <option value="5">Чешский</option>
-            <option value="6">Венгерский</option>
-            <option value="7">Румынский</option>
-            <option value="8">Французский</option>
-            <option value="9">Итальянский</option>
-            <option value="10">Испанский</option>
-            <option value="11" selected={true}>Русский</option>
-            <option value="12">Литовский</option>
-            <option value="13">Эстонский</option>
-            <option value="14">Украинский</option>
-            <option value="15">Болгарский</option>*/}
+        <select className="form-control navbar-select" id="langSelect" value={state.selectedLanguage.id}>
+            {state.languages.map((lang, i) => <option value={lang.id}>{lang.name}</option>)}
         </select>
     </div>
 }

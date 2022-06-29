@@ -21,8 +21,8 @@ const languageSlice = createSlice({
     name: "languages",
     initialState: INITIAL_STATE,
     reducers: {
-        setLanguagesList(state: LanguageState, action: PayloadAction<ILanguage[]>){
-            state.languages = action.payload;
+        setSelected(state: LanguageState, action: PayloadAction<ILanguage>){
+            state.selectedLanguage = action.payload;
             return state;
         }
     },
@@ -30,7 +30,9 @@ const languageSlice = createSlice({
         builder.addCase(uploadLanguagesThunk.fulfilled, (state, {payload}) => {
             state.languages = payload
         })
-        return builder
+        builder.addCase(uploadLanguagesThunk.rejected, (state, action) => {
+            console.error(`Cant download language list: Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
     }
 })
 

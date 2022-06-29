@@ -4,8 +4,8 @@ import {hashPassword} from "../../../../utils/passwordHasher";
 import {actions} from "./index";
 import {actions as authActions} from "../../auth";
 
-export const loginThunk = createAsyncThunk<string,
-            {username: string, password:string },
+export const loginThunk = createAsyncThunk<Function,
+            {username: string, password:string, redirectCallBack: Function },
             {rejectValue: { exception: string | null, statusCode: number }}>(
     'auth/login',
     async (args, thunkAPI) => {
@@ -22,7 +22,7 @@ export const loginThunk = createAsyncThunk<string,
             thunkAPI.dispatch(authActions.setCredentials({username: args.username, token: response.data!}))
             thunkAPI.dispatch(actions.clearAfterLogin())
 
-            return response.data!
+            return args.redirectCallBack;
         } catch (e) {
             return thunkAPI.rejectWithValue({exception: "net::ERR_CONNECTION_REFUSED", statusCode: 0})
         }

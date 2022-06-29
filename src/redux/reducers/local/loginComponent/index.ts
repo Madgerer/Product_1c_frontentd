@@ -72,6 +72,9 @@ const loginComponentSlice = createSlice({
         }
     },
     extraReducers: builder => {
+        builder.addCase(loginThunk.fulfilled, (state, action) => {
+            action.payload();
+        })
         builder.addCase(loginThunk.rejected, (state, action) => {
             state.errorText = `Can't login. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`
         })

@@ -6,6 +6,7 @@ import {ProtectedRoute} from "./ProtectedRoute";
 import {ApiGateway} from "../api/ApiGateway";
 import Login from "./login/Login";
 import configureAppStore from "../redux/configureStore";
+import Layout from "./layout/Layout";
 
 export interface IThunkExtraParam {
     api: ApiGateway;
@@ -35,7 +36,9 @@ function MainRouter() {
         }>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />}/>
-    </Routes>);
+    </Routes>)
+
+    return <Layout/>;
 
     /**/
 }

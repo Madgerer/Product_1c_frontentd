@@ -71,10 +71,13 @@ class HttpActions {
         const { response } = error;
         return {
             success: false,
-            status: error.status !== undefined ? Number(error.code) : -1,
+            status: response !== undefined
+                ? response.status !== undefined
+                    ? response.status : -1
+                : -1,
             data: null,
             exception: {
-                text: JSON.stringify(error.response?.data) ?? "Connection_Error"
+                text: JSON.stringify(error.response?.data) ?? JSON.stringify(error.response?.statusText) ?? "Connection_Error"
             }
         };
     }
@@ -94,7 +97,7 @@ class HttpActions {
             "Access-Control-Allow-Origin": "*"
         }
         if(authorized)
-            headers["authorization"] = LocalStorageProvider.getToken()
+            headers["authorization"] = `Bearer ${LocalStorageProvider.getToken()}`;
         return headers;
     }
 }

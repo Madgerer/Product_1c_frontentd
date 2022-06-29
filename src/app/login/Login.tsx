@@ -10,6 +10,7 @@ import {actions, InputStatus, LoginComponentState} from "../../redux/reducers/lo
 import {AuthState} from "../../redux/reducers/auth";
 import {loginThunk} from "../../redux/reducers/local/loginComponent/thunks";
 
+
 function Login() {
     let location = useLocation();
     const navigate = useNavigate();
@@ -47,9 +48,8 @@ function Login() {
         navigate(to);
     }
 
-    async function LogIn() {
-       dispatch(loginThunk({username: local.username, password: local.password}))
-       navigateToPreviousPage();
+    function LogIn() {
+       dispatch(loginThunk({username: local.username, password: local.password, redirectCallBack: navigateToPreviousPage}))
     }
 
     const isButtonDisabled = local.isLoginDisabled || local.isLoading;
