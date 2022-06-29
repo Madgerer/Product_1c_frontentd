@@ -1,6 +1,5 @@
-import {useState} from "react";
 import LanguageSelector from "./LanguageSelector";
-
+import './navbar.scss'
 
 function Navbar() {
 
@@ -28,11 +27,11 @@ function Navbar() {
                     </ul>
                     <form className="form-inline">
                         <LanguageSelector/>
-                     {/*   <div className="form-group" style="margin-left:10px">
+                        <div className="form-group navbar-logout-button">
                             <button type="button" title="Выйти из системы" id="logOut"
                                     className="btn btn-danger btn-sm"><i className="fa fa-sign-out"
                                                                          aria-hidden="true"></i></button>
-                        </div>*/}
+                        </div>
                     </form>
                 </div>
             </nav>

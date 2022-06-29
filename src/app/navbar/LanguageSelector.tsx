@@ -12,7 +12,9 @@ function LanguageSelector() {
 
     useEffect(() => {
         dispatch(uploadLanguagesThunk())
-    },[])
+    }, []);
+
+
     const selected = state.languages.find(x => x.id === state.selectedLanguage.id)
     if(isUndefined(selected)) {
         dispatch(actions.setSelected(state.languages[0].id))

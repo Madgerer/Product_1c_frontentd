@@ -8,6 +8,10 @@ import {App} from "./app/App";
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+/**
+ *  <React.StrictMode> рендерит часть компонентов дважды в dev режиме для поиска ошибок, поэтому если видишь двойной запрос/etc - первый на проверку это StrictMode
+ **/
 root.render(
   <React.StrictMode>
       <Router>

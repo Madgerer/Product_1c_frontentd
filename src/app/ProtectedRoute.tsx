@@ -1,11 +1,12 @@
 import {Navigate, useLocation} from "react-router-dom";
-import React from "react";
+import React, {useEffect} from "react";
 
 export function ProtectedRoute(props: IProtectedRouteProps) {
     const location = useLocation();
     const historyState = {
         from: location.pathname
     }
+
     return props.isLogged && props.shouldBeLogged
         ? props.children : <Navigate to="/login" state={historyState} replace/>;
 }
