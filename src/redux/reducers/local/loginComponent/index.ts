@@ -69,6 +69,7 @@ const loginComponentSlice = createSlice({
             state.passwordInputStatus = InputStatus.Empty;
             state.isLoginDisabled = true;
             state.errorText = null;
+            return state;
         }
     },
     extraReducers: builder => {

@@ -1,9 +1,9 @@
 import "./product.scss"
-import PriceGroupSelector from "../priceGroupSelector/PriceGroupSelector";
+import ProductList from "./productList/ProductList";
 
 function Product() {
-    return <div className={"product-body"}>
-        <PriceGroupSelector/>
+    return <div className="product-body">
+        <ProductList/>
     </div>
 }
 

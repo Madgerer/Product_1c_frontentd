@@ -23,6 +23,7 @@ const languageSlice = createSlice({
     reducers: {
         setSelected(state: LanguageState, action: PayloadAction<number>){
             state.selectedLanguage = state.languages.find(x => x.id === action.payload) ?? state.selectedLanguage;
+            LocalStorageProvider.setLanguage(state.selectedLanguage)
             return state;
         }
     },

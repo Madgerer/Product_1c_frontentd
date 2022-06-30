@@ -1,8 +1,10 @@
 import {combineReducers} from "redux";
-import {reducer} from "./loginComponent";
+import {reducer as loginComponentReducer} from "./loginComponent";
+import {reducer as productComponentReducer} from "./productComponent/productList"
 
 export const localReducer = combineReducers({
-    loginComponent: reducer
+    loginComponent: loginComponentReducer,
+    productListComponent: productComponentReducer
 })
 
 export type LocalState = ReturnType<typeof localReducer>;
