@@ -1,13 +1,13 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {IRejectQueryThunk} from "../../types";
 import Api from "../../../api";
-import {ICatalog} from "./types";
+import {ISellmark} from "./types";
 
-export const uploadCatalogs = createAsyncThunk<ICatalog[], void, {rejectValue: IRejectQueryThunk}>(
-    'upload/catalogs',
+export const uploadSellmarks = createAsyncThunk<ISellmark[], void, {rejectValue: IRejectQueryThunk}>(
+    'upload/sellmarks',
     async (args, thunkAPI) => {
         try {
-            const response = await Api.catalogs.getCatalogs();
+            const response = await Api.sellmarks.getSellmarks();
             if(!response.success)
                 return thunkAPI.rejectWithValue({exception: response.exception?.text ?? null, statusCode: response.status})
 

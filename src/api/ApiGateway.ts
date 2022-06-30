@@ -3,13 +3,15 @@ import TranslateApi from "./translate/TranslateApi";
 import PriceGroupApi from "./priceGroups/PriceGroupApi";
 import ProductApi from "./product/ProductApi";
 import CatalogsApi from "./catalogs/CatalogApi";
+import SellmarkApi from "./sellmarkApi/SellmarkApi";
 
 interface IApplicationApi {
     auth: AuthApi,
     translate: TranslateApi,
     priceGroup: PriceGroupApi,
     product: ProductApi,
-    catalogs: CatalogsApi
+    catalogs: CatalogsApi,
+    sellmarks: SellmarkApi
 }
 
 export class ApiGateway implements IApplicationApi {
@@ -18,6 +20,7 @@ export class ApiGateway implements IApplicationApi {
     priceGroup: PriceGroupApi;
     product: ProductApi
     catalogs: CatalogsApi;
+    sellmarks: SellmarkApi;
 
     constructor() {
         this.auth = new AuthApi();
@@ -25,6 +28,6 @@ export class ApiGateway implements IApplicationApi {
         this.priceGroup = new PriceGroupApi();
         this.product = new ProductApi()
         this.catalogs = new CatalogsApi();
+        this.sellmarks = new SellmarkApi();
     }
-
 }
