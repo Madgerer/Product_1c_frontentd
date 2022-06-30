@@ -16,7 +16,6 @@ const INITIAL_STATE: ProductListComponentState = {
     isLoading: true
 }
 
-
 const productComponentSlice = createSlice({
     name: "productPage/list",
     initialState: INITIAL_STATE,

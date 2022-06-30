@@ -16,21 +16,27 @@
     background-color: rgba(0,0,0,.075);
   }
 
-  td {
+  td, th {
     vertical-align: middle;
     line-height: 1em;
   }
 
-  td:last-child {
+  td:first-child, th:first-child {
+    width: 8%;
+    min-width: 50px;
+  }
+
+  td:last-child, th:last-child {
     text-align: center;
-    width: 36px;
+    width: 5%;
+    min-width: 36px;
   }
 
   input {
     margin-inline: 6px;
   }
 
-  td:nth-child(2) {
+  td:nth-child(2),th:nth-child(2) {
     width: 100%;
   }
 

@@ -4,7 +4,7 @@ import "./productList.scss"
 import ProductListTable from "./ProductListTable";
 
 function ProductList() {
-    return  <div className="h-100 d-inline-block product-left-column">
+    return  <div className="product-left-column">
         <ProductListToolbar/>
         <ProductListTable/>
     </div>

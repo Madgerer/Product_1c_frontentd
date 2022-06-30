@@ -23,7 +23,7 @@ function ProductListTable() {
         dispatch(actions.setChecked({id: id, checked: checked}))
     }
 
-    return <div className=" w-100 d-inline-block table-sm product-left-column-table">
+    return <div className="table-sm product-left-column-table">
         <Table bordered hover>
             <thead>
             <tr>
