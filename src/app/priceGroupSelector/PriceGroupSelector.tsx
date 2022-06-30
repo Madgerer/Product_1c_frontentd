@@ -6,7 +6,7 @@ import {uploadPriceGroups} from "../../redux/reducers/priceGroups/thunk";
 import {actions} from "../../redux/reducers/priceGroups";
 import {isUndefined} from "lodash";
 import {IPriceGroup} from "../../redux/reducers/priceGroups/types";
-import SimpleSelect, {IOptionType} from "../Common/SimpleSelect";
+import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
 
 const toOption = (priceGroup: IPriceGroup): IOptionType =>  {
     return {value: priceGroup.id, label: priceGroup.name};
@@ -28,14 +28,12 @@ function PriceGroupSelector() {
         dispatch(actions.setSelected(id));
     }
 
-    return <div>
-            <SimpleSelect toOption={toOption}
-                          options={state.priceGroups}
-                          className={"selector"}
-                          onChange={newValue => changeSelected(newValue)}
-                          value={state.selected}
-            />
-    </div>
+    return <SimpleSelect toOption={toOption}
+                         options={state.priceGroups}
+                         className={"selector"}
+                         onChange={newValue => changeSelected(newValue)}
+                         value={state.selected}
+    />
 }
 
 export default PriceGroupSelector;

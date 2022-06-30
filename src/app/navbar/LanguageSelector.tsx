@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {uploadLanguagesThunk} from "../../redux/reducers/languages/thunk";
 import {ILanguage} from "../../redux/reducers/languages/types";
 import "./languageSelector.scss"
-import SimpleSelect, {IOptionType} from "../Common/SimpleSelect";
+import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
 
 const toOption = (lang: ILanguage): IOptionType =>  {
     return {value: lang.id, label: lang.name};

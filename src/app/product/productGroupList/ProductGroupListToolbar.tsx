@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {actions, ProductGroupListComponentState} from "../../../redux/reducers/local/productComponent/productGroupList";
-import SimpleSelect, {IOptionType} from "../../Common/SimpleSelect";
+import SimpleSelect, {IOptionType} from "../../common/SimpleSelect";
 import "./ProductGroupListToolbar.scss"
 
 function ProductGroupListToolbar() {

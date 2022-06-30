@@ -1,4 +1,4 @@
-import {IOptionType} from "../../../../../app/Common/SimpleSelect";
+import {IOptionType} from "../../../../../app/common/SimpleSelect";
 
 export interface IProductGroupIdentity {
     id: string,
