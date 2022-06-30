@@ -1,22 +1,35 @@
 import {IPriceGroup} from "./types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {uploadPriceGroups} from "./thunk";
 
 export type PriceGroupState = {
-    priceGroups: IPriceGroup[]
+    priceGroups: IPriceGroup[],
+    selected: IPriceGroup
 };
 
+const defaultPriceGroup = {id: 6, name: "АвтоDело"};
+
 const INITIAL_STATE: PriceGroupState = {
-    priceGroups: [],
+    priceGroups: [defaultPriceGroup],
+    selected: defaultPriceGroup
 }
 
 const priceGroup = createSlice({
     name: "priceGroups",
     initialState: INITIAL_STATE,
     reducers: {
-        setPriceGroups(state: PriceGroupState, action: PayloadAction<IPriceGroup[]>){
-            state.priceGroups = action.payload;
+        setSelected(state: PriceGroupState, action: PayloadAction<number>){
+            state.selected = state.priceGroups.find(x => x.id === action.payload) ?? state.selected;
             return state;
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(uploadPriceGroups.fulfilled, (state, {payload}) => {
+            state.priceGroups = payload
+        })
+        builder.addCase(uploadPriceGroups.rejected, (state, action) => {
+            console.error(`Cant download price groups: Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
     }
 })
 

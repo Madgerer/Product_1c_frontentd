@@ -1,11 +1,10 @@
 import {createAsyncThunk, Dispatch} from "@reduxjs/toolkit";
 import Api from "../../../api";
 import {ILanguage} from "./types";
+import {IRejectQueryThunk} from "../../types";
 
 
-export const uploadLanguagesThunk = createAsyncThunk<ILanguage[],
-            void,
-            {rejectValue: { exception: string | null, statusCode: number }} >(
+export const uploadLanguagesThunk = createAsyncThunk<ILanguage[], void, {rejectValue: IRejectQueryThunk}>(
     'upload/languages',
     async (_, thunkAPI) => {
         try {

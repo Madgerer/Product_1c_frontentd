@@ -3,10 +3,11 @@ import Api from "../../../../api";
 import {hashPassword} from "../../../../utils/passwordHasher";
 import {actions} from "./index";
 import {actions as authActions} from "../../auth";
+import {IRejectQueryThunk} from "../../../types";
 
 export const loginThunk = createAsyncThunk<Function,
             {username: string, password:string, redirectCallBack: Function },
-            {rejectValue: { exception: string | null, statusCode: number }}>(
+            {rejectValue: IRejectQueryThunk}>(
     'auth/login',
     async (args, thunkAPI) => {
 

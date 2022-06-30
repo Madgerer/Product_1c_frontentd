@@ -2,9 +2,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../redux/reducers";
 import {LanguageState} from "../../redux/reducers/languages";
 import {actions} from "../../redux/reducers/languages";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {uploadLanguagesThunk} from "../../redux/reducers/languages/thunk";
-import {isUndefined} from "lodash";
+import {ILanguage} from "../../redux/reducers/languages/types";
+import "./languageSelector.scss"
+import SimpleSelect, {IOptionType} from "../Common/SimpleSelect";
+
+const toOption = (lang: ILanguage): IOptionType =>  {
+    return {value: lang.id, label: lang.name};
+}
 
 function LanguageSelector() {
     const state = useSelector<AppState, LanguageState>(s => s.languageState);
@@ -15,20 +21,19 @@ function LanguageSelector() {
     }, []);
 
 
-    const selected = state.languages.find(x => x.id === state.selectedLanguage.id)
-    if(isUndefined(selected)) {
-        dispatch(actions.setSelected(state.languages[0].id))
-    }
-
-    const changeSelected = (i: string) => {
-        const id = Number(i);
+    const changeSelected = (id: number) => {
+        if(state.selectedLanguage.id === id)
+            return;
         dispatch(actions.setSelected(id));
     }
 
     return <div className="form-group input-group-sm navbar-select-container">
-        <select className="form-control navbar-select" id="langSelect" value={state.selectedLanguage.id} onChange={e => changeSelected(e.currentTarget.value)}>
-            {state.languages.map((lang, i) => <option value={lang.id} key={lang.id}>{lang.name}</option>)}
-        </select>
+        <SimpleSelect toOption={toOption}
+            options={state.languages}
+            className={"selector"}
+            onChange={newValue => changeSelected(newValue)}
+            value={state.selectedLanguage}
+        />
     </div>
 }
 

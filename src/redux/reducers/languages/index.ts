@@ -3,11 +3,11 @@ import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
 import {ILanguage} from "./types";
 import {uploadLanguagesThunk} from "./thunk";
 
-export type LanguageState = {
-    languages: ILanguage[]
-    selectedLanguage: ILanguage
-};
 
+export interface LanguageState {
+    languages: ILanguage[]
+    selectedLanguage: ILanguage,
+}
 
 const INITIAL_STATE: LanguageState = {
     languages: [{id: 11, name: "Русский"}],
