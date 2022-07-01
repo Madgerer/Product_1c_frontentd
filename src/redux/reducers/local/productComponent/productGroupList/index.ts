@@ -1,4 +1,4 @@
-import {ICardType, IProductGroupIdentity} from "./types";
+import {ICardValidationType, IProductGroupIdentity} from "./types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 type IProductGroupIdentityWithCheck = IProductGroupIdentity & {checked: boolean}
@@ -6,8 +6,8 @@ type IProductGroupIdentityWithCheck = IProductGroupIdentity & {checked: boolean}
 export type ProductGroupListComponentState = {
     productGroups: IProductGroupIdentityWithCheck[],
     filter: string
-    selectedCardType: ICardType,
-    cardTypes: ICardType[]
+    selectedCardType: ICardValidationType,
+    cardTypes: ICardValidationType[]
 }
 
 const INITIAL_STATE: ProductGroupListComponentState = {

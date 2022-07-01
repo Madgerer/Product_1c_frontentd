@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
+    "@tanstack/react-table": "^8.0.3",
     "@types/crypto-js": "^4.1.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "^16.11.41",

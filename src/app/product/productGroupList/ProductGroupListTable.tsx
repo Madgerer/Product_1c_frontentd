@@ -1,5 +1,6 @@
 import {Table} from "react-bootstrap";
 import TogglingRow from "./TogglingRow";
+import "./productGroupListTable.scss"
 
 function ProductGroupListTable() {
     return <div className="table-sm product-right-column-table">
@@ -14,13 +15,7 @@ function ProductGroupListTable() {
             </thead>
             <tbody>
                 <>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <TogglingRow/>
+                    <TogglingRow name={"отвертки"}/>
                 </>
             {
 

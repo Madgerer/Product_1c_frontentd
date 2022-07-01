@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../redux/reducers";
 import {LanguageState} from "../../redux/reducers/languages";
 import {actions} from "../../redux/reducers/languages";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {uploadLanguagesThunk} from "../../redux/reducers/languages/thunk";
 import {ILanguage} from "../../redux/reducers/languages/types";
 import "./languageSelector.scss"

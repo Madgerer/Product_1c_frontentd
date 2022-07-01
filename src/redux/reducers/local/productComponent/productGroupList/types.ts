@@ -7,5 +7,5 @@ export interface IProductGroupIdentity {
     imageChecked: boolean
 }
 
-export interface ICardType extends IOptionType {
+export interface ICardValidationType extends IOptionType {
 }
