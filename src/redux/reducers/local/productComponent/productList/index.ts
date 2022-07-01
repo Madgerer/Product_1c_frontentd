@@ -1,11 +1,13 @@
 import {IProductIdentity} from "./types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getProductIdentityThunk} from "./thunks";
+import {stat} from "fs";
 
-type ProductsIdentityWithCheck = IProductIdentity & {checked: boolean}
+export type ProductsIdentityWithCheck = IProductIdentity & {checked: boolean}
 
 export type ProductListComponentState = {
     products: ProductsIdentityWithCheck[],
+    selected: string[],
     filter: string,
     isLoading: boolean
 }
@@ -13,7 +15,8 @@ export type ProductListComponentState = {
 const INITIAL_STATE: ProductListComponentState = {
     products: [],
     filter: "",
-    isLoading: true
+    isLoading: true,
+    selected: []
 }
 
 const productComponentSlice = createSlice({
@@ -33,6 +36,18 @@ const productComponentSlice = createSlice({
         },
         setLoading(state: ProductListComponentState, action: PayloadAction<boolean>) {
             state.isLoading = action.payload
+            return state;
+        },
+        setSelected(state: ProductListComponentState, action: PayloadAction<string>) {
+            const index = state.selected.indexOf(action.payload);
+            if(index > -1)
+                state.selected.splice(index, 1)
+            else
+                state.selected.push(action.payload)
+            return state;
+        },
+        clearSelected(state: ProductListComponentState, action: Action) {
+            state.selected = []
             return state;
         }
     },

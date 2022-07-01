@@ -2,50 +2,8 @@
   height:92%;
   line-height: 0.6;
   font-size: 13px;
-  overflow-y: auto;
+}
 
-  th {
-    padding: 0.75rem;
-  }
-
-  tr {
-    position: relative;
-  }
-
-  .selected {
-    background-color: rgba(0,0,0,.075);
-  }
-
-  td, th {
-    vertical-align: middle;
-    line-height: 1em;
-  }
-
-  td:first-child, th:first-child {
-    width: 8%;
-    min-width: 50px;
-  }
-
-  td:last-child, th:last-child {
-    text-align: center;
-    width: 5%;
-    min-width: 36px;
-  }
-
-  input {
-    margin-inline: 6px;
-  }
-
-  td:nth-child(2),th:nth-child(2) {
-    width: 100%;
-  }
-
-  label {
-    margin: 0;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+.rdg {
+  height: 92%;
 }

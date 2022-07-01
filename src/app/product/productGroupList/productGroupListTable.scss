@@ -1,3 +1,19 @@
 .product-right-column-table {
+  width: 49%;
+}
 
+.product-right-column-cell-expand {
+  float: right;
+  float: end;
+  display: table;
+  block-size: 100%;
+  span {
+    display: table-cell;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+}
+
+.rdg.fill-grid {
+  block-size: 100%;
 }

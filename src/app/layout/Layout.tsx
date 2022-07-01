@@ -11,6 +11,7 @@ function Layout() {
         <div className={"layout-body"}>
             <Routes>
                 <Route path={"/products"} element={<Product/>}/>
+                <Route path={"/try"} element={<div/>}/>
                 <Route path={"/*"} element={<Navigate to="/products" replace />}/>
             </Routes>
         </div>
@@ -19,3 +20,4 @@ function Layout() {
 }
 
 export default Layout;
+
