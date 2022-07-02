@@ -1,6 +1,6 @@
-import {ICatalog} from "./types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {uploadCatalogs} from "./thunk";
+import {ICatalog} from "../../../domain/types";
 
 
 export type CatalogState = {

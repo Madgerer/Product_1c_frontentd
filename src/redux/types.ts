@@ -3,3 +3,6 @@ export interface IRejectQueryThunk {
     statusCode: number
 }
 
+export interface ILoadingModel {
+    isLoading: boolean
+}

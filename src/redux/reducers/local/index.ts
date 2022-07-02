@@ -9,6 +9,4 @@ export const localReducer = combineReducers({
     productGroupListComponent: productGroupComponentReducer
 })
 
-export type LocalState = ReturnType<typeof localReducer>;
-
 export default localReducer;

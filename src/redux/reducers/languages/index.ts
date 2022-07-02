@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
-import {ILanguage} from "./types";
 import {uploadLanguagesThunk} from "./thunk";
+import {ILanguage} from "../../../domain/types";
 
 
 export interface LanguageState {

@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {IPriceGroup} from "./types";
 import {IRejectQueryThunk} from "../../types";
 import Api from "../../../api";
+import {IPriceGroup} from "../../../domain/types";
 
 export const uploadPriceGroups = createAsyncThunk<IPriceGroup[], void, {rejectValue: IRejectQueryThunk}>(
     'upload/priceGroups',

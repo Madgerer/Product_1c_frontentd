@@ -7,6 +7,7 @@ import {useEffect} from "react";
 import {getProductIdentityThunk} from "../../../redux/reducers/local/productComponent/productList/thunks";
 import {Table} from "react-bootstrap";
 import "./productListTable.scss"
+import InformationTableRow from "../../common/ErrorTableRow";
 
 function ProductListTable() {
     const local = useSelector<AppState, ProductListComponentState>(x => x.local.productListComponent);
@@ -34,19 +35,23 @@ function ProductListTable() {
             </thead>
             <tbody>
             {
-                local.products
-                    .filter(x => x.name.toLowerCase().indexOf(local.filter) !== -1)
-                    .map(x => {
-                        return <tr className={x.checked ? "selected" : ""} key={x.id}>
-                            <td>{x.id}</td>
-                            <td>{x.name}</td>
-                            <td>
-                                <label htmlFor={x.id}>
-                                </label>
-                                <input id={x.id} checked={x.checked} type="checkbox" onChange={(e) => setChecked(x.id, e.target.checked)}/>
-                            </td>
-                        </tr>
-                    })
+                !local.isLoading
+                    ? local.products.length === 0
+                        ? <InformationTableRow text={"No matching records found"} colSpan={3}/>
+                        :  local.products
+                            .filter(x => x.name.toLowerCase().indexOf(local.filter) !== -1)
+                            .map(x => {
+                                return <tr className={x.checked ? "selected" : ""} key={x.id}>
+                                    <td>{x.id}</td>
+                                    <td>{x.name}</td>
+                                    <td>
+                                        <label htmlFor={x.id}>
+                                        </label>
+                                        <input id={x.id} checked={x.checked} type="checkbox" onChange={(e) => setChecked(x.id, e.target.checked)}/>
+                                    </td>
+                                </tr>
+                            })
+                    : <InformationTableRow text={"Loading..."} colSpan={3}/>
             }
             </tbody>
         </Table>

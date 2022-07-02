@@ -5,8 +5,8 @@ import {PriceGroupState} from "../../redux/reducers/priceGroups";
 import {uploadPriceGroups} from "../../redux/reducers/priceGroups/thunk";
 import {actions} from "../../redux/reducers/priceGroups";
 import {isUndefined} from "lodash";
-import {IPriceGroup} from "../../redux/reducers/priceGroups/types";
 import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
+import {IPriceGroup} from "../../domain/types";
 
 const toOption = (priceGroup: IPriceGroup): IOptionType =>  {
     return {value: priceGroup.id, label: priceGroup.name};

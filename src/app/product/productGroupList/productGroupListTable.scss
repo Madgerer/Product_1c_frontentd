@@ -10,3 +10,41 @@
     color: blue;
   }
 }
+
+.toggling-view-code-column {
+  width: 60px;
+}
+
+.detail-view {
+  display: none;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  &.-open {
+    display: table-row;
+  }
+}
+
+.product-right-column-plus-wrapper {
+  width: 30px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.product-right-column-checkbox-wrapper {
+  width: 36px;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.info {
+  width: 30px;
+  text-align: center;
+  vertical-align: middle !important;
+
+  &.-green {
+    background-color: #19aa19;
+  }
+}

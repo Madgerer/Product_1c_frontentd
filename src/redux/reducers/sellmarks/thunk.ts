@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {IRejectQueryThunk} from "../../types";
 import Api from "../../../api";
-import {ISellmark} from "./types";
+import {ISellmark} from "../../../domain/types";
 
 export const uploadSellmarks = createAsyncThunk<ISellmark[], void, {rejectValue: IRejectQueryThunk}>(
     'upload/sellmarks',

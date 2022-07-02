@@ -1,6 +1,6 @@
-import {ISellmark} from "./types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {uploadSellmarks} from "./thunk";
+import {ISellmark} from "../../../domain/types";
 
 
 export type SellmarkState = {

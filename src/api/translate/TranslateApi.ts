@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {ILanguage} from "../../redux/reducers/languages/types";
+import {ILanguage} from "../../domain/types";
 
 export default class TranslateApi extends BaseApi {
 

@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {IRejectQueryThunk} from "../../types";
 import Api from "../../../api";
-import {ICatalog} from "./types";
+import {ICatalog} from "../../../domain/types";
 
 export const uploadCatalogs = createAsyncThunk<ICatalog[], void, {rejectValue: IRejectQueryThunk}>(
     'upload/catalogs',

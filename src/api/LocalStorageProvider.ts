@@ -1,10 +1,9 @@
 import {LocalStorageKeys} from "../LocalStorageKeys";
-import {ILanguage} from "../redux/reducers/languages/types";
+import {ILanguage} from "../domain/types";
 
 export class LocalStorageProvider {
     static getToken(): string | null {
-        const token = localStorage.getItem(LocalStorageKeys.TokenKey);
-        return token;
+        return localStorage.getItem(LocalStorageKeys.TokenKey);
     }
 
     static setToken(token: string) {

@@ -1,6 +1,6 @@
-import {IProductIdentity} from "./types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getProductIdentityThunk} from "./thunks";
+import {IProductIdentity} from "../../../../../domain/types";
 
 type ProductsIdentityWithCheck = IProductIdentity & {checked: boolean}
 

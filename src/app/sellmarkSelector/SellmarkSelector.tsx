@@ -4,9 +4,9 @@ import {AppState} from "../../redux/reducers";
 import {useEffect} from "react";
 import {actions} from "../../redux/reducers/priceGroups";
 import {SellmarkState} from "../../redux/reducers/sellmarks";
-import {ISellmark} from "../../redux/reducers/sellmarks/types";
 import {uploadSellmarks} from "../../redux/reducers/sellmarks/thunk";
 import {isUndefined} from "lodash";
+import {ISellmark} from "../../domain/types";
 
 const toOption = (catalog: ISellmark): IOptionType => {
     return {

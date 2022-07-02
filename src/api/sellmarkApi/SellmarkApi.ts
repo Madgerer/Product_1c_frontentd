@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {ISellmark} from "../../redux/reducers/sellmarks/types";
+import {ISellmark} from "../../domain/types";
 
 export default class SellmarkApi extends BaseApi {
 

@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {actions, ProductGroupListComponentState} from "../../../redux/reducers/local/productComponent/productGroupList";
-import SimpleSelect, {IOptionType} from "../../common/SimpleSelect";
+import SimpleSelect from "../../common/SimpleSelect";
 import "./ProductGroupListToolbar.scss"
 
 function ProductGroupListToolbar() {
@@ -9,7 +9,7 @@ function ProductGroupListToolbar() {
     const dispatch = useDispatch();
 
     const changeSelected = (id: number) => {
-        dispatch(actions.setSelected(id));
+        dispatch(actions.setSelectedCardType(id));
     }
 
     const setFilter = (filter: string) => {

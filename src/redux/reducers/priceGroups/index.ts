@@ -1,6 +1,6 @@
-import {IPriceGroup} from "./types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {uploadPriceGroups} from "./thunk";
+import {IPriceGroup} from "../../../domain/types";
 
 export type PriceGroupState = {
     priceGroups: IPriceGroup[],

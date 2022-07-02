@@ -1,13 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../redux/reducers";
-import {actions, PriceGroupState} from "../../redux/reducers/priceGroups";
+import {actions} from "../../redux/reducers/priceGroups";
 import {useEffect} from "react";
-import {uploadPriceGroups} from "../../redux/reducers/priceGroups/thunk";
 import {isUndefined} from "lodash";
 import {CatalogState} from "../../redux/reducers/catalogs";
 import {uploadCatalogs} from "../../redux/reducers/catalogs/thunk";
 import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
-import {ICatalog} from "../../redux/reducers/catalogs/types";
+import {ICatalog} from "../../domain/types";
 
 const toOption = (catalog: ICatalog): IOptionType => {
     return {

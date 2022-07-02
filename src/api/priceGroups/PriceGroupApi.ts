@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IPriceGroup} from "../../redux/reducers/priceGroups/types";
+import {IPriceGroup} from "../../domain/types";
 
 export default class PriceGroupApi extends BaseApi {
 
