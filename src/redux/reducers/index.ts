@@ -6,7 +6,7 @@ import {reducer as catalogReducer} from "./catalogs";
 import {reducer as sellmarksReducer} from "./sellmarks";
 import localReducer from "./local";
 import {reducer as catalogGroupReducer} from "./catalogGroups";
-import {reducer as cardTypesReducer} from "./cardTypes";
+import {reducer as distributionTypesReducer} from "./distributionsTypes";
 
 const rootReducer = combineReducers({
     authState: authReducer,
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
     catalogState: catalogReducer,
     sellmarkState: sellmarksReducer,
     catalogGroupState: catalogGroupReducer,
-    cardTypesState: cardTypesReducer,
+    distributionTypesState: distributionTypesReducer,
     local: localReducer
 });
 

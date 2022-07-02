@@ -2,35 +2,35 @@ import {IOptionType} from "../../../app/common/SimpleSelect";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-export type CardTypesState = {
+export type DistributionType = {
     cardTypes: IOptionType[],
     selected: IOptionType
 }
 
-const catGroupsOptions: IOptionType[] = [
+const distibutionOptions: IOptionType[] = [
     { value:0, label: "Нераспределенные карточки"},
     { value:2, label: "Распределенные карточки"},
 ]
 
-const initialCardType = catGroupsOptions[0];
+const initialCardType = distibutionOptions[0];
 
-const INITIAL_STATE: CardTypesState = {
-    cardTypes: catGroupsOptions,
+const INITIAL_STATE: DistributionType = {
+    cardTypes: distibutionOptions,
     selected: initialCardType
 }
 
-const cardTypesSlice = createSlice({
-    name: "cardTypes",
+const distributionTypesSlice = createSlice({
+    name: "distributionType",
     initialState: INITIAL_STATE,
     reducers: {
-        setSelected(state: CardTypesState, action: PayloadAction<number>){
+        setSelected(state: DistributionType, action: PayloadAction<number>){
             state.selected = state.cardTypes.find(x => x.value === action.payload) ?? state.selected;
             return state;
         }
     }
 })
 
-const reducer = cardTypesSlice.reducer;
-const actions = cardTypesSlice.actions;
+const reducer = distributionTypesSlice.reducer;
+const actions = distributionTypesSlice.actions;
 
 export {reducer, actions};

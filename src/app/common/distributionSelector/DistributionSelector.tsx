@@ -2,11 +2,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {isUndefined} from "lodash";
 import SimpleSelect from "../SimpleSelect";
-import {actions, CardTypesState} from "../../../redux/reducers/cardTypes";
+import {actions, DistributionType} from "../../../redux/reducers/distributionsTypes";
 
-function CardTypeSelector() {
+function DistributionTypeSelector() {
 
-    const state = useSelector<AppState, CardTypesState>(s => s.cardTypesState);
+    const state = useSelector<AppState, DistributionType>(s => s.distributionTypesState);
     const dispatch = useDispatch();
 
     const selected = state.cardTypes.find(x => x.value === state.selected.value)
@@ -26,4 +26,4 @@ function CardTypeSelector() {
         />
 }
 
-export default CardTypeSelector
+export default DistributionTypeSelector
