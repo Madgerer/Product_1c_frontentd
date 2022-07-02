@@ -1,12 +1,12 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../redux/reducers";
-import {PriceGroupState} from "../../redux/reducers/priceGroups";
-import {uploadPriceGroups} from "../../redux/reducers/priceGroups/thunk";
-import {actions} from "../../redux/reducers/priceGroups";
+import {AppState} from "../../../redux/reducers";
+import {PriceGroupState} from "../../../redux/reducers/priceGroups";
+import {uploadPriceGroups} from "../../../redux/reducers/priceGroups/thunk";
+import {actions} from "../../../redux/reducers/priceGroups";
 import {isUndefined} from "lodash";
-import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
-import {IPriceGroup} from "../../domain/types";
+import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import {IPriceGroup} from "../../../domain/types";
 
 const toOption = (priceGroup: IPriceGroup): IOptionType =>  {
     return {value: priceGroup.id, label: priceGroup.name};

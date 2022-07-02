@@ -1,12 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../redux/reducers";
-import {LanguageState} from "../../redux/reducers/languages";
-import {actions} from "../../redux/reducers/languages";
+import {AppState} from "../../../redux/reducers";
+import {LanguageState} from "../../../redux/reducers/languages";
+import {actions} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
-import {uploadLanguagesThunk} from "../../redux/reducers/languages/thunk";
+import {uploadLanguagesThunk} from "../../../redux/reducers/languages/thunk";
 import "./languageSelector.scss"
-import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
-import {ILanguage} from "../../domain/types";
+import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import {ILanguage} from "../../../domain/types";
 
 const toOption = (lang: ILanguage): IOptionType =>  {
     return {value: lang.id, label: lang.name};

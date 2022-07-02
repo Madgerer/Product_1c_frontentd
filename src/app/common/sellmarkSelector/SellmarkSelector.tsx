@@ -1,12 +1,11 @@
-import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
+import SimpleSelect, {IOptionType} from "../SimpleSelect";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../redux/reducers";
+import {AppState} from "../../../redux/reducers";
 import {useEffect} from "react";
-import {actions} from "../../redux/reducers/priceGroups";
-import {SellmarkState} from "../../redux/reducers/sellmarks";
-import {uploadSellmarks} from "../../redux/reducers/sellmarks/thunk";
+import {actions, SellmarkState} from "../../../redux/reducers/sellmarks";
+import {uploadSellmarks} from "../../../redux/reducers/sellmarks/thunk";
 import {isUndefined} from "lodash";
-import {ISellmark} from "../../domain/types";
+import {ISellmark} from "../../../domain/types";
 
 const toOption = (catalog: ISellmark): IOptionType => {
     return {
@@ -40,3 +39,5 @@ function SellmarkSelector() {
         value={state.selected}
     />
 }
+
+export default SellmarkSelector

@@ -1,6 +1,9 @@
-function Categories() {
+import "./categories.scss"
+import SelectorBlock from "./selectorBlock/SelectorBlock";
 
-    return <div>
-        
+export default function Categories() {
+
+    return <div className="cat-container">
+        <SelectorBlock/>
     </div>
 }

@@ -1,12 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../redux/reducers";
-import {actions} from "../../redux/reducers/priceGroups";
+import {AppState} from "../../../redux/reducers";
 import {useEffect} from "react";
 import {isUndefined} from "lodash";
-import {CatalogState} from "../../redux/reducers/catalogs";
-import {uploadCatalogs} from "../../redux/reducers/catalogs/thunk";
-import SimpleSelect, {IOptionType} from "../common/SimpleSelect";
-import {ICatalog} from "../../domain/types";
+import {actions, CatalogState} from "../../../redux/reducers/catalogs";
+import {uploadCatalogs} from "../../../redux/reducers/catalogs/thunk";
+import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import {ICatalog} from "../../../domain/types";
 
 const toOption = (catalog: ICatalog): IOptionType => {
     return {
@@ -39,3 +38,5 @@ function CatalogSelector() {
                          value={state.selected}
     />
 }
+
+export default CatalogSelector

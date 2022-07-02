@@ -19,7 +19,7 @@ const INITIAL_STATE: SellmarkState = {
 }
 
 const sellmarkSlice = createSlice({
-    name: "catalog",
+    name: "sellmarks",
     initialState: INITIAL_STATE,
     reducers: {
         setSelected(state: SellmarkState, action: PayloadAction<number>){

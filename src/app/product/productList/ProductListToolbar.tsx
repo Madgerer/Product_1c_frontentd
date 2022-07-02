@@ -1,4 +1,4 @@
-import PriceGroupSelector from "../../priceGroupSelector/PriceGroupSelector";
+import PriceGroupSelector from "../../common/priceGroupSelector/PriceGroupSelector";
 import "./productListToolbar.scss"
 import {useDispatch} from "react-redux";
 import {actions} from "../../../redux/reducers/local/productComponent/productList";
