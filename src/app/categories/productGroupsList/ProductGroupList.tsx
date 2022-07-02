@@ -1,6 +1,8 @@
 import "./productGroupList.scss"
-import CardTypeSelector from "../../common/cardSelector/CardSelector";
+import ProductGroupListToolbar from "./ProductGroupListToolbar";
 
 export default function ProductGroupList() {
-    return <div className="cat-product-group-list-container"><CardTypeSelector/></div>
+    return <div className="cat-product-group-list-container">
+        <ProductGroupListToolbar/>
+    </div>
 }
