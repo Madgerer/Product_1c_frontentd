@@ -1,8 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ICatalogGroup} from "../../../domain/types";
 
-
-
 export type CatalogGroupsState = {
     groups: ICatalogGroup[],
     selected: ICatalogGroup

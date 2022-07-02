@@ -2,22 +2,27 @@ import CatalogSelector from "../../common/catalogSelector/CatalogSelector";
 import "./selectorBlock.scss"
 import PriceGroupSelector from "../../common/priceGroupSelector/PriceGroupSelector";
 import SellmarkSelector from "../../common/sellmarkSelector/SellmarkSelector";
-import SimpleSelect, {IOptionType} from "../../common/SimpleSelect";
+import CatalogGroupSelector from "../../common/catalogGroupsSelector/CatalogGroupSelector";
+import {useSelector} from "react-redux";
+import {AppState} from "../../../redux/reducers";
+import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 
-const catGroupsOptions: IOptionType[] = [
-    {value:0, label: "АвтоDeloWeb"},
-    {value:1, label: "Печатный каталог"},
-    {value:2, label: "АвтоключWeb"}
-]
-
-const catGroupsInitial = catGroupsOptions[1];
 
 export default function SelectorBlock() {
+    const state = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState)
+    const catGroupWithCatalogsView = 1;
+
     return <div className="d-inline-block cat-selector-container" >
-        <h3>Каталог:</h3>
-        <div className="item align-top cat-selector-container-inner">
-            <CatalogSelector/>
-        </div>
+        {
+            state.selected.id === catGroupWithCatalogsView
+                ? <>
+                    <h3>Каталог:</h3>
+                    <div className="item align-top cat-selector-container-inner">
+                        <CatalogSelector/>
+                    </div>
+                </>
+                : <></>
+        }
         <h3>Ценовая группа:</h3>
         <div className="cat-selector-container-inner">
             <PriceGroupSelector/>
@@ -28,11 +33,7 @@ export default function SelectorBlock() {
         </div>
         <h3>Группа каталогов:</h3>
         <div className="form-group input-group-sm cat-selector-container-inner" >
-            <SimpleSelect value={catGroupsInitial}
-                          options={catGroupsOptions}
-                          onChange={value => {}}
-                          toOption={value => value}
-                          className={"selector"}/>
+            <CatalogGroupSelector/>
         </div>
     </div>
 }
