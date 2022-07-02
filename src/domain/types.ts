@@ -5,6 +5,11 @@ export interface ICatalog {
     name: string,
 }
 
+export interface ICatalogGroup {
+    id: number,
+    name: string,
+}
+
 export interface ILanguage {
     id: number;
     name: string;

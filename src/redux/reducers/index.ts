@@ -4,7 +4,7 @@ import {reducer as langReducer} from "./languages";
 import {reducer as priceGroupReducer } from "./priceGroups";
 import {reducer as catalogReducer} from "./catalogs";
 import {reducer as sellmarksReducer} from "./sellmarks";
-import localReducer from "./local";
+import {reducer as catalogGroupReducer} from "./catalogGroups";
 
 const rootReducer = combineReducers({
     authState: authReducer,
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     priceGroupsState: priceGroupReducer,
     catalogState: catalogReducer,
     sellmarkState: sellmarksReducer,
-    local: localReducer
+    catalogGroupState: catalogGroupReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>;
