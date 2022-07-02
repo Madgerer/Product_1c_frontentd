@@ -74,9 +74,9 @@ const productGroupComponentSlice = createSlice({
                     name: x.name,
                     checked: false,
                     products: null,
-                    checkedByHuman: x.checkedByHuman,
+                    isDescriptionChecked: x.isDescriptionChecked,
                     isLoading: false,
-                    imageChecked: x.imageChecked
+                    isImageChecked: x.isImageChecked
                 }
             });
             return state;

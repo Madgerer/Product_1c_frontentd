@@ -7,8 +7,15 @@ export default class ProductGroupApi extends BaseApi {
         let data = {
             priceGroupId: priceGroupId,
             languageId: languageId,
-            pgValidationType: cardValidationType
+            pgValidationType: cardValidationType.value
         };
         return await this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity', data, actionTypes.get, true);
     }
+}
+
+interface IProductGroupIdenityApiModel {
+    id: string;
+    name: string;
+    isImageChecked: boolean;
+    isDescriptionChecked: boolean
 }

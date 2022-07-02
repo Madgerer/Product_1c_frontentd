@@ -17,7 +17,7 @@ import {
 import InformationTableRow from "../../common/ErrorTableRow";
 
 function ProductGroupListTable() {
-    const localState = useSelector<AppState, ProductGroupListComponentState>(x => x.local.productGroupListComponent)
+    const local = useSelector<AppState, ProductGroupListComponentState>(x => x.local.productGroupListComponent)
     const priceGroupState = useSelector<AppState, PriceGroupState>(x => x.priceGroupsState);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
     const dispatch = useDispatch();
@@ -26,9 +26,9 @@ function ProductGroupListTable() {
         dispatch(getProductsGroupsIdentityThunk({
             priceGroupId: priceGroupState.selected.id,
             languageId: languageState.selectedLanguage.id,
-            cardValidationType: localState.selectedCardType
+            cardValidationType: local.selectedCardType
         }))
-    }, [priceGroupState.selected.id, languageState.selectedLanguage.id, localState.selectedCardType])
+    }, [priceGroupState.selected.id, languageState.selectedLanguage.id, local.selectedCardType])
 
 
     function onSelect(productGroup: IProductGroupIdentityModel) {
@@ -54,10 +54,12 @@ function ProductGroupListTable() {
             </thead>
             <tbody>
                 {
-                    !localState.isProductGroupsLoading
-                        ? localState.productGroups.length === 0
+                    !local.isProductGroupsLoading
+                        ? local.productGroups.length === 0
                             ? <InformationTableRow text={"No matching records found"} colSpan={4}/>
-                            : localState.productGroups.map(x => <ProductGroupTogglingRow key={x.id} model={x} onClick={loadProducts} onSelect={onSelect}/>)
+                            : local.productGroups
+                                .filter(x =>  x.name.toLowerCase().indexOf(local.filter) !== -1)
+                                .map(x => <ProductGroupTogglingRow key={x.id} model={x} onClick={loadProducts} onSelect={onSelect}/>)
                         : (<InformationTableRow text={"Loading..."} colSpan={4}/>)
                 }
             </tbody>
@@ -90,8 +92,8 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
             <td className="product-right-column-checkbox-wrapper" onClick={(e) => props.onSelect(props.model)}>
                 <input type="checkbox" checked={props.model.checked} readOnly={true}/>
             </td>
-            <td className={`info ${"-green"}`}>
-                <i className="fa fa-info-circle"></i>
+            <td className={`info ${getClassName(props.model)}`}>
+                <i className="fa fa-info-circle bg-blue"></i>
             </td>
         </tr>
         <tr className={`detail-view ${isToggle ? "-open" : ""}`}>
@@ -124,6 +126,16 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
             </td>
         </tr>
     </>
+}
+
+function getClassName(row: IProductGroupIdentityModel): string {
+    if (!row.isDescriptionChecked && !row.isImageChecked)
+        return "bg-red"
+    if (!row.isDescriptionChecked && row.isImageChecked)
+        return "bg-orange"
+    if (row.isDescriptionChecked && !row.isImageChecked)
+        return "bg-yellow"
+    return "bg-green";
 }
 
 interface ITogglingRowProps {

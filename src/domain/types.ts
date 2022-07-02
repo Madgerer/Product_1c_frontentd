@@ -13,8 +13,8 @@ export interface ILanguage {
 export interface IProductGroupIdentity {
     id: string,
     name: string,
-    checkedByHuman: boolean,
-    imageChecked: boolean
+    isDescriptionChecked: boolean,
+    isImageChecked: boolean
 }
 
 export interface ICardValidationType extends IOptionType {
