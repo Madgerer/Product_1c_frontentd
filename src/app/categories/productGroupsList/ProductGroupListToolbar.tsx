@@ -1,6 +1,15 @@
 import CardTypeSelector from "../../common/cardSelector/CardSelector";
+import {useDispatch} from "react-redux";
+import {actions} from "../../../redux/reducers/local/categoryComponent";
+import "./productGroupListToolbar.scss";
 
 export default function ProductGroupListToolbar(){
+    const dispatch = useDispatch();
+
+    function setFilter(filter: string) {
+        dispatch(actions.setFilter(filter));
+    }
+
     return <div className="cat-product-group-list-toolbar-container">
         <form className="form-inline">
             <button id="addButton" title="Добавить выделенные карточки в категорию" type="button"
@@ -9,7 +18,7 @@ export default function ProductGroupListToolbar(){
                 <CardTypeSelector/>
             </div>
             <div className="ml-auto" style={{float: "right"}}>
-                <input type="text" className="form-control" placeholder="Search"/>
+                <input type="text" className="form-control" placeholder="Search" onChange={e => setFilter(e.target.value)}/>
             </div>
         </form>
     </div>
