@@ -2,17 +2,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {isUndefined} from "lodash";
 import SimpleSelect, {IOptionType} from "../SimpleSelect";
-import {ICatalog} from "../../../domain/types";
+import {ICatalogGroup} from "../../../domain/types";
 import {actions, CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 
-const toOption = (catalog: ICatalog): IOptionType => {
+const toOption = (catalog: ICatalogGroup): IOptionType => {
     return {
         value: catalog.id,
         label: catalog.name
     }
 }
 
-function CatalogSelector() {
+function CatalogGroupSelector() {
 
     const state = useSelector<AppState, CatalogGroupsState>(s => s.catalogGroupState);
     const dispatch = useDispatch();
@@ -34,4 +34,4 @@ function CatalogSelector() {
     />
 }
 
-export default CatalogSelector
+export default CatalogGroupSelector

@@ -14,7 +14,7 @@ const toOption = (catalog: ICatalog): IOptionType => {
     }
 }
 
-function CatalogSelector() {
+function CatalogSelector(props: ICatalogSelectorGroups) {
 
     const state = useSelector<AppState, CatalogState>(s => s.catalogState);
     const dispatch = useDispatch();
@@ -32,11 +32,15 @@ function CatalogSelector() {
     }
 
     return <SimpleSelect toOption={toOption}
-                         options={state.catalogs}
+                         options={state.catalogs.filter(x => x.isPrinted === props.isPrinted)}
                          className={"selector"}
                          onChange={newValue => changeSelected(newValue)}
                          value={state.selected}
     />
+}
+
+interface ICatalogSelectorGroups {
+    isPrinted: boolean
 }
 
 export default CatalogSelector

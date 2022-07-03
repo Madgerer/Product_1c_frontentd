@@ -10,7 +10,8 @@ export type CatalogState = {
 
 const initalCatalog: ICatalog = {
     id: 0,
-    name: "Loading"
+    name: "Loading",
+    isPrinted: true
 }
 
 const INITIAL_STATE: CatalogState = {

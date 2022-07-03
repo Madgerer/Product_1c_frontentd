@@ -3,6 +3,7 @@ import {IOptionType} from "../app/common/SimpleSelect";
 export interface ICatalog {
     id: number,
     name: string,
+    isPrinted: boolean
 }
 
 export interface ICatalogGroup {

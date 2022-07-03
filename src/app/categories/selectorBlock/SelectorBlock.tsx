@@ -5,7 +5,7 @@ import SellmarkSelector from "../../common/sellmarkSelector/SellmarkSelector";
 import CatalogGroupSelector from "../../common/catalogGroupsSelector/CatalogGroupSelector";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
+import {CatalogGroup, CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 
 
 export default function SelectorBlock() {
@@ -18,7 +18,7 @@ export default function SelectorBlock() {
                 ? <>
                     <h3>Каталог:</h3>
                     <div className="item align-top cat-selector-container-inner">
-                        <CatalogSelector/>
+                        <CatalogSelector isPrinted={state.selected.id === CatalogGroup.Printed}/>
                     </div>
                 </>
                 : <></>
