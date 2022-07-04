@@ -1,11 +1,12 @@
 import {AppState} from "../../../redux/reducers";
-import {CategoryComponentState} from "../../../redux/reducers/local/categoryComponent";
+import {actions, CategoryComponentState} from "../../../redux/reducers/local/categoryComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {ICategory} from "../../../domain/types";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {useEffect, useState} from "react";
 import {getCategoriesThunk} from "../../../redux/reducers/local/categoryComponent/thunk";
 import {LanguageState} from "../../../redux/reducers/languages";
+import {ICategoryIdentityModel} from "../../common/tables/productGroupTable/types";
 
 export default function CategoryGroupTree() {
     const local = useSelector<AppState, CategoryComponentState>(x => x.local.categoryComponent);
@@ -17,10 +18,18 @@ export default function CategoryGroupTree() {
         dispatch(getCategoriesThunk({catalogGroup: catalogGroupsState.selected.id, languageId: languageState.selected.id}))
     }, [catalogGroupsState.selected.id])
 
+    function setChecked(category: ICategoryIdentityModel) {
+        dispatch(actions.setCategoryChecked({categoryId: category.id, checked: !category.checked}))
+    }
+
+    function onRowClicked(category: ICategoryIdentityModel) {
+        dispatch(actions.setSelectedCategory({categoryId: category.id, selected: !category.selected}))
+    }
+
     return <>
         {local.isCategoriesLoading
             ? "Loading"
-            : <CategoryExpandedList categories={local.categories}/>
+            : <CategoryExpandedList categories={local.categories} onRowClicked={onRowClicked} onCheckboxClicked={setChecked}/>
         }
     </>;
 }
@@ -28,13 +37,15 @@ export default function CategoryGroupTree() {
 function CategoryExpandedList(props: ICategoryExpandedListProps) {
     return <ul>
         {props.categories.map(x => <li>
-            <CategoryExpanded category={x}/>
+            <CategoryExpanded category={x} onCheckboxClicked={props.onCheckboxClicked} onRowClicked={props.onRowClicked}/>
         </li>)}
     </ul>
 }
 
 interface ICategoryExpandedListProps {
-    categories: ICategory[]
+    categories: ICategoryIdentityModel[],
+    onRowClicked: (category: ICategoryIdentityModel) => void,
+    onCheckboxClicked: (category: ICategoryIdentityModel) => void
 }
 
 function CategoryExpanded(props: ICategoryExpandedProps) {
@@ -47,13 +58,17 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
                         <i className="fa fa-plus" onClick={() => setToggled(!isToggled)}/>
                         : <></>
                 }
-                <input type="checkbox"/>
-                {props.category.name}
+                <input type="checkbox" checked={props.category.checked} onClick={e => props.onCheckboxClicked(props.category)}/>
+                <div onClick={e => props.onRowClicked(props.category)}>
+                    {props.category.name}
+                </div>
             </div>
-            {!isToggled ? <></> : <CategoryExpandedList categories={props.category.children}/>}
+            {!isToggled ? <></> : <CategoryExpandedList categories={props.category.children} onCheckboxClicked={props.onCheckboxClicked} onRowClicked={props.onRowClicked}/>}
     </>
 }
 
 interface ICategoryExpandedProps {
-    category: ICategory
+    category: ICategoryIdentityModel,
+    onRowClicked: (category: ICategoryIdentityModel) => void,
+    onCheckboxClicked: (category: ICategoryIdentityModel) => void
 }
