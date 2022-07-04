@@ -3,7 +3,7 @@ import './navbar.scss'
 
 function Navbar() {
 
-    return <div className={"row"}>
+    return <div className={"navbar-wrapper"}>
         <div className={"item col-md-12 navbar-container"}>
             <nav className={"navbar navbar-expand-lg navbar-dark bg-dark"}>
                 {/*todo: add href*/}
