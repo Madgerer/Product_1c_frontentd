@@ -15,6 +15,8 @@ import {DistributionTypeState} from "../../../redux/reducers/distributionsTypes"
 import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
 import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
 import {actions} from "../../../redux/reducers/local/productComponent/productGroupList";
+import _ from "lodash";
+
 
 export default function ProductGroupListTable() {
     const local = useSelector<AppState, CategoryComponentState>(x => x.local.categoryComponent);
@@ -25,17 +27,20 @@ export default function ProductGroupListTable() {
     const distributedState = useSelector<AppState, DistributionTypeState>(x => x.distributionTypesState)
 
     const dispatch = useDispatch();
+    const trottledDispatch = _.throttle(() => {
+        dispatch(uploadProductGroupFromCatalogsThunk({
+            priceGroupId: priceGroup.selected.id,
+            languageId: languageState.selected.id,
+            sellmarkId: sellmarkState.selected.id,
+            catalogId: catalogState.selected.id,
+            distributionType: distributedState.selected.value,
+            searchString: local.groupFilter
+        }))
+    }, 50);
 
     useEffect(() => {
         if(catalogState.wasInit) {
-            dispatch(uploadProductGroupFromCatalogsThunk({
-                priceGroupId: priceGroup.selected.id,
-                languageId: languageState.selected.id,
-                sellmarkId: sellmarkState.selected.id,
-                catalogId: catalogState.selected.id,
-                distributionType: distributedState.selected.value,
-                searchString: local.groupFilter
-            }));
+            trottledDispatch()
         }
     }, [priceGroup.selected.id,
         languageState.selected.id,

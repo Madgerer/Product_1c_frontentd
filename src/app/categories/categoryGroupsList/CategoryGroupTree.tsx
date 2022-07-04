@@ -1,7 +1,6 @@
 import {AppState} from "../../../redux/reducers";
 import {actions, CategoryComponentState} from "../../../redux/reducers/local/categoryComponent";
 import {useDispatch, useSelector} from "react-redux";
-import {ICategory} from "../../../domain/types";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {useEffect, useState} from "react";
 import {getCategoriesThunk} from "../../../redux/reducers/local/categoryComponent/thunk";
@@ -36,7 +35,7 @@ export default function CategoryGroupTree() {
 
 function CategoryExpandedList(props: ICategoryExpandedListProps) {
     return <ul>
-        {props.categories.map(x => <li>
+        {props.categories.map(x => <li key={x.id}>
             <CategoryExpanded category={x} onCheckboxClicked={props.onCheckboxClicked} onRowClicked={props.onRowClicked}/>
         </li>)}
     </ul>
@@ -55,10 +54,10 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
             <div>
                 {
                     props.category.children.length !==  0 ?
-                        <i className="fa fa-plus" onClick={() => setToggled(!isToggled)}/>
+                        <i className={!isToggled ? "fa fa-plus" : "fa fa-minus"} onClick={() => setToggled(!isToggled)}/>
                         : <></>
                 }
-                <input type="checkbox" checked={props.category.checked} onClick={e => props.onCheckboxClicked(props.category)}/>
+                <input type="checkbox" checked={props.category.checked} onChange={e => props.onCheckboxClicked(props.category)}/>
                 <div onClick={e => props.onRowClicked(props.category)}>
                     {props.category.name}
                 </div>

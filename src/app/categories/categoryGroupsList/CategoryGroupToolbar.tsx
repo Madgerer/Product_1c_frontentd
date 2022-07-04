@@ -11,6 +11,10 @@ export default function CategoryGroupToolbar() {
         dispatch(actions.setCurrentCategoryName(name))
     }
 
+    function setNewCategoryName(name: string) {
+        dispatch(actions.setNewCategoryName(name))
+    }
+
     return <div className="input-group-sm cat-category-group-toolbar-container">
         <div className="col-md-12 input-group-sm">
             <button title="Добавить категорию" type="button" className="btn btn-dark">
@@ -22,7 +26,9 @@ export default function CategoryGroupToolbar() {
             <button title="Удалить выделенную категорию" type="button" className="btn btn-dark">
                 <i className="fa fa-minus" aria-hidden="true"></i>
             </button>
-            <input className="form-control" placeholder="Наименование новой категории" style={{marginTop: 10}}/>
+            <input className="form-control"
+                   onChange={e => setNewCategoryName(e.currentTarget.value)}
+                   placeholder="Наименование новой категории" style={{marginTop: 10}}/>
             <input className="form-control"
                    onChange={e => setCurrentValue(e.currentTarget.value)}
                    value={local.categoryCurrentName}
