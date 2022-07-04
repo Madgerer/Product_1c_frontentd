@@ -13,6 +13,7 @@ function Layout() {
         <div className={"layout-body"}>
             <Routes>
                 <Route path={"/products"} element={<Product/>}/>
+                <Route path={"/categories"} element={<Categories/>}/>
                 <Route path={"/try"} element={<Categories/>}/>
                 <Route path={"/*"} element={<Navigate to="/products" replace />}/>
             </Routes>
