@@ -8,7 +8,7 @@ export type DistributionTypeState = {
 }
 
 const distibutionOptions: IOptionType[] = [
-    { value:0, label: "Нераспределенные карточки"},
+    { value:1, label: "Нераспределенные карточки"},
     { value:2, label: "Распределенные карточки"},
 ]
 

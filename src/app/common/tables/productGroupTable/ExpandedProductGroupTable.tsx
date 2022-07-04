@@ -1,16 +1,16 @@
-import InformationTableRow from "../ErrorTableRow";
 import {Table} from "react-bootstrap";
 import {useState} from "react";
+import InformationTableRow from "../../ErrorTableRow";
 import {IProductGroupIdentityModel} from "./types";
 
 export default function ExpandedProductGroupTable(props: IExpandedProductGroupTableProps) {
-    return <Table bordered hover>
+    return <Table bordered hover className={"p-table"}>
         <thead>
         <tr>
-            <th/>
+            <th className="product-right-column-plus-wrapper"/>
             <th>Наименование</th>
-            <th/>
-            <th/>
+            <th className="p-table-column-checkbox-wrapper"/>
+            <th className="info"/>
         </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@ export default function ExpandedProductGroupTable(props: IExpandedProductGroupTa
                 ? props.productGroups.length === 0
                     ? <InformationTableRow text={"No matching records found"} colSpan={4}/>
                     : props.productGroups
-                        .map(x => <ProductGroupTogglingRow key={x.id} model={x} onClick={props.loadProducts} onSelect={props.onSelect}/>)
+                        .map(x => <ProductGroupTogglingRow key={x.id + x.name} model={x} onClick={props.loadProducts} onSelect={props.onSelect}/>)
                 : (<InformationTableRow text={"Loading..."} colSpan={4}/>)
         }
         </tbody>
@@ -49,13 +49,13 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
                 }
             }}>
                 {isToggle
-                    ? <i className="fa fa-minus"></i>
-                    : <i className="fa fa-plus"></i>}
+                    ? <i className="fa fa-minus bg-blue"></i>
+                    : <i className="fa fa-plus bg-blue"></i>}
             </td>
             <td>
                 {props.model.name}
             </td>
-            <td className="product-right-column-checkbox-wrapper" onClick={(e) => props.onSelect(props.model)}>
+            <td className="p-table-column-checkbox-wrapper" onClick={(e) => props.onSelect(props.model)}>
                 <input type="checkbox" checked={props.model.checked} readOnly={true}/>
             </td>
             <td className={`info ${getClassName(props.model)}`}>

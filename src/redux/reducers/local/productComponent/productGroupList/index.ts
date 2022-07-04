@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ILoadingModel} from "../../../../types";
 import {ICardValidationType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
 import {getProductByGroupThunk, getProductsGroupsIdentityThunk} from "./thunk";
-import {IProductGroupIdentityModel} from "../../../../../app/common/productGroupTable/types";
+import {IProductGroupIdentityModel} from "../../../../../app/common/tables/productGroupTable/types";
 
 
 

@@ -12,8 +12,9 @@ import {
     getProductByGroupThunk,
     getProductsGroupsIdentityThunk
 } from "../../../redux/reducers/local/productComponent/productGroupList/thunk";
-import ExpandedProductGroupTable from "../../common/productGroupTable/ExpandedProductGroupTable";
-import {IProductGroupIdentityModel} from "../../common/productGroupTable/types";
+import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
+import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
+import "../../common/tables/tables-styles.scss"
 
 function ProductGroupListTable() {
     const local = useSelector<AppState, ProductGroupListComponentState>(x => x.local.productGroupListComponent)
@@ -42,7 +43,7 @@ function ProductGroupListTable() {
         ))
     }
 
-    return <div className="table-sm product-right-column-table">
+    return <div className="table-sm product-right-column-table p-table__scroll-wrapper">
         <ExpandedProductGroupTable
             isProductGroupsLoading={local.isProductGroupsLoading}
             productGroups={local.productGroups}

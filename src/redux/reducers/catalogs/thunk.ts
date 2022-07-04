@@ -2,15 +2,18 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {IRejectQueryThunk} from "../../types";
 import Api from "../../../api";
 import {ICatalog} from "../../../domain/types";
+import {actions} from "./index";
 
 export const uploadCatalogs = createAsyncThunk<ICatalog[], void, {rejectValue: IRejectQueryThunk}>(
     'upload/catalogs',
     async (args, thunkAPI) => {
         try {
             const response = await Api.catalogs.getCatalogs();
+            thunkAPI.dispatch(actions.setInited())
             if(!response.success)
                 return thunkAPI.rejectWithValue({exception: response.exception?.text ?? null, statusCode: response.status})
 
+            thunkAPI.dispatch(actions.setSelected(response.data![0].id))
             return response.data!
         }
         catch (e) {

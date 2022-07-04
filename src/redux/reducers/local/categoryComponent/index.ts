@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getProductByGroupFromCategoryThunk, uploadProductGroupFromCatalogsThunk} from "./thunk";
-import {IProductGroupIdentityModel} from "../../../../app/common/productGroupTable/types";
+import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
 export type CategoryComponentState = {
     groupFilter: string,

@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from "react-router-dom";
 import {App} from "./app/App";
 import "./default-colors.scss"
+import "./app/common/tables/tables-styles.scss"
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

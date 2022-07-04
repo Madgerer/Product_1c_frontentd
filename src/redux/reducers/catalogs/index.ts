@@ -1,11 +1,12 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {uploadCatalogs} from "./thunk";
 import {ICatalog} from "../../../domain/types";
 
 
 export type CatalogState = {
     catalogs: ICatalog[],
-    selected: ICatalog
+    selected: ICatalog,
+    wasInit: boolean
 };
 
 const initalCatalog: ICatalog = {
@@ -16,7 +17,8 @@ const initalCatalog: ICatalog = {
 
 const INITIAL_STATE: CatalogState = {
     catalogs: [initalCatalog],
-    selected: initalCatalog
+    selected: initalCatalog,
+    wasInit: false
 }
 
 const catalogSlice = createSlice({
@@ -26,6 +28,10 @@ const catalogSlice = createSlice({
         setSelected(state: CatalogState, action: PayloadAction<number>){
             state.selected = state.catalogs.find(x => x.id === action.payload) ?? state.selected;
             return state;
+        },
+        setInited(state: CatalogState, action: Action) {
+            state.wasInit = true;
+            return state
         }
     },
     extraReducers: builder => {

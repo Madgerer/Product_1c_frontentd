@@ -8,6 +8,7 @@ import {getProductIdentityThunk} from "../../../redux/reducers/local/productComp
 import {Table} from "react-bootstrap";
 import "./productListTable.scss"
 import InformationTableRow from "../../common/ErrorTableRow";
+import "../../common/tables/tables-styles.scss"
 
 function ProductListTable() {
     const local = useSelector<AppState, ProductListComponentState>(x => x.local.productListComponent);
@@ -24,13 +25,13 @@ function ProductListTable() {
         dispatch(actions.setChecked({id: id, checked: checked}))
     }
 
-    return <div className="table-sm product-left-column-table">
-        <Table bordered hover>
+    return <div className="table-sm product-left-column-table p-table__scroll-wrapper">
+        <Table bordered hover className={"p-table"}>
             <thead>
             <tr>
                 <th>Код</th>
                 <th>Наименование</th>
-                <th></th>
+                <th className="p-table-column-checkbox-wrapper"></th>
             </tr>
             </thead>
             <tbody>
@@ -41,10 +42,10 @@ function ProductListTable() {
                         :  local.products
                             .filter(x => x.name.toLowerCase().indexOf(local.filter) !== -1)
                             .map(x => {
-                                return <tr className={x.checked ? "selected" : ""} key={x.id}>
+                                return <tr className={x.checked ? "table-row--selected" : ""} key={x.id}>
                                     <td>{x.id}</td>
                                     <td>{x.name}</td>
-                                    <td>
+                                    <td className="p-table-column-checkbox-wrapper">
                                         <label htmlFor={x.id}>
                                         </label>
                                         <input id={x.id} checked={x.checked} type="checkbox" onChange={(e) => setChecked(x.id, e.target.checked)}/>

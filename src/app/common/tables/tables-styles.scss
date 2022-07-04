@@ -1,0 +1,36 @@
+.p-table__scroll-wrapper {
+  scrollbar-gutter: stable;
+  font-size: 13px;
+  line-height: 1em;
+  height: 92%;
+  overflow-y: auto;
+}
+
+.p-table {
+
+  line-height: 1em;
+
+
+  tr td {
+    font-size: 13px;
+    vertical-align: middle;
+    line-height: 1em;
+  }
+
+  th {
+    padding: 0.75rem;
+  }
+
+  .table-row--selected {
+    background-color: rgba(0,0,0,.075);
+  }
+
+
+
+  .p-table-column-checkbox-wrapper {
+    width: 35px;
+    text-align: center;
+    vertical-align: middle !important;
+    min-width: 35px;
+  }
+}

@@ -2,13 +2,8 @@
   font-size: 13px;
   line-height: 1em;
 
-  th {
-    padding: 0.75rem;
-  }
-
-  i {
-    color: blue;
-  }
+  height:92%;
+  overflow-y: auto;
 }
 
 .toggling-view-code-column {
@@ -33,11 +28,6 @@
   vertical-align: middle !important;
 }
 
-.product-right-column-checkbox-wrapper {
-  width: 36px;
-  text-align: center;
-  vertical-align: middle !important;
-}
 
 .info {
   width: 30px;

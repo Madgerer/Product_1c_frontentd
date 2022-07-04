@@ -12,8 +12,8 @@ import {
 } from "../../../redux/reducers/local/categoryComponent/thunk";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
-import ExpandedProductGroupTable from "../../common/productGroupTable/ExpandedProductGroupTable";
-import {IProductGroupIdentityModel} from "../../common/productGroupTable/types";
+import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
+import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
 import {actions} from "../../../redux/reducers/local/productComponent/productGroupList";
 
 export default function ProductGroupListTable() {
@@ -27,18 +27,21 @@ export default function ProductGroupListTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(uploadProductGroupFromCatalogsThunk({
-            priceGroupId: priceGroup.selected.id,
-            languageId: languageState.selected.id,
-            sellmarkId: sellmarkState.selected.id,
-            catalogId: catalogState.selected.id,
-            distributionType: distributedState.selected.value,
-            searchString: local.groupFilter
-        }));
+        if(catalogState.wasInit) {
+            dispatch(uploadProductGroupFromCatalogsThunk({
+                priceGroupId: priceGroup.selected.id,
+                languageId: languageState.selected.id,
+                sellmarkId: sellmarkState.selected.id,
+                catalogId: catalogState.selected.id,
+                distributionType: distributedState.selected.value,
+                searchString: local.groupFilter
+            }));
+        }
     }, [priceGroup.selected.id,
         languageState.selected.id,
         sellmarkState.selected.id,
         catalogState.selected.id,
+        catalogState.wasInit,
         distributedState.selected.value,
         local.groupFilter])
 
@@ -53,7 +56,7 @@ export default function ProductGroupListTable() {
         ))
     }
 
-    return <div className="table-sm">
+    return <div className="table-sm p-table__scroll-wrapper">
         <ExpandedProductGroupTable isProductGroupsLoading={local.isGroupsLoading} productGroups={local.productGroups} loadProducts={loadProducts} onSelect={onSelect}/>
     </div>
 }

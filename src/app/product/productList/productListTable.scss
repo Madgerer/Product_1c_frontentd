@@ -1,35 +1,15 @@
 .product-left-column-table {
   height:92%;
-  line-height: 0.6;
   font-size: 13px;
   overflow-y: auto;
-
-  th {
-    padding: 0.75rem;
-  }
 
   tr {
     position: relative;
   }
 
-  .selected {
-    background-color: rgba(0,0,0,.075);
-  }
-
-  td, th {
-    vertical-align: middle;
-    line-height: 1em;
-  }
-
   td:first-child, th:first-child {
     width: 8%;
     min-width: 50px;
-  }
-
-  td:last-child, th:last-child {
-    text-align: center;
-    width: 5%;
-    min-width: 36px;
   }
 
   input {
