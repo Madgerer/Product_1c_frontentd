@@ -1,10 +1,10 @@
 import "./categoryGroupToolbar.scss"
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {actions, CategoryComponentState} from "../../../redux/reducers/local/categoryComponent";
+import {actions, CategoriesState} from "../../../redux/reducers/categories";
 
 export default function CategoryGroupToolbar() {
-    const local = useSelector<AppState, CategoryComponentState>(x => x.local.categoryComponent);
+    const local = useSelector<AppState, CategoriesState>(x => x.categoriesState);
     const dispatch = useDispatch();
 
     function setCurrentValue(name: string) {

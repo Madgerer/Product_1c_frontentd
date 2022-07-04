@@ -1,17 +1,17 @@
 import {AppState} from "../../../redux/reducers";
-import {actions, CategoryComponentState} from "../../../redux/reducers/local/categoryComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {useEffect, useState} from "react";
-import {getCategoriesThunk} from "../../../redux/reducers/local/categoryComponent/thunk";
 import {LanguageState} from "../../../redux/reducers/languages";
-import {ICategoryIdentityModel} from "../../common/tables/productGroupTable/types";
-import CategoryExpandedList from "../../common/tables/expandedCategoryList/CategoryExpandedList";
+import {ICategoryIdentityModel} from "../tables/productGroupTable/types";
+import CategoryExpandedList from "./CategoryExpandedList";
+import {getCategoriesThunk} from "../../../redux/reducers/categories/thunk";
+import {actions, CategoriesState} from "../../../redux/reducers/categories";
 
 export default function CategoryGroupTree() {
-    const local = useSelector<AppState, CategoryComponentState>(x => x.local.categoryComponent);
     const catalogGroupsState = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
+    const categoriesState = useSelector<AppState, CategoriesState>(x => x.categoriesState);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,9 +27,9 @@ export default function CategoryGroupTree() {
     }
 
     return <>
-        {local.isCategoriesLoading
+        {categoriesState.isCategoriesLoading
             ? "Loading"
-            : <CategoryExpandedList categories={local.categories} onRowClicked={onRowClicked} onCheckboxClicked={setChecked}/>
+            : <CategoryExpandedList categories={categoriesState.categories} onRowClicked={onRowClicked} onCheckboxClicked={setChecked}/>
         }
     </>;
 }

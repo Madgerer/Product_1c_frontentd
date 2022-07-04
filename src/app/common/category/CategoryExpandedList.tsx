@@ -1,4 +1,4 @@
-import {ICategoryIdentityModel} from "../productGroupTable/types";
+import {ICategoryIdentityModel} from "../tables/productGroupTable/types";
 import {useState} from "react";
 
 export default function CategoryExpandedList(props: ICategoryExpandedListProps) {
