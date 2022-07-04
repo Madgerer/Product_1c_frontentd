@@ -22,7 +22,7 @@ function LanguageSelector() {
 
 
     const changeSelected = (id: number) => {
-        if(state.selectedLanguage.id === id)
+        if(state.selected.id === id)
             return;
         dispatch(actions.setSelected(id));
     }
@@ -32,7 +32,7 @@ function LanguageSelector() {
             options={state.languages}
             className={"selector"}
             onChange={newValue => changeSelected(newValue)}
-            value={state.selectedLanguage}
+            value={state.selected}
         />
     </div>
 }

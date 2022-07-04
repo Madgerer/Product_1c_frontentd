@@ -5,14 +5,19 @@ import {actions} from "./index";
 import {ICardValidationType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
 
 export const getProductsGroupsIdentityThunk = createAsyncThunk<IProductGroupIdentity[],
-    {priceGroupId: number, languageId: number, cardValidationType: ICardValidationType},
+    {priceGroupId: number, languageId: number, searchString: string, cardValidationType: ICardValidationType},
     {rejectValue: IRejectQueryThunk}>(
     'product-page/get-product-groups',
     async (args, thunkAPI) => {
         try {
 
             thunkAPI.dispatch(actions.setLoading(true));
-            const response = await Api.productGroups.getProductsGroupsIdentity(args.priceGroupId, args.languageId, args.cardValidationType);
+
+            const response = await Api.productGroups.getProductsGroupsIdentity(args.priceGroupId,
+                args.languageId,
+                args.searchString,
+                args.cardValidationType);
+
             thunkAPI.dispatch(actions.setLoading(false));
 
             if(!response.success)

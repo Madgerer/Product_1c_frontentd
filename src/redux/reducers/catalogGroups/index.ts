@@ -16,7 +16,7 @@ const catGroupsOptions: ICatalogGroup[] = [
     { id:0, name: "Web"}
 ]
 
-const initialCatGroup = catGroupsOptions[1];
+const initialCatGroup = catGroupsOptions[0];
 
 const INITIAL_STATE: CatalogGroupsState = {
     groups: catGroupsOptions,

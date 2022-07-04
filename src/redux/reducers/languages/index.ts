@@ -6,12 +6,12 @@ import {ILanguage} from "../../../domain/types";
 
 export interface LanguageState {
     languages: ILanguage[]
-    selectedLanguage: ILanguage,
+    selected: ILanguage,
 }
 
 const INITIAL_STATE: LanguageState = {
     languages: [{id: 11, name: "Русский"}],
-    selectedLanguage: LocalStorageProvider.getLanguage() ?? {
+    selected: LocalStorageProvider.getLanguage() ?? {
         id: 11,
         name: "Русский"
     }
@@ -22,8 +22,8 @@ const languageSlice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         setSelected(state: LanguageState, action: PayloadAction<number>){
-            state.selectedLanguage = state.languages.find(x => x.id === action.payload) ?? state.selectedLanguage;
-            LocalStorageProvider.setLanguage(state.selectedLanguage)
+            state.selected = state.languages.find(x => x.id === action.payload) ?? state.selected;
+            LocalStorageProvider.setLanguage(state.selected)
             return state;
         }
     },

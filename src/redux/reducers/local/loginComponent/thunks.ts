@@ -16,10 +16,11 @@ export const loginThunk = createAsyncThunk<Function,
         const passwordHash = hashPassword(args.password);
         try {
             const response = await Api.auth.login(args.username, passwordHash);
+            thunkAPI.dispatch(actions.setLoading(false))
+
             if(!response.success)
                 return thunkAPI.rejectWithValue({exception: response.exception?.text ?? null, statusCode: response.status})
 
-            thunkAPI.dispatch(actions.setLoading(false))
             thunkAPI.dispatch(authActions.setCredentials({username: args.username, token: response.data!}))
             thunkAPI.dispatch(actions.clearAfterLogin())
 

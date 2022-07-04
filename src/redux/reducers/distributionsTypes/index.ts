@@ -2,8 +2,8 @@ import {IOptionType} from "../../../app/common/SimpleSelect";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-export type DistributionType = {
-    cardTypes: IOptionType[],
+export type DistributionTypeState = {
+    distributedTypes: IOptionType[],
     selected: IOptionType
 }
 
@@ -14,8 +14,8 @@ const distibutionOptions: IOptionType[] = [
 
 const initialCardType = distibutionOptions[0];
 
-const INITIAL_STATE: DistributionType = {
-    cardTypes: distibutionOptions,
+const INITIAL_STATE: DistributionTypeState = {
+    distributedTypes: distibutionOptions,
     selected: initialCardType
 }
 
@@ -23,8 +23,8 @@ const distributionTypesSlice = createSlice({
     name: "distributionType",
     initialState: INITIAL_STATE,
     reducers: {
-        setSelected(state: DistributionType, action: PayloadAction<number>){
-            state.selected = state.cardTypes.find(x => x.value === action.payload) ?? state.selected;
+        setSelected(state: DistributionTypeState, action: PayloadAction<number>){
+            state.selected = state.distributedTypes.find(x => x.value === action.payload) ?? state.selected;
             return state;
         }
     }

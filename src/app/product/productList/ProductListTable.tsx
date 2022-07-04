@@ -16,8 +16,8 @@ function ProductListTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getProductIdentityThunk({priceGroupId: priceGroupStat.selected.id, languageId: languageState.selectedLanguage.id}))
-    }, [languageState.selectedLanguage.id, priceGroupStat.selected.id])
+        dispatch(getProductIdentityThunk({priceGroupId: priceGroupStat.selected.id, languageId: languageState.selected.id}))
+    }, [languageState.selected.id, priceGroupStat.selected.id])
 
 
     const setChecked = (id: string, checked: boolean) => {

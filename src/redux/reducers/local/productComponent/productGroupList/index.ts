@@ -2,10 +2,9 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ILoadingModel} from "../../../../types";
 import {ICardValidationType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
 import {getProductByGroupThunk, getProductsGroupsIdentityThunk} from "./thunk";
+import {IProductGroupIdentityModel} from "../../../../../app/common/productGroupTable/types";
 
-export type IProductGroupIdentityModel = IProductGroupIdentity
-    & ILoadingModel
-    & { products: IProductIdentity[] | null, checked : boolean }
+
 
 export type ProductGroupListComponentState = {
     productGroups: IProductGroupIdentityModel[],
@@ -82,7 +81,7 @@ const productGroupComponentSlice = createSlice({
             return state;
         })
         builder.addCase(getProductsGroupsIdentityThunk.rejected, (state, action) => {
-            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            console.log(`Can't get products groups. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getProductByGroupThunk.fulfilled, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.payload.productGroupId)

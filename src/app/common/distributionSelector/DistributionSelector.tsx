@@ -2,16 +2,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {isUndefined} from "lodash";
 import SimpleSelect from "../SimpleSelect";
-import {actions, DistributionType} from "../../../redux/reducers/distributionsTypes";
+import {actions, DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
 
 function DistributionTypeSelector() {
 
-    const state = useSelector<AppState, DistributionType>(s => s.distributionTypesState);
+    const state = useSelector<AppState, DistributionTypeState>(s => s.distributionTypesState);
     const dispatch = useDispatch();
 
-    const selected = state.cardTypes.find(x => x.value === state.selected.value)
+    const selected = state.distributedTypes.find(x => x.value === state.selected.value)
     if(isUndefined(selected)) {
-        dispatch(actions.setSelected(state.cardTypes[0].value))
+        dispatch(actions.setSelected(state.distributedTypes[0].value))
     }
 
     const changeSelected = (id: number) => {
@@ -19,7 +19,7 @@ function DistributionTypeSelector() {
     }
 
     return <SimpleSelect toOption={x => x}
-            options={state.cardTypes}
+            options={state.distributedTypes}
             className={"selector"}
             onChange={newValue => changeSelected(newValue)}
             value={state.selected}
