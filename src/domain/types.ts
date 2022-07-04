@@ -6,6 +6,19 @@ export interface ICatalog {
     isPrinted: boolean
 }
 
+export interface ICategory {
+    id: number,
+    parentId: number,
+    name: string,
+    children: ICategory[]
+}
+
+export enum CatalogGroup {
+    Web = 0,
+    Printed = 1
+}
+
+
 export interface ICatalogGroup {
     id: number,
     name: string,

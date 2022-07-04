@@ -6,10 +6,6 @@ export type CatalogGroupsState = {
     selected: ICatalogGroup
 }
 
-export enum CatalogGroup {
-    Web = 0,
-    Printed = 1
-}
 
 const catGroupsOptions: ICatalogGroup[] = [
     { id:1, name: "Печатный каталог"},

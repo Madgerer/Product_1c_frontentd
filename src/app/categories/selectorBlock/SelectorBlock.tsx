@@ -5,9 +5,10 @@ import SellmarkSelector from "../../common/sellmarkSelector/SellmarkSelector";
 import CatalogGroupSelector from "../../common/catalogGroupsSelector/CatalogGroupSelector";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {CatalogGroup, CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
+import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {useEffect} from "react";
 import {actions, CatalogState} from "../../../redux/reducers/catalogs";
+import {CatalogGroup} from "../../../domain/types";
 
 
 export default function SelectorBlock() {

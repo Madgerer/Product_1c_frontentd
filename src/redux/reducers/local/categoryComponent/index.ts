@@ -1,17 +1,28 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getProductByGroupFromCategoryThunk, uploadProductGroupFromCatalogsThunk} from "./thunk";
+import {getCategoriesThunk, getProductByGroupFromCategoryThunk, uploadProductGroupFromCatalogsThunk} from "./thunk";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
+import {ICategory} from "../../../../domain/types";
 
 export type CategoryComponentState = {
     groupFilter: string,
     isGroupsLoading: boolean
     productGroups: IProductGroupIdentityModel[]
+    categories: ICategory[],
+    isCategoriesLoading: boolean,
+    categoryCurrentName: string,
+    newCategoryName: string,
+    selectedCategory: ICategory | null
 }
 
 const INITIAL_STATE: CategoryComponentState = {
     groupFilter: "",
     isGroupsLoading: false,
-    productGroups: []
+    productGroups: [],
+    categories: [],
+    isCategoriesLoading: false,
+    categoryCurrentName: "",
+    newCategoryName: "",
+    selectedCategory: null
 }
 
 const categorySlice = createSlice({
@@ -32,7 +43,22 @@ const categorySlice = createSlice({
                 state.productGroups[index].isLoading = action.payload.isLoading;
             return state;
         },
-
+        setCategoriesLoading(state: CategoryComponentState, action: PayloadAction<boolean>) {
+            state.isCategoriesLoading = action.payload;
+            return state;
+        },
+        setNewCategoryName(state: CategoryComponentState, action: PayloadAction<string>) {
+            state.newCategoryName = action.payload;
+            return state;
+        },
+        setCurrentCategoryName(state: CategoryComponentState, action: PayloadAction<string>) {
+            state.categoryCurrentName = action.payload;
+            return state;
+        },
+        setSelectedCategory(state: CategoryComponentState, action: PayloadAction<ICategory | null>) {
+            state.selectedCategory = action.payload;
+            return state;
+        }
     },
     extraReducers: builder => {
         builder.addCase(uploadProductGroupFromCatalogsThunk.fulfilled, (state, action) => {
@@ -59,6 +85,13 @@ const categorySlice = createSlice({
             return state;
         })
         builder.addCase(getProductByGroupFromCategoryThunk.rejected, (state, action) => {
+            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
+            state.categories = action.payload
+            return state;
+        })
+        builder.addCase(getCategoriesThunk.rejected, (state, action) => {
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

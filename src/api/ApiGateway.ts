@@ -5,6 +5,7 @@ import ProductApi from "./product/ProductApi";
 import CatalogsApi from "./catalogs/CatalogApi";
 import SellmarkApi from "./sellmarkApi/SellmarkApi";
 import ProductGroupApi from "./productGroup/ProductGroupApi";
+import CategoryApi from "./categoryApi/CategoryApi";
 
 interface IApplicationApi {
     auth: AuthApi,
@@ -13,7 +14,8 @@ interface IApplicationApi {
     product: ProductApi,
     catalogs: CatalogsApi,
     sellmarks: SellmarkApi,
-    productGroups: ProductGroupApi
+    productGroups: ProductGroupApi,
+    category: CategoryApi
 }
 
 export class ApiGateway implements IApplicationApi {
@@ -24,6 +26,7 @@ export class ApiGateway implements IApplicationApi {
     catalogs: CatalogsApi;
     sellmarks: SellmarkApi;
     productGroups: ProductGroupApi;
+    category: CategoryApi;
 
     constructor() {
         this.auth = new AuthApi();
@@ -33,5 +36,6 @@ export class ApiGateway implements IApplicationApi {
         this.catalogs = new CatalogsApi();
         this.sellmarks = new SellmarkApi();
         this.productGroups = new ProductGroupApi()
+        this.category = new CategoryApi();
     }
 }
