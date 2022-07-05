@@ -19,6 +19,9 @@ interface IApplicationApi {
 }
 
 export class ApiGateway implements IApplicationApi {
+
+    static Api = new ApiGateway()
+
     auth: AuthApi;
     translate: TranslateApi;
     priceGroup: PriceGroupApi;

@@ -4,7 +4,10 @@ import {actions, ProductListComponentState} from "../../../redux/reducers/local/
 import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
-import {getProductIdentityThunk} from "../../../redux/reducers/local/productComponent/productList/thunks";
+import {
+    getProductIdentityThunk,
+    getProductIdentityThunk1
+} from "../../../redux/reducers/local/productComponent/productList/thunks";
 import {Table} from "react-bootstrap";
 import "./productListTable.scss"
 import InformationTableRow from "../../common/ErrorTableRow";
@@ -17,7 +20,7 @@ function ProductListTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getProductIdentityThunk({priceGroupId: priceGroupStat.selected.id, languageId: languageState.selected.id}))
+        dispatch(getProductIdentityThunk1({priceGroup: priceGroupStat.selected.id, languageId: languageState.selected.id}))
     }, [languageState.selected.id, priceGroupStat.selected.id])
 
 

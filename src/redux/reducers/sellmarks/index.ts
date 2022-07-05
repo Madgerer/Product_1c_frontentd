@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {uploadSellmarks} from "./thunk";
+import {getSellmarksThunk} from "./thunk";
 import {ISellmark} from "../../../domain/types";
 
 
@@ -28,10 +28,10 @@ const sellmarkSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(uploadSellmarks.fulfilled, (state, {payload}) => {
+        builder.addCase(getSellmarksThunk.fulfilled, (state, {payload}) => {
             state.sellmarks = payload
         })
-        builder.addCase(uploadSellmarks.rejected, (state, action) => {
+        builder.addCase(getSellmarksThunk.rejected, (state, action) => {
             console.error(`Cant download price groups: Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

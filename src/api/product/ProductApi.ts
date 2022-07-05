@@ -3,13 +3,8 @@ import actionTypes, {IApplicationResponse} from "../baseTypes";
 import {IProductIdentity} from "../../domain/types";
 
 export default class ProductApi extends BaseApi {
-    async getProductsIdentityWithoutGroup(priceGroupId: number, languageId: number): Promise<IApplicationResponse<IProductIdentity[]>> {
-        const data = {
-            priceGroupId: priceGroupId,
-            languageId: languageId
-        };
-        return await this.sendQuery<IProductIdentity[]>('/api/product/identity/no-group', data, actionTypes.get, true);
-    }
+     getProductsIdentityWithoutGroup = async (args: {priceGroup: number, languageId: number}): Promise<IApplicationResponse<IProductIdentity[]>> =>
+         await this.sendQuery<IProductIdentity[]>('/api/product/identity/no-group', args, actionTypes.get, true);
 
     async getProductsIdentityByGroup(productGroupId: string, languageId: number): Promise<IApplicationResponse<IProductIdentity[]>> {
         const data = {

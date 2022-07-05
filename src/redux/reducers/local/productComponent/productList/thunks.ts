@@ -3,6 +3,12 @@ import {IRejectQueryThunk} from "../../../../types";
 import Api from "../../../../../api";
 import {actions} from "./index";
 import {IProductIdentity} from "../../../../../domain/types";
+import {createApiThunk} from "../../../../createApiThunk";
+
+export const getProductIdentityThunk1  = createApiThunk({
+    typePrefix: 'product-page/get-products1',
+    apiCall: Api.product.getProductsIdentityWithoutGroup
+});
 
 export const getProductIdentityThunk = createAsyncThunk<IProductIdentity[],
     {priceGroupId: number, languageId: number},
@@ -12,7 +18,7 @@ export const getProductIdentityThunk = createAsyncThunk<IProductIdentity[],
         try {
 
             thunkAPI.dispatch(actions.setLoading(true))
-            const response = await Api.product.getProductsIdentityWithoutGroup(args.priceGroupId, args.languageId);
+            const response = await Api.product.getProductsIdentityWithoutGroup({priceGroup: args.priceGroupId, languageId: args.languageId});
             thunkAPI.dispatch(actions.setLoading(false))
 
             if(!response.success)

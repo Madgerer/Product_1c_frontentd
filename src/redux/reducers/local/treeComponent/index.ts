@@ -2,10 +2,11 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IProductGroupBasicModel} from "../../../../app/common/tables/productGroupTable/types";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
+import {getProductsGroupsBasicThunk} from "./thunks";
 
 
 export type TreeComponentState = {
-    groups: IProductGroupBasicModel[],
+    productGroups: IProductGroupBasicModel[],
     filter: string,
     isProductGroupsLoading: boolean,
     sortNumber: string,
@@ -14,11 +15,16 @@ export type TreeComponentState = {
 }
 
 const INITIAL_STATE: TreeComponentState = {
-    groups: [],
+    productGroups: [],
     filter: "",
     isProductGroupsLoading: false,
     sortNumber: "",
-    cardTypes: [{label: "Все карточки", value: 0}, {label: "Непроверенное описание", value: 1}, {label: "Непроверенное фото", value: 2}],
+    cardTypes: [
+        {label: "Все карточки", value: 0},
+        {label: "Непроверенное описание", value: 1},
+        {label: "Непроверенное фото", value: 2},
+        {label: "Проверено все", value: 3}
+    ],
     selectedCardType: {label: "Все карточки", value: 0}
 }
 
@@ -42,7 +48,32 @@ const slice = createSlice({
                 state.sortNumber = action.payload;
             }
             return state;
+        },
+        setSelectedCardType(state: TreeComponentState, action: PayloadAction<number>) {
+            state.selectedCardType = state.cardTypes.find(x => x.value === action.payload) ?? state.selectedCardType;
+            return state;
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(getProductsGroupsBasicThunk.fulfilled, (state, action) => {
+            state.productGroups = action.payload.map(x => {
+                return{
+                    id: x.id,
+                    name: x.name,
+                    checked: false,
+                    isImageChecked: x.isImageChecked,
+                    isLoading: false,
+                    products: null,
+                    isDescriptionChecked: x.isDescriptionChecked,
+                    showStatus: x.showStatus,
+                    sort: x.sort
+                }
+            });
+            return state;
+        })
+        builder.addCase(getProductsGroupsBasicThunk.rejected, (state, action) => {
+            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
     }
 })
 

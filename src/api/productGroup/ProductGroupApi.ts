@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {ICardDistributionType, IProductGroupIdentity} from "../../domain/types";
+import {ICardDistributionType, IProductGroupBasic, IProductGroupIdentity} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
     async getProductsGroupsIdentity(priceGroupId: number, languageId: number, searchString: string, distributionType: ICardDistributionType)
@@ -37,15 +37,17 @@ export default class ProductGroupApi extends BaseApi {
     async getProductsGroupsByCategory(languageId: number,
                                       searchString: string,
                                       catalogGroup: number,
-                                      catalogId: number,
-                                      categoryId: number): Promise<IApplicationResponse<IProductGroupIdentity[]>> {
+                                      validationType: number,
+                                      catalogId: number | null,
+                                      categoryId: number): Promise<IApplicationResponse<IProductGroupBasic[]>> {
         const data = {
             languageId: languageId,
             searchString: searchString,
             catalogGroup: catalogGroup,
             catalogId: catalogId,
-            categoryId: categoryId
+            categoryId: categoryId,
+            validationType: validationType
         };
-        return await this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity/by-category', data, actionTypes.get, true);
+        return await this.sendQuery<IProductGroupBasic[]>('/api/product-group/identity/by-category', data, actionTypes.get, true);
     }
 }
