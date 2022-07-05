@@ -34,7 +34,16 @@ export interface IProductGroupIdentity {
     name: string,
     isDescriptionChecked: boolean,
     isImageChecked: boolean,
-    showStatus: boolean | null
+
+}
+
+export interface IProductGroupBasic {
+    id: string,
+    name: string,
+    isDescriptionChecked: boolean,
+    isImageChecked: boolean,
+    showStatus: boolean,
+    sort: number | null
 }
 
 export interface IDistributionType extends IOptionType {

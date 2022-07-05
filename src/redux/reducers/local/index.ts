@@ -3,12 +3,14 @@ import {reducer as loginComponentReducer} from "./loginComponent";
 import {reducer as productComponentReducer} from "./productComponent/productList"
 import {reducer as productGroupComponentReducer} from "./productComponent/productGroupList";
 import {reducer as categoryReducer} from "./categoryComponent";
+import {reducer as treeReducer} from "./treeComponent";
 
 export const localReducer = combineReducers({
     loginComponent: loginComponentReducer,
     productListComponent: productComponentReducer,
     productGroupListComponent: productGroupComponentReducer,
-    categoryComponent: categoryReducer
+    categoryComponent: categoryReducer,
+    treeComponent: treeReducer
 })
 
 export default localReducer;

@@ -31,7 +31,7 @@ export default class ProductGroupApi extends BaseApi {
             catalogId: catalogId,
             sellmarkId: sellmarkId
         };
-        return await this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity/from-catalog', data, actionTypes.get, true);
+        return await this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity/by-catalog', data, actionTypes.get, true);
     }
 
     async getProductsGroupsByCategory(languageId: number,
