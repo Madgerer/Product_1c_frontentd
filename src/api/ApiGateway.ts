@@ -18,6 +18,20 @@ interface IApplicationApi {
     category: CategoryApi
 }
 
+/**
+ Api should be ARROW FUNCTIONS because of context visibility and should accept only objects because of thunk handling
+ for example:
+ login = async (authData: {username: string, password: string}): Promise<IApplicationResponse<string>> =>
+    this.sendQuery<string>('/api/auth/', authData, actionTypes.get, false);
+ NOT
+ async login(username: string, password: string): Promise<IApplicationResponse<string>> {
+        const response = this.sendQuery<string>('/api/auth/', {
+            username: username,
+            password: password
+        }, actionTypes.get, false);
+        return response;
+    }
+ **/
 export class ApiGateway implements IApplicationApi {
 
     static Api = new ApiGateway()

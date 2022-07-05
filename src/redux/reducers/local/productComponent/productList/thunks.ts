@@ -18,7 +18,7 @@ export const getProductIdentityThunk = createAsyncThunk<IProductIdentity[],
         try {
 
             thunkAPI.dispatch(actions.setLoading(true))
-            const response = await Api.product.getProductsIdentityWithoutGroup({priceGroup: args.priceGroupId, languageId: args.languageId});
+            const response = await Api.product.getProductsIdentityWithoutGroup({priceGroupId: args.priceGroupId, languageId: args.languageId});
             thunkAPI.dispatch(actions.setLoading(false))
 
             if(!response.success)

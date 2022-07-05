@@ -5,7 +5,6 @@ import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
 import {
-    getProductIdentityThunk,
     getProductIdentityThunk1
 } from "../../../redux/reducers/local/productComponent/productList/thunks";
 import {Table} from "react-bootstrap";
@@ -20,7 +19,7 @@ function ProductListTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getProductIdentityThunk1({priceGroup: priceGroupStat.selected.id, languageId: languageState.selected.id}))
+        dispatch(getProductIdentityThunk1({priceGroupId: priceGroupStat.selected.id, languageId: languageState.selected.id}))
     }, [languageState.selected.id, priceGroupStat.selected.id])
 
 
