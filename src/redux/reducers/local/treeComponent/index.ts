@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IProductGroupBasicModel} from "../../../../app/common/tables/productGroupTable/types";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
-import {getProductsGroupsBasicThunk} from "./thunks";
+import {getProductGroupsBasicThunk, getProductsGroupsBasicThunk1} from "./thunks";
 
 
 export type TreeComponentState = {
@@ -38,10 +38,6 @@ const slice = createSlice({
             state.filter = action.payload.toLowerCase()
             return state;
         },
-        setLoading(state: TreeComponentState, action: PayloadAction<boolean>) {
-            state.isProductGroupsLoading = action.payload;
-            return state;
-        },
         setSortNumber(state: TreeComponentState, action: PayloadAction<string>) {
             const noRestrictions = sortValidationRegex.test(action.payload)
             if(noRestrictions) {
@@ -55,7 +51,11 @@ const slice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getProductsGroupsBasicThunk.fulfilled, (state, action) => {
+        builder.addCase(getProductGroupsBasicThunk.pending, (state, action) => {
+            state.isProductGroupsLoading = true;
+            return state;
+        })
+        builder.addCase(getProductGroupsBasicThunk.fulfilled, (state, action) => {
             state.productGroups = action.payload.map(x => {
                 return{
                     id: x.id,
@@ -69,9 +69,11 @@ const slice = createSlice({
                     sort: x.sort
                 }
             });
+            state.isProductGroupsLoading = false;
             return state;
         })
-        builder.addCase(getProductsGroupsBasicThunk.rejected, (state, action) => {
+        builder.addCase(getProductGroupsBasicThunk.rejected, (state, action) => {
+            state.isProductGroupsLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

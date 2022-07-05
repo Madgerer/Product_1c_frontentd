@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getProductIdentityThunk1} from "./thunks";
+import {getProductIdentityThunk} from "./thunks";
 import {IProductIdentity} from "../../../../../domain/types";
 
 type ProductsIdentityWithCheck = IProductIdentity & {checked: boolean}
@@ -37,11 +37,11 @@ const productComponentSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getProductIdentityThunk1.pending, (state, action) => {
+        builder.addCase(getProductIdentityThunk.pending, (state, action) => {
             state.isLoading = true;
             return state
         })
-        builder.addCase(getProductIdentityThunk1.fulfilled, (state, action) => {
+        builder.addCase(getProductIdentityThunk.fulfilled, (state, action) => {
             state.isLoading = false;
             state.products = action.payload.map(x => {
                 return {
@@ -52,7 +52,8 @@ const productComponentSlice = createSlice({
             });
             return state;
         })
-        builder.addCase(getProductIdentityThunk1.rejected, (state, action) => {
+        builder.addCase(getProductIdentityThunk.rejected, (state, action) => {
+            state.isLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

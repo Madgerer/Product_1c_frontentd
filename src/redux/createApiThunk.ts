@@ -39,6 +39,7 @@ export function createNoArgsApiThunk<TReturnType>(options:ApiThunkOptions<void, 
                 return response.data!
             }
             catch (e) {
+                console.log(e)
                 return thunkAPI.rejectWithValue({exception: "net::ERR_CONNECTION_REFUSED", statusCode: 0})
             }
         })
@@ -46,7 +47,6 @@ export function createNoArgsApiThunk<TReturnType>(options:ApiThunkOptions<void, 
 
 type ApiThunkOptions<TArgs, TReturnType> = {
     apiCall: (args: TArgs) => Promise<IApplicationResponse<TReturnType>>,
-    //args: () => TArgs,
     typePrefix: string
 } | {
     apiCall: () => Promise<IApplicationResponse<TReturnType>>,

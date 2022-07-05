@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ICardDistributionType} from "../../../../../domain/types";
-import {getProductByGroupThunk, getProductsGroupsIdentityThunk} from "./thunk";
+import {getProductByProductGroup, getProductGroupsIdentityThunk} from "./thunk";
 import {IProductGroupIdentityModel} from "../../../../../app/common/tables/productGroupTable/types";
 
 export type ProductGroupListComponentState = {
@@ -33,16 +33,6 @@ const productGroupComponentSlice = createSlice({
             state.selectedCardType = state.cardTypes.find(x => x.value === action.payload) ?? state.selectedCardType;
             return state;
         },
-        setLoading(state: ProductGroupListComponentState, action: PayloadAction<boolean>) {
-            state.isProductGroupsLoading = action.payload;
-            return state;
-        },
-        setProductGroupLoading(state: ProductGroupListComponentState, action: PayloadAction<{productGroupId: string, isLoading: boolean}>) {
-            const index = state.productGroups.findIndex(x => x.id === action.payload.productGroupId)
-            if(index >= 0)
-                state.productGroups[index].isLoading = action.payload.isLoading;
-            return state;
-        },
         setSelectedProductGroup(state: ProductGroupListComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
             //в случае если "отщелкиваем" чекбокс, чтобы лишний раз не проходить по массиву
@@ -63,7 +53,11 @@ const productGroupComponentSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getProductsGroupsIdentityThunk.fulfilled, (state, action) => {
+        builder.addCase(getProductGroupsIdentityThunk.pending, (state, action) => {
+            state.isProductGroupsLoading = false;
+            return state;
+        })
+        builder.addCase(getProductGroupsIdentityThunk.fulfilled, (state, action) => {
             state.productGroups = action.payload.map(x => {
                 return {
                     id: x.id,
@@ -75,18 +69,27 @@ const productGroupComponentSlice = createSlice({
                     isImageChecked: x.isImageChecked
                 }
             });
+            state.isProductGroupsLoading = false;
             return state;
         })
-        builder.addCase(getProductsGroupsIdentityThunk.rejected, (state, action) => {
+        builder.addCase(getProductGroupsIdentityThunk.rejected, (state, action) => {
             console.log(`Can't get products groups. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
-        builder.addCase(getProductByGroupThunk.fulfilled, (state, action) => {
-            const index = state.productGroups.findIndex(x => x.id === action.payload.productGroupId)
-            if(index >= 0)
-                state.productGroups[index].products = action.payload.products;
+            state.isProductGroupsLoading = false;
             return state;
         })
-        builder.addCase(getProductByGroupThunk.rejected, (state, action) => {
+        builder.addCase(getProductByProductGroup.pending, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0)
+                state.productGroups[index].isLoading = true;
+            return state;
+        })
+        builder.addCase(getProductByProductGroup.fulfilled, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0)
+                state.productGroups[index].products = action.payload;
+            return state;
+        })
+        builder.addCase(getProductByProductGroup.rejected, (state, action) => {
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

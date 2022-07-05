@@ -7,7 +7,7 @@ import {AppState} from "../../../redux/reducers";
 import {actions, TreeComponentState} from "../../../redux/reducers/local/treeComponent";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogGroup} from "../../../domain/types";
-import {getProductsGroupsBasicThunk} from "../../../redux/reducers/local/treeComponent/thunks";
+import {getProductsGroupsBasicThunk1} from "../../../redux/reducers/local/treeComponent/thunks";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {CategoriesState} from "../../../redux/reducers/categories";
@@ -22,10 +22,12 @@ export default function TreeGroupTable() {
 
     useEffect(() => {
         if(categoryState.selectedCategory !== null) {
-            dispatch(getProductsGroupsBasicThunk({
+            dispatch(getProductsGroupsBasicThunk1({
                 languageId: languageState.selected.id,
                 catalogGroup: catalogGroupState.selected.id,
-                catalogId: catalogState.selected.id,
+                catalogId:  catalogGroupState.selected.id === CatalogGroup.Printed
+                    ? catalogState.selected.id
+                    : null,
                 validationType: local.selectedCardType.value,
                 categoryId: categoryState.selectedCategory!.id,
                 searchString: local.filter

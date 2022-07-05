@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {uploadPriceGroups} from "./thunk";
+import {getPriceGroupsThunk} from "./thunk";
 import {IPriceGroup} from "../../../domain/types";
 
 export type PriceGroupState = {
@@ -24,10 +24,10 @@ const priceGroup = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(uploadPriceGroups.fulfilled, (state, {payload}) => {
+        builder.addCase(getPriceGroupsThunk.fulfilled, (state, {payload}) => {
             state.priceGroups = payload
         })
-        builder.addCase(uploadPriceGroups.rejected, (state, action) => {
+        builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
             console.error(`Cant download price groups: Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
