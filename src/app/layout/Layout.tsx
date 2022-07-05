@@ -5,6 +5,7 @@ import React from "react";
 
 import "./layout.scss";
 import Categories from "../categories/Categories";
+import Tree from "../tree/Tree";
 
 function Layout() {
 
@@ -14,7 +15,7 @@ function Layout() {
             <Routes>
                 <Route path={"/products"} element={<Product/>}/>
                 <Route path={"/categories"} element={<Categories/>}/>
-                <Route path={"/try"} element={<Categories/>}/>
+                <Route path={"/try"} element={<Tree/>}/>
                 <Route path={"/*"} element={<Navigate to="/products" replace />}/>
             </Routes>
         </div>

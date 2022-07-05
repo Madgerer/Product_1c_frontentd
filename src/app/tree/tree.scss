@@ -1,4 +1,4 @@
-.cat-container {
+.tree-container {
   height: 100%;
   display: flex;
 
@@ -6,10 +6,9 @@
     flex: 1 1 0;
   }
 
-  .cat-category-group-list-container {
+  .tree-category-group-list-container {
     height: 90vh;
     width: 40%;
-    vertical-align:
-            top;
+    vertical-align: top;
   }
 }

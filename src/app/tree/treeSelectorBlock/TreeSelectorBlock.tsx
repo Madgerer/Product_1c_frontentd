@@ -1,17 +1,15 @@
-import CatalogSelector from "../../common/catalogSelector/CatalogSelector";
-import "./selectorBlock.scss"
-import PriceGroupSelector from "../../common/priceGroupSelector/PriceGroupSelector";
-import SellmarkSelector from "../../common/sellmarkSelector/SellmarkSelector";
-import CatalogGroupSelector from "../../common/catalogGroupsSelector/CatalogGroupSelector";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
-import {useEffect} from "react";
 import {actions, CatalogState} from "../../../redux/reducers/catalogs";
+import {useEffect} from "react";
 import {CatalogGroup} from "../../../domain/types";
+import CatalogSelector from "../../common/catalogSelector/CatalogSelector";
+import CatalogGroupSelector from "../../common/catalogGroupsSelector/CatalogGroupSelector";
+import "./treeSelectorBlock.scss"
 
-
-export default function SelectorBlock() {
+export default function TreeSelectorBlock() {
+    // noinspection DuplicatedCode
     const state = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState)
     const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState)
     const dispatch = useDispatch();
@@ -24,29 +22,21 @@ export default function SelectorBlock() {
             dispatch(actions.setSelected(selected!.id))
     },[state.selected.id])
 
-    return <div className="d-inline-block cat-selector-container" >
+    return <div className="d-inline-block tree-selector-container" >
         <>
             {
                 state.selected.id === CatalogGroup.Printed ?
                     <>
                         <h3>Каталог:</h3>
-                        <div className="item align-top cat-selector-container-inner">
+                        <div className="item align-top tree-selector-container-inner">
                             <CatalogSelector isPrinted={state.selected.id === CatalogGroup.Printed}/>
                         </div>
                     </>
                     : <></>
             }
         </>
-        <h3>Ценовая группа:</h3>
-        <div className="cat-selector-container-inner">
-            <PriceGroupSelector/>
-        </div>
-        <h3>Торговая марка:</h3>
-        <div className="cat-selector-container-inner">
-            <SellmarkSelector/>
-        </div>
         <h3>Группа каталогов:</h3>
-        <div className="form-group input-group-sm cat-selector-container-inner" >
+        <div className="form-group input-group-sm tree-selector-container-inner" >
             <CatalogGroupSelector/>
         </div>
     </div>

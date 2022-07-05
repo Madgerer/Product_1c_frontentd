@@ -7,10 +7,10 @@ import {uploadSellmarks} from "../../../redux/reducers/sellmarks/thunk";
 import {isUndefined} from "lodash";
 import {ISellmark} from "../../../domain/types";
 
-const toOption = (catalog: ISellmark): IOptionType => {
+const toOption = (sellmark: ISellmark): IOptionType => {
     return {
-        value: catalog.id,
-        label: catalog.name
+        value: sellmark.id,
+        label: sellmark.name
     }
 }
 

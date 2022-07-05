@@ -9,6 +9,7 @@ export const uploadProductGroupFromCatalogsThunk = createAsyncThunk<IProductGrou
         languageId: number,
         searchString: string,
         distributionType: number,
+        catalogGroup: number,
         catalogId: number,
         sellmarkId: number},
     {rejectValue: IRejectQueryThunk}>(
@@ -22,6 +23,7 @@ export const uploadProductGroupFromCatalogsThunk = createAsyncThunk<IProductGrou
                 args.languageId,
                 args.searchString,
                 args.distributionType,
+                args.catalogGroup,
                 args.catalogId,
                 args.sellmarkId
             );

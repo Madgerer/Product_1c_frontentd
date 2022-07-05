@@ -16,6 +16,7 @@ import ExpandedProductGroupTable from "../../common/tables/productGroupTable/Exp
 import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
 import {actions} from "../../../redux/reducers/local/productComponent/productGroupList";
 import _ from "lodash";
+import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 
 
 export default function ProductGroupListTable() {
@@ -24,7 +25,8 @@ export default function ProductGroupListTable() {
     const priceGroup = useSelector<AppState, PriceGroupState>(x => x.priceGroupsState);
     const sellmarkState = useSelector<AppState, SellmarkState>(x => x.sellmarkState);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
-    const distributedState = useSelector<AppState, DistributionTypeState>(x => x.distributionTypesState)
+    const distributedState = useSelector<AppState, DistributionTypeState>(x => x.distributionTypesState);
+    const catalogGroupState = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState);
 
     const dispatch = useDispatch();
     const trottledDispatch = _.throttle(() => {
@@ -34,6 +36,7 @@ export default function ProductGroupListTable() {
             sellmarkId: sellmarkState.selected.id,
             catalogId: catalogState.selected.id,
             distributionType: distributedState.selected.value,
+            catalogGroup: catalogGroupState.selected.id,
             searchString: local.groupFilter
         }))
     }, 50);

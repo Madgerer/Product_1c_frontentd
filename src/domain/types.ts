@@ -33,10 +33,11 @@ export interface IProductGroupIdentity {
     id: string,
     name: string,
     isDescriptionChecked: boolean,
-    isImageChecked: boolean
+    isImageChecked: boolean,
+    showStatus: boolean | null
 }
 
-export interface ICardValidationType extends IOptionType {
+export interface IDistributionType extends IOptionType {
 
 }
 
