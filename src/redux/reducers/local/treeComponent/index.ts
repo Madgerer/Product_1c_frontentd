@@ -1,20 +1,28 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IProductGroupBasic} from "../../../../domain/types";
 import {IProductGroupBasicModel} from "../../../../app/common/tables/productGroupTable/types";
-import {ProductGroupListComponentState} from "../productComponent/productGroupList";
+import {numericRestrictions} from "../../../../utils/regexpUtlis";
+import {ICardDistributionType} from "../../../../domain/types";
 
 
 export type TreeComponentState = {
     groups: IProductGroupBasicModel[],
     filter: string,
-    isProductGroupsLoading: boolean
+    isProductGroupsLoading: boolean,
+    sortNumber: string,
+    selectedCardType: ICardDistributionType,
+    cardTypes: ICardDistributionType[],
 }
 
 const INITIAL_STATE: TreeComponentState = {
     groups: [],
     filter: "",
-    isProductGroupsLoading: false
+    isProductGroupsLoading: false,
+    sortNumber: "",
+    cardTypes: [{label: "Все карточки", value: 0}, {label: "Непроверенное описание", value: 1}, {label: "Непроверенное фото", value: 2}],
+    selectedCardType: {label: "Все карточки", value: 0}
 }
+
+const sortValidationRegex = numericRestrictions();
 
 const slice = createSlice({
     name: "treePage/groupList",
@@ -26,6 +34,13 @@ const slice = createSlice({
         },
         setLoading(state: TreeComponentState, action: PayloadAction<boolean>) {
             state.isProductGroupsLoading = action.payload;
+            return state;
+        },
+        setSortNumber(state: TreeComponentState, action: PayloadAction<string>) {
+            const noRestrictions = sortValidationRegex.test(action.payload)
+            if(noRestrictions) {
+                state.sortNumber = action.payload;
+            }
             return state;
         }
     }

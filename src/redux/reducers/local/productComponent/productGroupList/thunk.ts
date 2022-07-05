@@ -2,10 +2,10 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {IRejectQueryThunk} from "../../../../types";
 import Api from "../../../../../api";
 import {actions} from "./index";
-import {IDistributionType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
+import {ICardDistributionType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
 
 export const getProductsGroupsIdentityThunk = createAsyncThunk<IProductGroupIdentity[],
-    {priceGroupId: number, languageId: number, searchString: string, cardValidationType: IDistributionType},
+    {priceGroupId: number, languageId: number, searchString: string, cardValidationType: ICardDistributionType},
     {rejectValue: IRejectQueryThunk}>(
     'product-page/get-product-groups',
     async (args, thunkAPI) => {

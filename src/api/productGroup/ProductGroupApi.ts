@@ -1,9 +1,9 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IDistributionType, IProductGroupIdentity} from "../../domain/types";
+import {ICardDistributionType, IProductGroupIdentity} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
-    async getProductsGroupsIdentity(priceGroupId: number, languageId: number, searchString: string, distributionType: IDistributionType)
+    async getProductsGroupsIdentity(priceGroupId: number, languageId: number, searchString: string, distributionType: ICardDistributionType)
             : Promise<IApplicationResponse<IProductGroupIdentity[]>> {
         let data = {
             priceGroupId: priceGroupId,

@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ILoadingModel} from "../../../../types";
-import {IDistributionType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
+import {ICardDistributionType, IProductGroupIdentity, IProductIdentity} from "../../../../../domain/types";
 import {getProductByGroupThunk, getProductsGroupsIdentityThunk} from "./thunk";
 import {IProductGroupIdentityModel} from "../../../../../app/common/tables/productGroupTable/types";
 
@@ -10,8 +10,8 @@ export type ProductGroupListComponentState = {
     productGroups: IProductGroupIdentityModel[],
     isProductGroupsLoading: boolean,
     filter: string
-    selectedCardType: IDistributionType,
-    cardTypes: IDistributionType[],
+    selectedCardType: ICardDistributionType,
+    cardTypes: ICardDistributionType[],
     selectedProductGroup: IProductGroupIdentityModel | null
 }
 

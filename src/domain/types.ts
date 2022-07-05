@@ -46,7 +46,7 @@ export interface IProductGroupBasic {
     sort: number | null
 }
 
-export interface IDistributionType extends IOptionType {
+export interface ICardDistributionType extends IOptionType {
 
 }
 

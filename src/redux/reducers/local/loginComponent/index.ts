@@ -1,5 +1,5 @@
 import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AlphabeticalAndNumericRestrictionsAllStr} from "../../../../utils/regexpUtlis";
+import {alphabeticalAndNumericRestrictionsAllStr} from "../../../../utils/regexpUtlis";
 import {loginThunk} from "./thunks";
 
 export type LoginComponentState = {
@@ -87,7 +87,7 @@ const reducer = loginComponentSlice.reducer;
 
 export {actions, reducer}
 
-const regexp = AlphabeticalAndNumericRestrictionsAllStr();
+const regexp = alphabeticalAndNumericRestrictionsAllStr();
 
 const getInputStatus = (str: string, minLength: number, maxLength: number): InputStatus => {
     const noRestricted = regexp.test(str);
