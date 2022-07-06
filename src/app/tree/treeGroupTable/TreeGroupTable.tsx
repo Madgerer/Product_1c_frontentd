@@ -1,13 +1,13 @@
 import {Table} from "react-bootstrap";
 import InformationTableRow from "../../common/ErrorTableRow";
-import {IProductGroupBasicModel, IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
+import {IProductGroupBasicModel} from "../../common/tables/productGroupTable/types";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {actions, TreeComponentState} from "../../../redux/reducers/local/treeComponent";
+import {TreeComponentState} from "../../../redux/reducers/local/treeComponent";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogGroup} from "../../../domain/types";
-import {getProductsGroupsBasicThunk1} from "../../../redux/reducers/local/treeComponent/thunks";
+import {getProductGroupsBasicThunk} from "../../../redux/reducers/local/treeComponent/thunks";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {CategoriesState} from "../../../redux/reducers/categories";
@@ -22,7 +22,7 @@ export default function TreeGroupTable() {
 
     useEffect(() => {
         if(categoryState.selectedCategory !== null) {
-            dispatch(getProductsGroupsBasicThunk1({
+            dispatch(getProductGroupsBasicThunk({
                 languageId: languageState.selected.id,
                 catalogGroup: catalogGroupState.selected.id,
                 catalogId:  catalogGroupState.selected.id === CatalogGroup.Printed

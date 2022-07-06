@@ -1,6 +1,5 @@
-import {applyMiddleware, Store} from "redux";
+import {Store} from "redux";
 import {configureStore} from '@reduxjs/toolkit';
-import thunk from "redux-thunk";
 import rootReducer, {AppState} from "./reducers";
 
 export default function configureAppStore(

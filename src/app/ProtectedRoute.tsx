@@ -1,5 +1,5 @@
 import {Navigate, useLocation} from "react-router-dom";
-import React, {useEffect} from "react";
+import React from "react";
 
 export function ProtectedRoute(props: IProtectedRouteProps) {
     const location = useLocation();

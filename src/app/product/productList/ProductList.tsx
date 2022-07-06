@@ -1,5 +1,4 @@
 import ProductListToolbar from "./ProductListToolbar";
-import {Table} from "react-bootstrap";
 import "./productList.scss"
 import ProductListTable from "./ProductListTable";
 

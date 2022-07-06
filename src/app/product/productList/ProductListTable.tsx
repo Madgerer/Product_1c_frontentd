@@ -4,9 +4,7 @@ import {actions, ProductListComponentState} from "../../../redux/reducers/local/
 import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
-import {
-    getProductIdentityThunk
-} from "../../../redux/reducers/local/productComponent/productList/thunks";
+import {getProductIdentityThunk} from "../../../redux/reducers/local/productComponent/productList/thunks";
 import {Table} from "react-bootstrap";
 import "./productListTable.scss"
 import InformationTableRow from "../../common/ErrorTableRow";

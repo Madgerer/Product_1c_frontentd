@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IProductGroupBasicModel} from "../../../../app/common/tables/productGroupTable/types";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
-import {getProductGroupsBasicThunk, getProductsGroupsBasicThunk1} from "./thunks";
+import {getProductGroupsBasicThunk} from "./thunks";
 
 
 export type TreeComponentState = {

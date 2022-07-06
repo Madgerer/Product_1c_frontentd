@@ -1,11 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {
-    getProductsByGroupThunk,
-    getProductGroupsByCatalogsThunk
-} from "./thunk";
-import {
-    IProductGroupIdentityModel, mapCategoryToModel
-} from "../../../../app/common/tables/productGroupTable/types";
+import {getProductGroupsByCatalogsThunk, getProductsByGroupThunk} from "./thunk";
+import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
 export type CategoryComponentState = {
     groupFilter: string,
@@ -26,13 +21,6 @@ const categorySlice = createSlice({
         setFilter(state: CategoryComponentState, action: PayloadAction<string>) {
             state.groupFilter = action.payload;
             return state;
-        },
-        setGroupsLoading(state: CategoryComponentState, action: PayloadAction<boolean>) {
-            state.isGroupsLoading = action.payload;
-            return state;
-        },
-        setProductGroupLoading(state: CategoryComponentState, action: PayloadAction<{productGroupId: string, isLoading: boolean}>) {
-
         },
     },
     extraReducers: builder => {

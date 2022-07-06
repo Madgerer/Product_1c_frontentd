@@ -1,9 +1,8 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {PriceGroupState} from "../../../redux/reducers/priceGroups";
-import {uploadPriceGroups} from "../../../redux/reducers/priceGroups/thunk";
-import {actions} from "../../../redux/reducers/priceGroups";
+import {actions, PriceGroupState} from "../../../redux/reducers/priceGroups";
+import {getPriceGroupsThunk} from "../../../redux/reducers/priceGroups/thunk";
 import {isUndefined} from "lodash";
 import SimpleSelect, {IOptionType} from "../SimpleSelect";
 import {IPriceGroup} from "../../../domain/types";
@@ -16,7 +15,7 @@ function PriceGroupSelector() {
     const state = useSelector<AppState, PriceGroupState>(s => s.priceGroupsState);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(uploadPriceGroups())
+        dispatch(getPriceGroupsThunk())
     }, []);
 
     const selected = state.priceGroups.find(x => x.id === state.selected.id)

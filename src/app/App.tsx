@@ -1,6 +1,6 @@
-import {Navigate, Route, Routes,} from "react-router-dom";
-import {Provider, useDispatch, useSelector} from "react-redux";
-import React, {useEffect} from "react";
+import {Route, Routes,} from "react-router-dom";
+import {Provider, useSelector} from "react-redux";
+import React from "react";
 import {AppState} from "../redux/reducers";
 import {ProtectedRoute} from "./ProtectedRoute";
 import Login from "./login/Login";

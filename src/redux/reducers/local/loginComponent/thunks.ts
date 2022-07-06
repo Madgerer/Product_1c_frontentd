@@ -1,4 +1,4 @@
-import {createAsyncThunk, Dispatch} from "@reduxjs/toolkit";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 import Api from "../../../../api";
 import {hashPassword} from "../../../../utils/passwordHasher";
 import {actions} from "./index";

@@ -1,4 +1,4 @@
-import {AsyncThunkPayloadCreator, createAsyncThunk} from "@reduxjs/toolkit";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 import {IApplicationResponse} from "../api/baseTypes";
 import {IRejectQueryThunk} from "./types";
 import {actions} from "./reducers/auth";

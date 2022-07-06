@@ -1,9 +1,8 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {LanguageState} from "../../../redux/reducers/languages";
-import {actions} from "../../../redux/reducers/languages";
+import {actions, LanguageState} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
-import {uploadLanguagesThunk} from "../../../redux/reducers/languages/thunk";
+import {getLanguagesThunk} from "../../../redux/reducers/languages/thunk";
 import "./languageSelector.scss"
 import SimpleSelect, {IOptionType} from "../SimpleSelect";
 import {ILanguage} from "../../../domain/types";
@@ -17,7 +16,7 @@ function LanguageSelector() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(uploadLanguagesThunk())
+        dispatch(getLanguagesThunk())
     }, []);
 
 

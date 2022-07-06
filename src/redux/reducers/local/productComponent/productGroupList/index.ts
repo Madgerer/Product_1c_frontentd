@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ICardDistributionType} from "../../../../../domain/types";
-import {getProductByProductGroup, getProductGroupsIdentityThunk} from "./thunk";
+import {getProductByProductGroupThunk, getProductGroupsIdentityThunk} from "./thunk";
 import {IProductGroupIdentityModel} from "../../../../../app/common/tables/productGroupTable/types";
 
 export type ProductGroupListComponentState = {
@@ -77,19 +77,21 @@ const productGroupComponentSlice = createSlice({
             state.isProductGroupsLoading = false;
             return state;
         })
-        builder.addCase(getProductByProductGroup.pending, (state, action) => {
+        builder.addCase(getProductByProductGroupThunk.pending, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
             if(index >= 0)
                 state.productGroups[index].isLoading = true;
             return state;
         })
-        builder.addCase(getProductByProductGroup.fulfilled, (state, action) => {
+        builder.addCase(getProductByProductGroupThunk.fulfilled, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
-            if(index >= 0)
+            if(index >= 0) {
                 state.productGroups[index].products = action.payload;
+                state.productGroups[index].isLoading = false;
+            }
             return state;
         })
-        builder.addCase(getProductByProductGroup.rejected, (state, action) => {
+        builder.addCase(getProductByProductGroupThunk.rejected, (state, action) => {
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

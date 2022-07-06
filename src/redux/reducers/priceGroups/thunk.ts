@@ -1,7 +1,7 @@
 import Api from "../../../api";
-import {createApiThunk} from "../../createApiThunk";
+import {createNoArgsApiThunk} from "../../createApiThunk";
 
-export const getPriceGroupsThunk = createApiThunk({
+export const getPriceGroupsThunk = createNoArgsApiThunk({
     typePrefix: "get/priceGroups",
     apiCall: Api.priceGroup.getPriceGroups
 })

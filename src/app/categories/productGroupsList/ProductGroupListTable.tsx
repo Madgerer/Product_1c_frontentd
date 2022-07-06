@@ -7,8 +7,8 @@ import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {SellmarkState} from "../../../redux/reducers/sellmarks";
 import {useEffect} from "react";
 import {
-    getProductsByGroupThunk,
-    uploadProductGroupFromCatalogsThunk
+    getProductGroupsByCatalogsThunk,
+    getProductsByGroupThunk
 } from "../../../redux/reducers/local/categoryComponent/thunk";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
@@ -30,7 +30,7 @@ export default function ProductGroupListTable() {
 
     const dispatch = useDispatch();
     const trottledDispatch = _.throttle(() => {
-        dispatch(uploadProductGroupFromCatalogsThunk({
+        dispatch(getProductGroupsByCatalogsThunk({
             priceGroupId: priceGroup.selected.id,
             languageId: languageState.selected.id,
             sellmarkId: sellmarkState.selected.id,

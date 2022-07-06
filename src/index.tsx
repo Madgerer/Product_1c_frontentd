@@ -2,11 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router } from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 import {App} from "./app/App";
 import "./default-colors.scss"
 import "./app/common/tables/tables-styles.scss"
-import {ApiGateway} from "./api/ApiGateway";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

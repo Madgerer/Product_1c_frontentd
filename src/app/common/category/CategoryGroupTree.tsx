@@ -1,7 +1,7 @@
 import {AppState} from "../../../redux/reducers";
 import {useDispatch, useSelector} from "react-redux";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {ICategoryIdentityModel} from "../tables/productGroupTable/types";
 import CategoryExpandedList from "./CategoryExpandedList";

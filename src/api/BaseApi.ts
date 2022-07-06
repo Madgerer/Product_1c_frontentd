@@ -1,6 +1,5 @@
 import queryTypes, {ActionType, IApplicationResponse} from "./baseTypes";
 import HttpActions from './HttpActions';
-import {isNull} from "lodash";
 
 export default class BaseApi {
     baseUrl: string;

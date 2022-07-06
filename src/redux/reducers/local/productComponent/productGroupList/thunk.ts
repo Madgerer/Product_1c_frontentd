@@ -6,7 +6,7 @@ export const getProductGroupsIdentityThunk = createApiThunk({
     apiCall: Api.productGroups.getProductsGroupsIdentity
 })
 
-export const getProductByProductGroup = createApiThunk({
+export const getProductByProductGroupThunk = createApiThunk({
     typePrefix: "product-page/get-product-by-group",
     apiCall: Api.product.getProductsIdentityByGroup
 })

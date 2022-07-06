@@ -1,16 +1,13 @@
 import "./productGroupListTable.scss"
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {
-    actions,
-    ProductGroupListComponentState
-} from "../../../redux/reducers/local/productComponent/productGroupList";
-import {useEffect, useState} from "react";
+import {actions, ProductGroupListComponentState} from "../../../redux/reducers/local/productComponent/productGroupList";
+import {useEffect} from "react";
 import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {
-    getProductByGroupThunk,
-    getProductsGroupsIdentityThunk
+    getProductByProductGroupThunk,
+    getProductGroupsIdentityThunk
 } from "../../../redux/reducers/local/productComponent/productGroupList/thunk";
 import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
 import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
@@ -23,11 +20,11 @@ function ProductGroupListTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getProductsGroupsIdentityThunk({
+        dispatch(getProductGroupsIdentityThunk({
             priceGroupId: priceGroupState.selected.id,
             languageId: languageState.selected.id,
             searchString: local.filter,
-            cardValidationType: local.selectedCardType
+            distributionType: local.selectedCardType,
         }))
     }, [priceGroupState.selected.id, languageState.selected.id, local.selectedCardType, local.filter])
 
@@ -37,7 +34,7 @@ function ProductGroupListTable() {
     }
 
     function loadProducts(productGroup: IProductGroupIdentityModel) {
-        dispatch(getProductByGroupThunk({
+        dispatch(getProductByProductGroupThunk({
             productGroupId: productGroup.id,
             languageId: languageState.selected.id}
         ))

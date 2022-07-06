@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {reducer as authReducer} from "./auth";
 import {reducer as langReducer} from "./languages";
-import {reducer as priceGroupReducer } from "./priceGroups";
+import {reducer as priceGroupReducer} from "./priceGroups";
 import {reducer as catalogReducer} from "./catalogs";
 import {reducer as sellmarksReducer} from "./sellmarks";
 import localReducer from "./local";
