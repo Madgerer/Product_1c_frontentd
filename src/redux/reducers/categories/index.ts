@@ -1,7 +1,7 @@
 import {ICategoryIdentityModel, mapCategoryToModel} from "../../../app/common/tables/productGroupTable/types";
 import {ICategory} from "../../../domain/types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getCategoriesThunk} from "./thunk";
+import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createCategoryThunk, getCategoriesThunk, updateCategoryNameThunk} from "./thunk";
 
 export type CategoriesState = {
     categories: ICategoryIdentityModel[],
@@ -48,8 +48,10 @@ const categorySlice = createSlice({
             const category = findCategory(state.categories, action.payload.categoryId);
             if(category != null)
                 category.checked = action.payload.checked;
-
-            return state;
+        },
+        clearToolbarState(state: CategoriesState) {
+            state.categoryCurrentName = ""
+            state.selectedCategory = null
         }
     },
     extraReducers: builder => {
@@ -65,8 +67,43 @@ const categorySlice = createSlice({
             state.isCategoriesLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
+        builder.addCase(updateCategoryNameThunk.fulfilled, (state, action) => {
+            if(state.selectedCategory !== null) {
+                const category = findCategory(state.categories, state.selectedCategory.id);
+                if(category !== null) {
+                    category.name = state.categoryCurrentName;
+                    state.selectedCategory.name = state.categoryCurrentName;
+                }
+            }
+        })
+        builder.addCase(updateCategoryNameThunk.rejected, (state, action) => {
+            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(createCategoryThunk.fulfilled, (state, action) => {
+            if(action.meta.arg.parentId == null) {
+                state.categories.push(createCategory(action.meta.arg.parentId ?? 0, action.payload, action.meta.arg.name))
+            }
+            else {
+                const category = findCategory(state.categories, action.meta.arg.parentId);
+                category!.children.push(createCategory(action.meta.arg.parentId, action.payload, action.meta.arg.name))
+            }
+        })
+        builder.addCase(createCategoryThunk.rejected, (state, action) => {
+            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
     }
 })
+
+function createCategory(parentId: number, id: number, name: string) {
+    return {
+        name: name,
+        id: id,
+        checked: false,
+        children: [],
+        selected: false,
+        parentId: parentId
+    }
+}
 
 function findCategory(categories: ICategoryIdentityModel[], id: number): ICategoryIdentityModel | null {
     for (let i = 0; i < categories.length; i++) {

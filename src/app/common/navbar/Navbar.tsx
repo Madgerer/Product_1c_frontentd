@@ -1,7 +1,11 @@
 import LanguageSelector from "./LanguageSelector";
 import './navbar.scss'
+import {Link} from "react-router-dom";
+import {} from "react-router-dom";
+import {useLocation} from "react-router";
 
 function Navbar() {
+    const history = useLocation();
 
     return <div className={"navbar-wrapper"}>
         <div className={"item col-md-12 navbar-container"}>
@@ -13,17 +17,22 @@ function Navbar() {
                 <div className={"collapse navbar-collapse"}>
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className="nav-link">Товары </a>
+                            <Link to="/products">Товары</Link>
                         </li>
                         <li className="nav-item active">
-                            <a className="nav-link">Категории</a>
+                            <Link to="/categories">Категории</Link>
                         </li>
                         <li className="nav-item active">
-                            <a className="nav-link">Дерево</a>
+                            <Link to={"/tree"}>Дерево</Link>
                         </li>
                         <li className="nav-item active">
-                            <a className="nav-link">Переводы</a>
+                            <Link to={"/translate"}>Переводы</Link>
                         </li>
+                        {
+                            history.pathname == "/products"
+                                ? <button>Новая карточка</button>
+                                : <></>
+                        }
                     </ul>
                     <form className="form-inline">
                         <LanguageSelector/>
