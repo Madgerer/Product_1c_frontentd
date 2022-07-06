@@ -8,7 +8,8 @@ export function ProtectedRoute(props: IProtectedRouteProps) {
     }
 
     return props.isLogged && props.shouldBeLogged
-        ? props.children : <Navigate to="/login" state={historyState} replace/>;
+        ? props.children
+        : <Navigate to="/login" state={historyState} replace/>;
 }
 
 export interface IHistoryState {
