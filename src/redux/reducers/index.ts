@@ -8,6 +8,7 @@ import localReducer from "./local";
 import {reducer as catalogGroupReducer} from "./catalogGroups";
 import {reducer as distributionTypesReducer} from "./distributionsTypes";
 import {reducer as categoriesReducer} from "./categories";
+import {reducer as webSiteReducer} from "./webSites";
 
 const rootReducer = combineReducers({
     authState: authReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
     catalogGroupState: catalogGroupReducer,
     distributionTypesState: distributionTypesReducer,
     categoriesState: categoriesReducer,
+    websitesState: webSiteReducer,
     local: localReducer
 });
 

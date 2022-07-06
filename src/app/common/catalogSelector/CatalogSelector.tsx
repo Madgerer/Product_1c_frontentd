@@ -3,7 +3,7 @@ import {AppState} from "../../../redux/reducers";
 import {useEffect} from "react";
 import {isUndefined} from "lodash";
 import {actions, CatalogState} from "../../../redux/reducers/catalogs";
-import {getCatalogs} from "../../../redux/reducers/catalogs/thunk";
+import {getCatalogsThunk} from "../../../redux/reducers/catalogs/thunk";
 import SimpleSelect, {IOptionType} from "../SimpleSelect";
 import {ICatalog} from "../../../domain/types";
 
@@ -19,7 +19,7 @@ function CatalogSelector(props: ICatalogSelectorGroups) {
     const state = useSelector<AppState, CatalogState>(s => s.catalogState);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getCatalogs())
+        dispatch(getCatalogsThunk())
     }, []);
 
     const selected = state.catalogs.find(x => x.id === state.selected.id)

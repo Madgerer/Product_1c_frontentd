@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getCatalogs} from "./thunk";
+import {getCatalogsThunk} from "./thunk";
 import {ICatalog} from "../../../domain/types";
 
 
@@ -31,11 +31,11 @@ const catalogSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getCatalogs.fulfilled, (state, {payload}) => {
+        builder.addCase(getCatalogsThunk.fulfilled, (state, {payload}) => {
             state.catalogs = payload
             state.wasInit = true;
         })
-        builder.addCase(getCatalogs.rejected, (state, action) => {
+        builder.addCase(getCatalogsThunk.rejected, (state, action) => {
             console.error(`Cant download price groups: Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

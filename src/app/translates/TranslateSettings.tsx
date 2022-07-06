@@ -5,6 +5,7 @@ import {actions, TranslateComponentState} from "../../redux/reducers/local/trans
 import SimpleSelect from "../common/SimpleSelect";
 import ToOptionProvider from "../../utils/ToOptionProvider";
 import CatalogSelector, {CatalogFilter} from "../common/catalogSelector/CatalogSelector";
+import WebsiteSelector from "../common/websiteSelector/WebsiteSelector";
 
 
 export function TranslateSettings() {
@@ -19,13 +20,13 @@ export function TranslateSettings() {
 
     return <>
         <div>
-            <SimpleSelect value={local.selectedLanguage} options={languageState.languages} onChange={setLocalLanguage} toOption={ToOptionProvider.toOption} className={"selector"}/>
+            <SimpleSelect value={local.selectedLanguage} options={languageState.languages} onChange={setLocalLanguage} toOption={ToOptionProvider.websiteToOption} className={"selector"}/>
         </div>
         <div>
             <CatalogSelector filter={CatalogFilter.All}/>
         </div>
         <div>
-            Websites
+            <WebsiteSelector/>
         </div>
         <div className="row col-md-12">
             <form className="form-inline col-md-4">
