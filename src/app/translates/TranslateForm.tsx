@@ -1,4 +1,15 @@
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../redux/reducers";
+import {actions, PhraseTypes, TranslateComponentState} from "../../redux/reducers/local/translateComponent";
+
 export function TranslateForm() {
+    const local = useSelector<AppState, TranslateComponentState>(x => x.local.translateComponent);
+    const dispatch = useDispatch();
+
+    function setPhraseType(type: PhraseTypes) {
+        dispatch(actions.setPhaseType(type))
+    }
+
     return <div className = "col-md-4">
         <button className="btn btn-dark" style={{marginTop: 15}}>Выгрузка</button>
         <button className="btn btn-dark" style={{marginTop: 15}}>Справочник переводов</button>
@@ -14,11 +25,11 @@ export function TranslateForm() {
             <div className="d-flex flex-column align-items-start">
                 <h4 style={{marginLeft:10}}>Форма для переводчика</h4>
                 <label className="form-check-label" style={{marginLeft:10}}>
-                    <input type="checkbox" className="form-check-input" id="nonTranslated"/>
+                    <input type="checkbox" checked={local.phraseType == PhraseTypes.NotTranslated} className="form-check-input" onChange={() => setPhraseType(PhraseTypes.NotTranslated)}/>
                     <span>Только не переведенные</span>
                 </label>
                 <label className="form-check-label" style={{marginLeft:10}}>
-                    <input type="checkbox" className="form-check-input" id="AllFacts"/>
+                    <input type="checkbox" checked={local.phraseType == PhraseTypes.All} className="form-check-input" onChange={() => setPhraseType(PhraseTypes.All)}/>
                     <span>Все фразы</span>
                 </label>
                 <div style={{marginLeft:10, marginBottom:10}}>
@@ -28,10 +39,10 @@ export function TranslateForm() {
                 </div>
             </div>
         </form>
-        <button id="UploadSiteData" type="button" className="btn btn-dark" style={{marginTop:10}}>Загрузить
+        <button type="button" className="btn btn-dark" style={{marginTop:10}}>Загрузить
             информацию на сайт
         </button>
-        <button id="CompareContent" type="button" className="btn btn-dark" style={{marginTop:15}}>Сравнить контент
+        <button type="button" className="btn btn-dark" style={{marginTop:15}}>Сравнить контент
             сайта с блоком каталогов
         </button>
     </div>

@@ -1,5 +1,6 @@
 import {ILanguage} from "../../../../domain/types";
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {act} from "react-dom/test-utils";
 
 export type TranslateComponentState = {
     phraseType: PhraseTypes,
@@ -7,7 +8,7 @@ export type TranslateComponentState = {
     selectedLanguage: ILanguage,
 }
 
-enum PhraseTypes {
+export enum PhraseTypes {
     Nothing,
     All,
     NotTranslated
@@ -39,7 +40,16 @@ const slice = createSlice({
     name: "translate-page",
     initialState: INITIAL_STATE,
     reducers: {
-
+        setPhaseType(state: TranslateComponentState, action: PayloadAction<PhraseTypes>) {
+            if(state.phraseType === action.payload)
+                state.phraseType = PhraseTypes.Nothing
+            else
+                state.phraseType = action.payload
+        },
+        setLanguage(state: TranslateComponentState, action: PayloadAction<ILanguage | undefined>) {
+            if(action.payload !== undefined)
+                state.selectedLanguage = action.payload
+        }
     }
 })
 

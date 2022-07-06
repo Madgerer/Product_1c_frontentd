@@ -1,10 +1,28 @@
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../redux/reducers";
+import {LanguageState} from "../../redux/reducers/languages";
+import {actions, TranslateComponentState} from "../../redux/reducers/local/translateComponent";
+import SimpleSelect from "../common/SimpleSelect";
+import ToOptionProvider from "../../utils/ToOptionProvider";
+import CatalogSelector, {CatalogFilter} from "../common/catalogSelector/CatalogSelector";
+
+
 export function TranslateSettings() {
+    const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
+    const local = useSelector<AppState, TranslateComponentState>(x => x.local.translateComponent)
+    const dispatch = useDispatch();
+
+    function setLocalLanguage(languageId: number){
+        const language = languageState.languages.find(x => x.id == languageId);
+        dispatch(actions.setLanguage(language))
+    }
+
     return <>
         <div>
-            Languages
+            <SimpleSelect value={local.selectedLanguage} options={languageState.languages} onChange={setLocalLanguage} toOption={ToOptionProvider.toOption} className={"selector"}/>
         </div>
         <div>
-            Catalogs
+            <CatalogSelector filter={CatalogFilter.All}/>
         </div>
         <div>
             Websites
