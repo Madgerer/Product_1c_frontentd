@@ -24,7 +24,7 @@ const categorySlice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(getProductGroupsByCatalogsThunk.pending, (state, action) => {
+        builder.addCase(getProductGroupsByCatalogsThunk.pending, (state) => {
             state.isGroupsLoading = true;
         })
         builder.addCase(getProductGroupsByCatalogsThunk.fulfilled, (state, action) => {
@@ -49,7 +49,7 @@ const categorySlice = createSlice({
         builder.addCase(getProductsByGroupThunk.pending, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
             if(index >= 0)
-                state.productGroups[index].isLoading = false;
+                state.productGroups[index].isLoading = true;
             return state;
         })
         builder.addCase(getProductsByGroupThunk.fulfilled, (state, action) => {

@@ -1,13 +1,13 @@
 import {Table} from "react-bootstrap";
 import InformationTableRow from "../../common/ErrorTableRow";
-import {IProductGroupBasicModel} from "../../common/tables/productGroupTable/types";
+import {IProductGroupBasicModel, IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {TreeComponentState} from "../../../redux/reducers/local/treeComponent";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogGroup} from "../../../domain/types";
-import {getProductGroupsBasicThunk} from "../../../redux/reducers/local/treeComponent/thunks";
+import {getProductGroupsBasicThunk, getProductsByGroupThunk} from "../../../redux/reducers/local/treeComponent/thunks";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {CategoriesState} from "../../../redux/reducers/categories";
@@ -42,6 +42,13 @@ export default function TreeGroupTable() {
         local.filter
     ])
 
+    function loadProducts(productGroup: IProductGroupIdentityModel) {
+        dispatch(getProductsByGroupThunk({
+            productGroupId: productGroup.id,
+            languageId: languageState.selected.id}
+        ))
+    }
+
     return <Table bordered hover className={"p-table"}>
         <thead>
         <tr>
@@ -61,7 +68,7 @@ export default function TreeGroupTable() {
                     : local.productGroups
                         .map(x => <ProductGroupTogglingRow key={x.id + x.name}
                                                            model={x}
-                                                           onClick={model => {}}
+                                                           onClick={model => {loadProducts(model)}}
                                                            onSelect={model => {} }
                                                            catalogGroup={catalogGroupState.selected.id}/>)
                 : (<InformationTableRow text={"Loading..."} colSpan={5}/>)

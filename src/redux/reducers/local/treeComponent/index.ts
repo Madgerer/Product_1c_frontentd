@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IProductGroupBasicModel} from "../../../../app/common/tables/productGroupTable/types";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
-import {getProductGroupsBasicThunk} from "./thunks";
+import {getProductGroupsBasicThunk, getProductsByGroupThunk} from "./thunks";
 
 
 export type TreeComponentState = {
@@ -51,7 +51,7 @@ const slice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getProductGroupsBasicThunk.pending, (state, action) => {
+        builder.addCase(getProductGroupsBasicThunk.pending, (state) => {
             state.isProductGroupsLoading = true;
             return state;
         })
@@ -74,6 +74,26 @@ const slice = createSlice({
         })
         builder.addCase(getProductGroupsBasicThunk.rejected, (state, action) => {
             state.isProductGroupsLoading = false;
+            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(getProductsByGroupThunk.pending, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0)
+                state.productGroups[index].isLoading = true;
+            return state;
+        })
+        builder.addCase(getProductsByGroupThunk.fulfilled, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0) {
+                state.productGroups[index].products = action.payload;
+                state.productGroups[index].isLoading = false;
+            }
+            return state;
+        })
+        builder.addCase(getProductsByGroupThunk.rejected, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0)
+                state.productGroups[index].isLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
