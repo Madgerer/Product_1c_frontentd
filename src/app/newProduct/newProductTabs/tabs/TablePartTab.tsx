@@ -1,5 +1,5 @@
 export default function TablePartTab() {
-    return <div id="products" className="tab-pane active row">
+    return <div id="products" className="tab-pane row">
         <div className="row" style={{marginRight:20}}>
             <div className="col-md-6 table-sm" style={{marginTop: 15, lineHeight: 0.6, fontSize: 13}}>
                 <div className="col-md-12" style={{textAlign: "center"}}><h6>Техническое описание</h6></div>
