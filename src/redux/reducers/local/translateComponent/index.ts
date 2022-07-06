@@ -27,12 +27,12 @@ const INITIAL_STATE: TranslateComponentState = {
     phraseType: PhraseTypes.Nothing,
     selectedLanguage: {id: 11, name: "Русский"},
     translateCategories: {
-        isAttributesChecked: false,
-        IsK2UChecked: false,
-        isPcChecked: false,
-        IsPictogramsChecked: false,
-        isSiteChecked: false,
-        IsTechDescriptionChecked: false
+        isAttributesChecked: true,
+        IsK2UChecked: true,
+        isPcChecked: true,
+        IsPictogramsChecked: true,
+        isSiteChecked: true,
+        IsTechDescriptionChecked: true
     }
 }
 
@@ -49,6 +49,32 @@ const slice = createSlice({
         setLanguage(state: TranslateComponentState, action: PayloadAction<ILanguage | undefined>) {
             if(action.payload !== undefined)
                 state.selectedLanguage = action.payload
+        },
+        setTranslateCategoryChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.IsTechDescriptionChecked = action.payload;
+            state.translateCategories.isSiteChecked = action.payload;
+            state.translateCategories.IsK2UChecked = action.payload;
+            state.translateCategories.IsPictogramsChecked = action.payload;
+            state.translateCategories.isAttributesChecked = action.payload;
+            state.translateCategories.isPcChecked = action.payload;
+        },
+        setPcChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.isPcChecked = action.payload;
+        },
+        setAttributesChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.isAttributesChecked = action.payload;
+        },
+        setPictogramsChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.IsPictogramsChecked = action.payload;
+        },
+        setK2UChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.IsK2UChecked = action.payload;
+        },
+        setSiteChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.isSiteChecked = action.payload;
+        },
+        setTechDescriptionChecked(state: TranslateComponentState, action: PayloadAction<boolean>) {
+            state.translateCategories.IsTechDescriptionChecked = action.payload;
         }
     }
 })
