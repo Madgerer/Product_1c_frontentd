@@ -1,6 +1,5 @@
 import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
-import {useDispatch} from "react-redux";
 
 export type AuthState = {
     username: string | null;

@@ -3,9 +3,15 @@ import {IRejectQueryThunk} from "../../types";
 import Api from "../../../api";
 import {ICatalog} from "../../../domain/types";
 import {actions} from "./index";
+import {createApiThunk, createNoArgsApiThunk} from "../../createApiThunk";
+
+export const getCatalogs = createNoArgsApiThunk({
+    typePrefix: "get/catalogs",
+    apiCall: Api.catalogs.getCatalogs
+})
 
 export const uploadCatalogs = createAsyncThunk<ICatalog[], void, {rejectValue: IRejectQueryThunk}>(
-    'upload/catalogs',
+    '',
     async (args, thunkAPI) => {
         try {
             const response = await Api.catalogs.getCatalogs();

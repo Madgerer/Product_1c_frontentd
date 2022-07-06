@@ -53,11 +53,16 @@ const categorySlice = createSlice({
         }
     },
     extraReducers: builder => {
+        builder.addCase(getCategoriesThunk.pending, (state, action) => {
+            state.isCategoriesLoading = true;
+        })
         builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
+            state.isCategoriesLoading = false;
             state.categories = action.payload.map(x => mapCategoryToModel(x))
             return state;
         })
         builder.addCase(getCategoriesThunk.rejected, (state, action) => {
+            state.isCategoriesLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

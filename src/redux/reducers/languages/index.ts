@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LocalStorageProvider} from "../../../api/LocalStorageProvider";
-import {uploadLanguagesThunk} from "./thunk";
+import {getLanguagesThunk} from "./thunk";
 import {ILanguage} from "../../../domain/types";
 
 
@@ -28,10 +28,10 @@ const languageSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(uploadLanguagesThunk.fulfilled, (state, {payload}) => {
+        builder.addCase(getLanguagesThunk.fulfilled, (state, {payload}) => {
             state.languages = payload
         })
-        builder.addCase(uploadLanguagesThunk.rejected, (state, action) => {
+        builder.addCase(getLanguagesThunk.rejected, (state, action) => {
             console.error(`Cant download language list: Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

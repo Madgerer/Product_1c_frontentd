@@ -5,6 +5,7 @@ import {actions} from "./index";
 import {actions as authActions} from "../../auth";
 import {IRejectQueryThunk} from "../../../types";
 
+
 export const loginThunk = createAsyncThunk<Function,
             {username: string, password:string, redirectCallBack: Function },
             {rejectValue: IRejectQueryThunk}>(
@@ -15,7 +16,7 @@ export const loginThunk = createAsyncThunk<Function,
 
         const passwordHash = hashPassword(args.password);
         try {
-            const response = await Api.auth.login(args.username, passwordHash);
+            const response = await Api.auth.login({username: args.username, password: passwordHash});
             thunkAPI.dispatch(actions.setLoading(false))
 
             if(!response.success)

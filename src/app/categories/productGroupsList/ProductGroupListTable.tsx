@@ -7,7 +7,7 @@ import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {SellmarkState} from "../../../redux/reducers/sellmarks";
 import {useEffect} from "react";
 import {
-    getProductByGroupFromCategoryThunk,
+    getProductsByGroupThunk,
     uploadProductGroupFromCatalogsThunk
 } from "../../../redux/reducers/local/categoryComponent/thunk";
 import {LanguageState} from "../../../redux/reducers/languages";
@@ -58,7 +58,7 @@ export default function ProductGroupListTable() {
     }
 
     function loadProducts(productGroup: IProductGroupIdentityModel) {
-        dispatch(getProductByGroupFromCategoryThunk({
+        dispatch(getProductsByGroupThunk({
             productGroupId: productGroup.id,
             languageId: languageState.selected.id}
         ))

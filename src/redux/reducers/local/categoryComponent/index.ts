@@ -1,5 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getProductByGroupFromCategoryThunk, uploadProductGroupFromCatalogsThunk} from "./thunk";
+import {
+    getProductsByGroupThunk,
+    getProductGroupsByCatalogsThunk
+} from "./thunk";
 import {
     IProductGroupIdentityModel, mapCategoryToModel
 } from "../../../../app/common/tables/productGroupTable/types";
@@ -29,14 +32,14 @@ const categorySlice = createSlice({
             return state;
         },
         setProductGroupLoading(state: CategoryComponentState, action: PayloadAction<{productGroupId: string, isLoading: boolean}>) {
-            const index = state.productGroups.findIndex(x => x.id === action.payload.productGroupId)
-            if(index >= 0)
-                state.productGroups[index].isLoading = action.payload.isLoading;
-            return state;
+
         },
     },
     extraReducers: builder => {
-        builder.addCase(uploadProductGroupFromCatalogsThunk.fulfilled, (state, action) => {
+        builder.addCase(getProductGroupsByCatalogsThunk.pending, (state, action) => {
+            state.isGroupsLoading = true;
+        })
+        builder.addCase(getProductGroupsByCatalogsThunk.fulfilled, (state, action) => {
             state.productGroups = action.payload.map(x => {
                 return {
                     id: x.id,
@@ -48,23 +51,35 @@ const categorySlice = createSlice({
                     isImageChecked: x.isImageChecked
                 }
             });
+            state.isGroupsLoading = false;
             return state;
         })
-        builder.addCase(uploadProductGroupFromCatalogsThunk.rejected, (state, action) => {
+        builder.addCase(getProductGroupsByCatalogsThunk.rejected, (state, action) => {
+            state.isGroupsLoading = false;
             console.log(`Can't get products groups. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(getProductByGroupFromCategoryThunk.fulfilled, (state, action) => {
-            const index = state.productGroups.findIndex(x => x.id === action.payload.productGroupId)
+        builder.addCase(getProductsByGroupThunk.pending, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
             if(index >= 0)
-                state.productGroups[index].products = action.payload.products;
+                state.productGroups[index].isLoading = false;
             return state;
         })
-        builder.addCase(getProductByGroupFromCategoryThunk.rejected, (state, action) => {
+        builder.addCase(getProductsByGroupThunk.fulfilled, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0) {
+                state.productGroups[index].products = action.payload;
+                state.productGroups[index].isLoading = false;
+            }
+            return state;
+        })
+        builder.addCase(getProductsByGroupThunk.rejected, (state, action) => {
+            const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
+            if(index >= 0)
+                state.productGroups[index].isLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })
-
 
 
 const actions = categorySlice.actions;
