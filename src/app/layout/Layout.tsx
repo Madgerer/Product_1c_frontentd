@@ -7,6 +7,7 @@ import "./layout.scss";
 import Categories from "../categories/Categories";
 import Tree from "../tree/Tree";
 import Translate from "../translates/Translate";
+import NewProduct from "../newProduct/NewProduct";
 
 function Layout() {
 
@@ -17,7 +18,8 @@ function Layout() {
                 <Route path={"/products"} element={<Product/>}/>
                 <Route path={"/categories"} element={<Categories/>}/>
                 <Route path={"/tree"} element={<Tree/>}/>
-                <Route path={"/try"} element={<Translate/>}/>
+                <Route path={"/translate"} element={<Translate/>}/>
+                <Route path={"/try"} element={<NewProduct/>}/>
                 <Route path={"/*"} element={<Navigate to="/products" replace />}/>
             </Routes>
         </div>
