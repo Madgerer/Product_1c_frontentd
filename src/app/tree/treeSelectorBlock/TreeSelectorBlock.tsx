@@ -4,7 +4,7 @@ import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {actions, CatalogState} from "../../../redux/reducers/catalogs";
 import {useEffect} from "react";
 import {CatalogGroup} from "../../../domain/types";
-import CatalogSelector from "../../common/catalogSelector/CatalogSelector";
+import CatalogSelector, {CatalogFilter} from "../../common/catalogSelector/CatalogSelector";
 import CatalogGroupSelector from "../../common/catalogGroupsSelector/CatalogGroupSelector";
 import "./treeSelectorBlock.scss"
 
@@ -29,7 +29,9 @@ export default function TreeSelectorBlock() {
                     <>
                         <h3>Каталог:</h3>
                         <div className="item align-top tree-selector-container-inner">
-                            <CatalogSelector isPrinted={state.selected.id === CatalogGroup.Printed}/>
+                            <CatalogSelector filter={state.selected.id === CatalogGroup.Printed
+                                ? CatalogFilter.Printed
+                                : CatalogFilter.Web}/>
                         </div>
                     </>
                     : <></>

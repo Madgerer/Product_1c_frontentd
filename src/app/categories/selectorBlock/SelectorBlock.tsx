@@ -1,4 +1,4 @@
-import CatalogSelector from "../../common/catalogSelector/CatalogSelector";
+import CatalogSelector, {CatalogFilter} from "../../common/catalogSelector/CatalogSelector";
 import "./selectorBlock.scss"
 import PriceGroupSelector from "../../common/priceGroupSelector/PriceGroupSelector";
 import SellmarkSelector from "../../common/sellmarkSelector/SellmarkSelector";
@@ -31,7 +31,10 @@ export default function SelectorBlock() {
                     <>
                         <h3>Каталог:</h3>
                         <div className="item align-top cat-selector-container-inner">
-                            <CatalogSelector isPrinted={state.selected.id === CatalogGroup.Printed}/>
+                            <CatalogSelector filter={state.selected.id === CatalogGroup.Printed
+                                ? CatalogFilter.Printed
+                                : CatalogFilter.Web}
+                            />
                         </div>
                     </>
                     : <></>

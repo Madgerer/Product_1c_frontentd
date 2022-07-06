@@ -31,8 +31,14 @@ function CatalogSelector(props: ICatalogSelectorGroups) {
         dispatch(actions.setSelected(id));
     }
 
+    const filtered = props.filter == CatalogFilter.All
+        ? state.catalogs
+        : props.filter == CatalogFilter.Web
+            ? state.catalogs.filter(x => !x.isPrinted)
+            : state.catalogs.filter(x => x.isPrinted)
+
     return <SimpleSelect toOption={toOption}
-                         options={state.catalogs.filter(x => x.isPrinted === props.isPrinted)}
+                         options={filtered}
                          className={"selector"}
                          onChange={newValue => changeSelected(newValue)}
                          value={state.selected}
@@ -40,7 +46,13 @@ function CatalogSelector(props: ICatalogSelectorGroups) {
 }
 
 interface ICatalogSelectorGroups {
-    isPrinted: boolean
+    filter: CatalogFilter
+}
+
+export enum CatalogFilter {
+    All,
+    Printed,
+    Web
 }
 
 export default CatalogSelector

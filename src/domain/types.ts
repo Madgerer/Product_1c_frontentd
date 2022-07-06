@@ -65,3 +65,8 @@ export interface ISellmark {
     name: string,
     imageUrl?: string | null
 }
+
+export interface IWebsite {
+    id: number,
+    name: string
+}
