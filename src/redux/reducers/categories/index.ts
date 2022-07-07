@@ -98,6 +98,7 @@ const categorySlice = createSlice({
                 const category = findCategory(state.categories, action.meta.arg.parentId);
                 category!.children.push(createCategory(action.meta.arg.parentId, action.payload, action.meta.arg.name))
             }
+            state.newCategoryName = ""
         })
         builder.addCase(createCategoryThunk.rejected, (state, action) => {
             console.log(`Can't create category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
