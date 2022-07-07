@@ -29,7 +29,10 @@ export default function CategoryGroupTree() {
     return <>
         {categoriesState.isCategoriesLoading
             ? "Loading"
-            : <CategoryExpandedList categories={categoriesState.categories} onRowClicked={onRowClicked} onCheckboxClicked={setChecked}/>
+            :
+          <ul className="cat-category-group-list__wrapper">
+              <CategoryExpandedList spanLevel={1} categories={categoriesState.categories} onRowClicked={onRowClicked} onCheckboxClicked={setChecked}/>
+          </ul>
         }
     </>;
 }

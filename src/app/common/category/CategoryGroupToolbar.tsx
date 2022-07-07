@@ -77,15 +77,15 @@ export default function CategoryGroupToolbar() {
     }
 
     return <div className="input-group-sm cat-category-group-toolbar-container">
-        <div className="col-md-12 input-group-sm">
+        <div className="col-md-12 input-group-sm u-no-padding">
             <button title="Добавить категорию" type="button" className="btn btn-dark" onClick={() => createCategory()}>
-                <i className="fa fa-plus" aria-hidden="true"></i>
+                <i className="fa fa-plus" aria-hidden="true"/>
             </button>
             <button title="Изменить наименование выделенной категории" type="button" className="btn btn-dark" onClick={() => updateCategoryName()}>
-                <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <i className="fa fa-pencil-square-o" aria-hidden="true"/>
             </button>
             <button title="Удалить выделенную категорию" type="button" className="btn btn-dark" onClick={() => deleteCategory()}>
-                <i className="fa fa-minus" aria-hidden="true"></i>
+                <i className="fa fa-minus" aria-hidden="true"/>
             </button>
             <input className="form-control"
                    onChange={e => setNewCategoryName(e.currentTarget.value)}

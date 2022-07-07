@@ -1,0 +1,43 @@
+.cat-category-group-list__wrapper {
+  list-style: none;
+  padding: 0;
+}
+
+.cat-category-group-list__element {
+  padding: 4px 0;
+  border: 1px solid #ccc;
+
+  &.--selected {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+}
+
+.span-indent-wrapper {
+  display: flex;
+}
+
+.li-indent {
+  width: 20px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.cat-category-group-list {
+  display: flex;
+  align-items: center;
+
+  padding-left: 22px;
+  position: relative;
+
+  .fa {
+    padding: 4px;
+    position: absolute;
+    left: 0;
+  }
+}
+
+.my-custom-checkbox__wrapper {
+  margin: 2px 10px 2px 2px;
+}
