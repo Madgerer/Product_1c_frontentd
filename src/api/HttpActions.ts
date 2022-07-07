@@ -52,7 +52,8 @@ class HttpActions {
 
     /** Функция выполняет Remove запрос на сервер */
     static delete<T>(url: string, data: object | null, authorized: boolean): Promise<IApplicationResponse<T>>  {
-        return axios.delete(url, {headers: this.getHeaders(authorized)})
+        const urlWithArguments = HttpActions.getFullUrl(url, data);
+        return axios.delete(urlWithArguments, {headers: this.getHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch((e) => HttpActions.getErrorObject(e));
     }
