@@ -24,7 +24,7 @@ function ProductGroupListTable() {
             priceGroupId: priceGroupState.selected.id,
             languageId: languageState.selected.id,
             searchString: local.filter,
-            distributionType: local.selectedCardType,
+            pgValidationType: local.selectedCardType.value,
         }))
     }, [priceGroupState.selected.id, languageState.selected.id, local.selectedCardType, local.filter])
 

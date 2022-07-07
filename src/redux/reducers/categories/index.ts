@@ -1,7 +1,7 @@
 import {ICategoryIdentityModel, mapCategoryToModel} from "../../../app/common/tables/productGroupTable/types";
 import {ICategory} from "../../../domain/types";
 import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createCategoryThunk, getCategoriesThunk, updateCategoryNameThunk} from "./thunk";
+import {createCategoryThunk, deleteCategoryThunk, getCategoriesThunk, updateCategoryNameThunk} from "./thunk";
 
 export type CategoriesState = {
     categories: ICategoryIdentityModel[],
@@ -36,12 +36,23 @@ const categorySlice = createSlice({
             return state;
         },
         setSelectedCategory(state: CategoriesState, action: PayloadAction<{selected: boolean, categoryId: number}>) {
+            if(state.selectedCategory !== null && state.selectedCategory.id == action.payload.categoryId) {
+                state.categoryCurrentName = ""
+                state.selectedCategory = null;
+                return state;
+            }
+
             const category = findCategory(state.categories, action.payload.categoryId);
             if(category != null) {
+                if(state.selectedCategory != null) {
+                    const previousCategory = findCategory(state.categories, state.selectedCategory.id)
+                    previousCategory!.selected = false;
+                }
                 category.selected = action.payload.selected;
                 state.categoryCurrentName = category.name;
                 state.selectedCategory = category;
             }
+
             return state;
         },
         setCategoryChecked(state: CategoriesState, action: PayloadAction<{checked: boolean, categoryId: number}>) {
@@ -65,7 +76,7 @@ const categorySlice = createSlice({
         })
         builder.addCase(getCategoriesThunk.rejected, (state, action) => {
             state.isCategoriesLoading = false;
-            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            console.log(`Can't get categories identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(updateCategoryNameThunk.fulfilled, (state, action) => {
             if(state.selectedCategory !== null) {
@@ -77,11 +88,11 @@ const categorySlice = createSlice({
             }
         })
         builder.addCase(updateCategoryNameThunk.rejected, (state, action) => {
-            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            console.log(`Can't update category name. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(createCategoryThunk.fulfilled, (state, action) => {
             if(action.meta.arg.parentId == null) {
-                state.categories.push(createCategory(action.meta.arg.parentId ?? 0, action.payload, action.meta.arg.name))
+                state.categories.unshift(createCategory(action.meta.arg.parentId ?? 0, action.payload, action.meta.arg.name))
             }
             else {
                 const category = findCategory(state.categories, action.meta.arg.parentId);
@@ -89,7 +100,29 @@ const categorySlice = createSlice({
             }
         })
         builder.addCase(createCategoryThunk.rejected, (state, action) => {
-            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            console.log(`Can't create category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(deleteCategoryThunk.fulfilled, (state, action) => {
+            const category = findCategory(state.categories, action.meta.arg.id);
+            if(category !== null) {
+                if(category.parentId != 0) {
+                    const parent = findCategory(state.categories, category.parentId);
+                    if(parent !== null) {
+                        parent.children = parent.children.filter(x => x.id != category.id);
+                    }
+                }
+                else {
+                    state.categories = state.categories.filter(x => x.id != category.id);
+                }
+                //после удаления категории нужно выставить selected = null
+                if(state.selectedCategory !== null && state.selectedCategory.id == category.id) {
+                    state.selectedCategory = null;
+                    state.categoryCurrentName = "";
+                }
+            }
+        })
+        builder.addCase(deleteCategoryThunk.rejected, (state, action) => {
+            console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

@@ -4,7 +4,7 @@ import {ICardDistributionType, IProductGroupBasic, IProductGroupIdentity} from "
 
 export default class ProductGroupApi extends BaseApi {
 
-    getProductsGroupsIdentity = async (data: {priceGroupId: number, languageId: number, searchString: string, distributionType: ICardDistributionType}): Promise<IApplicationResponse<IProductGroupIdentity[]>> =>
+    getProductsGroupsIdentity = async (data: {priceGroupId: number, languageId: number, searchString: string, pgValidationType: number}): Promise<IApplicationResponse<IProductGroupIdentity[]>> =>
          this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity', data, actionTypes.get, true);
 
     getProductsGroupsFromCatalog = async (data: {priceGroupId: number,

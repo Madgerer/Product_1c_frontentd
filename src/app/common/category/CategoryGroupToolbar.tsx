@@ -2,7 +2,11 @@ import "./categoryGroupToolbar.scss"
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {actions, CategoriesState} from "../../../redux/reducers/categories";
-import {createCategoryThunk, updateCategoryNameThunk} from "../../../redux/reducers/categories/thunk";
+import {
+    createCategoryThunk,
+    deleteCategoryThunk,
+    updateCategoryNameThunk
+} from "../../../redux/reducers/categories/thunk";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
@@ -28,6 +32,7 @@ export default function CategoryGroupToolbar() {
     function updateCategoryName() {
         if(local.selectedCategory === null) {
             alert("Выберите категорию")
+            return
         }
         else {
             if(local.selectedCategory.name !== local.categoryCurrentName) {
@@ -55,6 +60,22 @@ export default function CategoryGroupToolbar() {
         }))
     }
 
+    function deleteCategory() {
+        if(local.selectedCategory === null){
+            alert("Выберите наименование")
+            return;
+        }
+        if(local.selectedCategory.children.length != 0)
+        {
+            alert("У категории есть суб категории")
+            return;
+        }
+        dispatch(deleteCategoryThunk({
+            id: local.selectedCategory.id,
+            catalogGroup: catalogGroupState.selected.id
+        }))
+    }
+
     return <div className="input-group-sm cat-category-group-toolbar-container">
         <div className="col-md-12 input-group-sm">
             <button title="Добавить категорию" type="button" className="btn btn-dark" onClick={() => createCategory()}>
@@ -63,7 +84,7 @@ export default function CategoryGroupToolbar() {
             <button title="Изменить наименование выделенной категории" type="button" className="btn btn-dark" onClick={() => updateCategoryName()}>
                 <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
             </button>
-            <button title="Удалить выделенную категорию" type="button" className="btn btn-dark">
+            <button title="Удалить выделенную категорию" type="button" className="btn btn-dark" onClick={() => deleteCategory()}>
                 <i className="fa fa-minus" aria-hidden="true"></i>
             </button>
             <input className="form-control"

@@ -15,3 +15,8 @@ export const createCategoryThunk = createApiThunk({
     typePrefix: "create/category",
     apiCall: Api.category.createCategory
 })
+
+export const deleteCategoryThunk = createApiThunk({
+    typePrefix: "delete/category",
+    apiCall: Api.category.deleteCategory
+})

@@ -14,4 +14,7 @@ export default class CategoryApi extends BaseApi {
 
     createCategory = (data: {parentId: number | null, name: string, catalogGroup: CatalogGroup, languageId: number}) : Promise<IApplicationResponse<number>> =>
         this.sendQuery('/api/category', data, actionTypes.post, true);
+
+    deleteCategory = (data: {id: number, catalogGroup: number}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery('/api/category', data, actionTypes.delete, true);
 }
