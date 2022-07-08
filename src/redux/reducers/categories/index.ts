@@ -1,7 +1,12 @@
 import {ICategoryIdentityModel, mapCategoryToModel} from "../../../app/common/tables/productGroupTable/types";
 import {ICategory} from "../../../domain/types";
-import {Action, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createCategoryThunk, deleteCategoryThunk, getCategoriesThunk, updateCategoryNameThunk} from "./thunk";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {
+    createCategoryThunk,
+    deleteCategoryThunk,
+    getCategoriesThunk,
+    updateCategoryNameThunk
+} from "./thunk";
 
 export type CategoriesState = {
     categories: ICategoryIdentityModel[],
@@ -63,6 +68,14 @@ const categorySlice = createSlice({
         clearToolbarState(state: CategoriesState) {
             state.categoryCurrentName = ""
             state.selectedCategory = null
+        },
+        setHighlightedCategories(state: CategoriesState, action: PayloadAction<number[]>){
+            clearHighlighting(state.categories)
+            action.payload.forEach(x => {
+                const category = findCategory(state.categories, x);
+                if(category !== null)
+                    category.highlighted = true;
+            })
         }
     },
     extraReducers: builder => {
@@ -125,17 +138,27 @@ const categorySlice = createSlice({
         builder.addCase(deleteCategoryThunk.rejected, (state, action) => {
             console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
+
     }
 })
 
-function createCategory(parentId: number, id: number, name: string) {
+function clearHighlighting(categories: ICategoryIdentityModel[]) {
+    categories.forEach(x => {
+        x.highlighted = false;
+        if(x.children.length !== 0)
+            clearHighlighting(x.children)
+    })
+}
+
+function createCategory(parentId: number, id: number, name: string): ICategoryIdentityModel {
     return {
         name: name,
         id: id,
         checked: false,
         children: [],
         selected: false,
-        parentId: parentId
+        parentId: parentId,
+        highlighted: false
     }
 }
 

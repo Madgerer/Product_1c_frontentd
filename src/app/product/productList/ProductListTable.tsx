@@ -44,10 +44,12 @@ function ProductListTable() {
                             .map(x => {
                                 return <tr className={x.checked ? "table-row--selected" : ""} key={x.id}>
                                     <td>{x.id}</td>
-                                    <td>{x.name}</td>
+                                    <td>
+                                        {x.name}
+                                        <label htmlFor={x.id}/>
+                                    </td>
                                     <td className="p-table-column-checkbox-wrapper">
-                                        <label htmlFor={x.id}>
-                                        </label>
+
                                         <input id={x.id} checked={x.checked} type="checkbox" onChange={(e) => setChecked(x.id, e.target.checked)}/>
                                     </td>
                                 </tr>

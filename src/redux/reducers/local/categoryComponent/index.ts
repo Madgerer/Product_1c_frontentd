@@ -1,17 +1,23 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getProductGroupsByCatalogsThunk, getProductsByGroupThunk} from "./thunk";
+import {getProductGroupCatsThunk, getProductGroupsByCatalogsThunk, getProductsByGroupThunk} from "./thunk";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
+import {IProductGroupWithCategoryPath} from "../../../../domain/types";
+import {ProductGroupListComponentState} from "../productComponent/productGroupList";
 
 export type CategoryComponentState = {
     groupFilter: string,
     isGroupsLoading: boolean
     productGroups: IProductGroupIdentityModel[]
+    selectedGroups: IProductGroupIdentityModel[]
+    productGroupsWithCategoriesPath: IProductGroupWithCategoryPath[]
 }
 
 const INITIAL_STATE: CategoryComponentState = {
     groupFilter: "",
     isGroupsLoading: false,
     productGroups: [],
+    selectedGroups: [],
+    productGroupsWithCategoriesPath: []
 }
 
 const categorySlice = createSlice({
@@ -22,6 +28,20 @@ const categorySlice = createSlice({
             state.groupFilter = action.payload;
             return state;
         },
+        removeProductGroupWithCatPath(state: CategoryComponentState, action: PayloadAction<string>) {
+            state.productGroupsWithCategoriesPath = state.productGroupsWithCategoriesPath.filter(x => x.productGroupId != action.payload)
+        },
+        setSelectedProductGroup(state: CategoryComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
+            const selectedIndex = state.selectedGroups.findIndex(x => x.id === action.payload.id);
+            const index = state.productGroups.findIndex(x => x.id === action.payload.id)
+
+            if(selectedIndex > -1) {
+                state.selectedGroups = state.selectedGroups.splice(index, 1)
+            }
+            if(index > -1) {
+                state.productGroups[index].checked = !action.payload.checked
+            }
+        }
     },
     extraReducers: builder => {
         builder.addCase(getProductGroupsByCatalogsThunk.pending, (state) => {
@@ -65,6 +85,12 @@ const categorySlice = createSlice({
             if(index >= 0)
                 state.productGroups[index].isLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(getProductGroupCatsThunk.fulfilled, (state, action) => {
+
+        })
+        builder.addCase(getProductGroupCatsThunk.rejected, (state, action) => {
+            console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

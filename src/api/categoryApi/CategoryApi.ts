@@ -17,4 +17,7 @@ export default class CategoryApi extends BaseApi {
 
     deleteCategory = (data: {id: number, catalogGroup: number}): Promise<IApplicationResponse<void>> =>
         this.sendQuery('/api/category', data, actionTypes.delete, true);
+
+    getProductGroupCats = (data: {productGroupId: string, catalogGroup: number, languageId: number}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery('/api/category/product-group-cats', data, actionTypes.get, true);
 }

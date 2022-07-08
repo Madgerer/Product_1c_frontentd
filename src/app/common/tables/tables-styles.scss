@@ -25,7 +25,18 @@
     background-color: rgba(0,0,0,.075);
   }
 
+  td {
+    position: relative;
 
+    label {
+      margin: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
 
   .p-table-column-checkbox-wrapper {
     width: 35px;

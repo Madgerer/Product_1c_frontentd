@@ -13,11 +13,20 @@ export interface ICategory {
     children: ICategory[]
 }
 
+export interface IProductGroupWithCategoryPath {
+    productGroupId: string,
+    categoryPath: number[]
+}
+
+export enum DistributionType {
+    NotDistributed = 1,
+    Distributed = 2
+}
+
 export enum CatalogGroup {
     Web = 0,
     Printed = 1
 }
-
 
 export interface ICatalogGroup {
     id: number,
