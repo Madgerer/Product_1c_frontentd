@@ -17,20 +17,20 @@ function Navbar() {
                 <div className={"collapse navbar-collapse"}>
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <Link to="/products">Товары</Link>
+                            <Link to="/products" className="nav-link">Товары</Link>
                         </li>
                         <li className="nav-item active">
-                            <Link to="/categories">Категории</Link>
+                            <Link to="/categories" className="nav-link">Категории</Link>
                         </li>
                         <li className="nav-item active">
-                            <Link to={"/tree"}>Дерево</Link>
+                            <Link to={"/tree"} className="nav-link">Дерево</Link>
                         </li>
                         <li className="nav-item active">
-                            <Link to={"/translate"}>Переводы</Link>
+                            <Link to={"/translate"} className="nav-link">Переводы</Link>
                         </li>
                         {
                             history.pathname == "/products"
-                                ? <button>Новая карточка</button>
+                                ? <button style={{cursor: "pointer", backgroundColor: "chocolate", borderRadius: 4, fontWeight: "bold", color: "white", border: "none"}}>Новая карточка</button>
                                 : <></>
                         }
                     </ul>
@@ -38,8 +38,7 @@ function Navbar() {
                         <LanguageSelector/>
                         <div className="form-group navbar-logout-button">
                             <button type="button" title="Выйти из системы" id="logOut"
-                                    className="btn btn-danger btn-sm"><i className="fa fa-sign-out"
-                                                                         aria-hidden="true"></i></button>
+                                    className="btn btn-danger btn-sm"><i className="fa fa-sign-out" aria-hidden="true"/></button>
                         </div>
                     </form>
                 </div>
