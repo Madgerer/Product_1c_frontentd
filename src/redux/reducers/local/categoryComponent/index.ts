@@ -66,6 +66,7 @@ const categorySlice = createSlice({
                 }
             });
             state.isGroupsLoading = false;
+            state.productGroupsWithCategoriesPath = []
             return state;
         })
         builder.addCase(getProductGroupsByCatalogsThunk.rejected, (state, action) => {

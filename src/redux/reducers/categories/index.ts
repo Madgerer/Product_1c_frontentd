@@ -14,6 +14,7 @@ export type CategoriesState = {
     categoryCurrentName: string,
     newCategoryName: string,
     selectedCategory: ICategory | null
+    checkCategories: ICategory[]
 }
 
 const INITIAL_STATE: CategoriesState = {
@@ -21,7 +22,8 @@ const INITIAL_STATE: CategoriesState = {
     isCategoriesLoading: false,
     categoryCurrentName: "",
     newCategoryName: "",
-    selectedCategory: null
+    selectedCategory: null,
+    checkCategories: []
 }
 
 const categorySlice = createSlice({
@@ -62,8 +64,13 @@ const categorySlice = createSlice({
         },
         setCategoryChecked(state: CategoriesState, action: PayloadAction<{checked: boolean, categoryId: number}>) {
             const category = findCategory(state.categories, action.payload.categoryId);
-            if(category != null)
+            if(category != null) {
+                if(action.payload.checked)
+                    state.checkCategories.push(category)
+                else
+                    state.checkCategories = state.checkCategories.filter(x => x.id !== category.id)
                 category.checked = action.payload.checked;
+            }
         },
         clearToolbarState(state: CategoriesState) {
             state.categoryCurrentName = ""
@@ -71,7 +78,7 @@ const categorySlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getCategoriesThunk.pending, (state, action) => {
+        builder.addCase(getCategoriesThunk.pending, (state) => {
             state.isCategoriesLoading = true;
         })
         builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
@@ -83,7 +90,7 @@ const categorySlice = createSlice({
             state.isCategoriesLoading = false;
             console.log(`Can't get categories identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(updateCategoryNameThunk.fulfilled, (state, action) => {
+        builder.addCase(updateCategoryNameThunk.fulfilled, (state) => {
             if(state.selectedCategory !== null) {
                 const category = findCategory(state.categories, state.selectedCategory.id);
                 if(category !== null) {
