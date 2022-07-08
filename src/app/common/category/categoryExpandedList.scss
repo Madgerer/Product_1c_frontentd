@@ -12,6 +12,10 @@
     color: white;
     border-color: #007bff;
   }
+
+  &.--highlighted {
+    background-color: #2ECC40;
+  }
 }
 
 .span-indent-wrapper {

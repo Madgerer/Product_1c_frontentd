@@ -1,7 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {CatalogGroup, ICategory} from "../../domain/types";
-import HttpActions from "../HttpActions";
+import {CatalogGroup, ICategory, IProductGroupWithCategoryPath} from "../../domain/types";
 
 
 export default class CategoryApi extends BaseApi {
@@ -18,6 +17,6 @@ export default class CategoryApi extends BaseApi {
     deleteCategory = (data: {id: number, catalogGroup: number}): Promise<IApplicationResponse<void>> =>
         this.sendQuery('/api/category', data, actionTypes.delete, true);
 
-    getProductGroupCats = (data: {productGroupId: string, catalogGroup: number, languageId: number}): Promise<IApplicationResponse<void>> =>
+    getProductGroupCats = (data: {productGroupId: string, catalogGroup: number, languageId: number}): Promise<IApplicationResponse<IProductGroupWithCategoryPath[]>> =>
         this.sendQuery('/api/category/product-group-cats', data, actionTypes.get, true);
 }

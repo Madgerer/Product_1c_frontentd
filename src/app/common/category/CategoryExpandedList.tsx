@@ -19,7 +19,10 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
     const [isToggled, setToggled] = useState<boolean>(false);
 
     return <>
-        <li className="cat-category-group-list__element span-indent-wrapper">
+        <li className={`cat-category-group-list__element 
+                span-indent-wrapper 
+                ${props.category.selected ? "--selected": ""} 
+                ${props.category.highlighted ? "--highlighted" : ""}`}>
             { Array.from({ length: props.spanLevel }, (_, i) =>
               <span key={i} className="li-indent" />)
             }
@@ -30,10 +33,10 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
                       : <></>
                 }
                 <div className="my-custom-checkbox__wrapper">
-                    <input type="checkbox" className="my-custom-checkbox" id={String(props.category.id)} checked={props.category.checked} onChange={e => props.onCheckboxClicked(props.category)}/>
+                    <input type="checkbox" className="my-custom-checkbox" id={String(props.category.id)} checked={props.category.checked} onChange={() => props.onCheckboxClicked(props.category)}/>
                     <label htmlFor={String(props.category.id)}/>
                 </div>
-                <div onClick={e => props.onRowClicked(props.category)}>
+                <div onClick={() => props.onRowClicked(props.category)}>
                     {props.category.name}
                 </div>
             </div>

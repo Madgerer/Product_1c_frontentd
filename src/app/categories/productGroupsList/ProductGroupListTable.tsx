@@ -56,7 +56,9 @@ export default function ProductGroupListTable() {
         local.groupFilter])
 
     useEffect(() => {
-        dispatch(categoryActions.setHighlightedCategories(local.productGroupsWithCategoriesPath.flatMap(x => x.categoryPath)))
+        let allCategoryIds = local.productGroupsWithCategoriesPath.map(x => x.categoryPath).flatMap(x => x);
+        allCategoryIds = _.uniq(allCategoryIds)
+        dispatch(categoryActions.setHighlightedCategories(allCategoryIds))
     }, [local.productGroupsWithCategoriesPath])
 
     function onSelect(productGroup: IProductGroupIdentityModel) {
