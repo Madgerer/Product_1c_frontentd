@@ -15,7 +15,6 @@ import {LanguageState} from "../../../redux/reducers/languages";
 import {DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
 import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
 import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
-import {actions as categoryActions} from "../../../redux/reducers/categories/index";
 import _ from "lodash";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {DistributionType} from "../../../domain/types";
@@ -55,22 +54,21 @@ export default function ProductGroupListTable() {
         distributedState.selected.value,
         local.groupFilter])
 
-    useEffect(() => {
-        let allCategoryIds = local.productGroupsWithCategoriesPath.map(x => x.categoryPath).flatMap(x => x);
-        allCategoryIds = _.uniq(allCategoryIds)
-        dispatch(categoryActions.setHighlightedCategories(allCategoryIds))
-    }, [local.productGroupsWithCategoriesPath])
-
-    function onSelect(productGroup: IProductGroupIdentityModel) {
+    function onSelect(productGroup: IProductGroupIdentityModel, fromCheckBox: boolean) {
         dispatch(actions.setSelectedProductGroup(productGroup))
 
         if(distributedState.selected.value == DistributionType.Distributed) {
             if(local.productGroupsWithCategoriesPath.find(x => x.productGroupId == productGroup.id) === undefined) {
-                dispatch(getProductGroupCatsThunk({
-                    productGroupId: productGroup.id,
-                    languageId: languageState.selected.id,
-                    catalogGroup: catalogGroupState.selected.id}))
-            }else {
+                //при нажатии на чек бокс не должно происходить подсветки
+                //if(!fromCheckBox) {
+                    dispatch(getProductGroupCatsThunk({
+                        productGroupId: productGroup.id,
+                        languageId: languageState.selected.id,
+                        catalogGroup: catalogGroupState.selected.id}))
+                //}
+            }
+            else {
+                //при отключении чекбокса должно происходить отключение подсветки
                 dispatch(actions.removeProductGroupWithCatPath(productGroup.id))
             }
         }
@@ -84,6 +82,12 @@ export default function ProductGroupListTable() {
     }
 
     return <div className="table-sm p-table__scroll-wrapper">
-        <ExpandedProductGroupTable isProductGroupsLoading={local.isGroupsLoading} productGroups={local.productGroups} loadProducts={loadProducts} onRowClick={onSelect}/>
+        <ExpandedProductGroupTable
+            isProductGroupsLoading={local.isGroupsLoading}
+            productGroups={local.productGroups}
+            loadProducts={loadProducts}
+            onRowClick={x => onSelect(x, false)}
+            onCheckBoxClick={x => onSelect(x, true)}
+        />
     </div>
 }

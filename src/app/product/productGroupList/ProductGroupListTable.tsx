@@ -45,7 +45,9 @@ function ProductGroupListTable() {
             isProductGroupsLoading={local.isProductGroupsLoading}
             productGroups={local.productGroups}
             loadProducts={loadProducts}
-            onRowClick={onSelect}/>
+            onRowClick={onSelect}
+            onCheckBoxClick={onSelect}
+        />
     </div>
 }
 

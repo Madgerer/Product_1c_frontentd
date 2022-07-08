@@ -1,9 +1,13 @@
 import CategoryGroupToolbar from "./CategoryGroupToolbar";
 import CategoryGroupTree from "./CategoryGroupTree";
 
-export default function CategoryForm() {
+export default function CategoryForm(props: ICategoryFormProps) {
     return <>
         <CategoryGroupToolbar/>
-        <CategoryGroupTree/>
+        <CategoryGroupTree highlightedRows={props.highlightedCategories}/>
     </>
+}
+
+interface ICategoryFormProps {
+    highlightedCategories: number[]
 }

@@ -4,7 +4,13 @@ import {useState} from "react";
 
 export default function CategoryExpandedList(props: ICategoryExpandedListProps) {
     return <>
-        {props.categories.map(x => <CategoryExpanded spanLevel={props.spanLevel} key={x.id} category={x} onCheckboxClicked={props.onCheckboxClicked} onRowClicked={props.onRowClicked}/>)}
+        {props.categories.map(x => <CategoryExpanded
+            key={x.id}
+            spanLevel={props.spanLevel}
+            category={x}
+            highlightedRows={props.highlightedRows}
+            onCheckboxClicked={props.onCheckboxClicked}
+            onRowClicked={props.onRowClicked}/>)}
     </>
 }
 
@@ -13,6 +19,7 @@ interface ICategoryExpandedListProps {
     onRowClicked: (category: ICategoryIdentityModel) => void,
     onCheckboxClicked: (category: ICategoryIdentityModel) => void,
     spanLevel: number
+    highlightedRows: number[]
 }
 
 function CategoryExpanded(props: ICategoryExpandedProps) {
@@ -22,7 +29,8 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
         <li className={`cat-category-group-list__element 
                 span-indent-wrapper 
                 ${props.category.selected ? "--selected": ""} 
-                ${props.category.highlighted ? "--highlighted" : ""}`}>
+                ${props.highlightedRows.findIndex(x => props.category.id === x) > -1  ? "--highlighted" : ""}`}>
+
             { Array.from({ length: props.spanLevel }, (_, i) =>
               <span key={i} className="li-indent" />)
             }
@@ -42,7 +50,12 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
             </div>
         </li>
 
-        {!isToggled ? <></> : <CategoryExpandedList spanLevel={props.spanLevel + 1} categories={props.category.children} onCheckboxClicked={props.onCheckboxClicked} onRowClicked={props.onRowClicked}/>}
+        {!isToggled ? <></> : <CategoryExpandedList
+                                    spanLevel={props.spanLevel + 1}
+                                    highlightedRows={props.highlightedRows}
+                                    categories={props.category.children}
+                                    onCheckboxClicked={props.onCheckboxClicked}
+                                    onRowClicked={props.onRowClicked}/>}
     </>
 }
 
@@ -50,5 +63,6 @@ interface ICategoryExpandedProps {
     category: ICategoryIdentityModel,
     onRowClicked: (category: ICategoryIdentityModel) => void,
     onCheckboxClicked: (category: ICategoryIdentityModel) => void,
-    spanLevel: number
+    spanLevel: number,
+    highlightedRows: number[]
 }

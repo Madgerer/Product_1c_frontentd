@@ -12,7 +12,6 @@ export type ICategoryIdentityModel = {
     children: ICategoryIdentityModel[],
     checked: boolean,
     selected: boolean,
-    highlighted: boolean
 }
 
 export type IProductGroupBasicModel = IProductGroupBasic
@@ -27,6 +26,5 @@ export function mapCategoryToModel(category: ICategory): ICategoryIdentityModel 
         parentId: category.parentId,
         children: category.children.map(x => mapCategoryToModel(x)),
         selected: false,
-        highlighted: false
     }
 }

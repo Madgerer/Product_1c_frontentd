@@ -35,7 +35,8 @@ const categorySlice = createSlice({
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
 
             if(selectedIndex > -1) {
-                state.selectedGroups = state.selectedGroups.splice(index, 1)
+                state.selectedGroups = state.selectedGroups.splice(selectedIndex, 1)
+                state.productGroupsWithCategoriesPath.filter(x => x.productGroupId != state.productGroups[index].id);
                 state.productGroupsWithCategoriesPath = state.productGroupsWithCategoriesPath.filter(x => x.productGroupId != action.payload.id)
             }
             else {
@@ -44,6 +45,7 @@ const categorySlice = createSlice({
             if(index > -1) {
                 state.productGroups[index].checked = !action.payload.checked
             }
+
         }
     },
     extraReducers: builder => {
@@ -75,7 +77,6 @@ const categorySlice = createSlice({
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
             if(index >= 0)
                 state.productGroups[index].isLoading = true;
-            return state;
         })
         builder.addCase(getProductsByGroupThunk.fulfilled, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
@@ -83,7 +84,6 @@ const categorySlice = createSlice({
                 state.productGroups[index].products = action.payload;
                 state.productGroups[index].isLoading = false;
             }
-            return state;
         })
         builder.addCase(getProductsByGroupThunk.rejected, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)

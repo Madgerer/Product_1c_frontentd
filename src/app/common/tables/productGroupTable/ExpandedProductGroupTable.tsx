@@ -19,7 +19,12 @@ export default function ExpandedProductGroupTable(props: IExpandedProductGroupTa
                 ? props.productGroups.length === 0
                     ? <InformationTableRow text={"No matching records found"} colSpan={4}/>
                     : props.productGroups
-                        .map(x => <ProductGroupTogglingRow key={x.id + x.name} model={x} onExpanderClick={props.loadProducts} onRowClick={props.onRowClick}/>)
+                        .map(x => <ProductGroupTogglingRow
+                            key={x.id + x.name}
+                            model={x}
+                            onCheckBoxClick={props.onCheckBoxClick}
+                            onExpanderClick={props.loadProducts}
+                            onRowClick={props.onRowClick}/>)
                 : (<InformationTableRow text={"Loading..."} colSpan={4}/>)
         }
         </tbody>
@@ -31,13 +36,14 @@ interface IExpandedProductGroupTableProps {
     productGroups: IProductGroupIdentityModel[],
     loadProducts: (productGroup: IProductGroupIdentityModel) => void,
     onRowClick: (productGroup: IProductGroupIdentityModel) => void
+    onCheckBoxClick: (model: IProductGroupIdentityModel) => void;
 }
 
 function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
     const [isToggle, setIsToggle] = useState(false)
 
     return <>
-        <tr>
+        <tr className={props.model.checked ? "table-row--selected" : ""}>
             <td className="product-right-column-plus-wrapper" onClick={_ => {
                 //проверка на то что уже загружено поддерево
                 if(props.model.products != null && !isToggle) {
@@ -52,12 +58,11 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
                     ? <i className="fa fa-minus bg-blue"></i>
                     : <i className="fa fa-plus bg-blue"></i>}
             </td>
-            <td>
+            <td onClick={(e) => props.onRowClick(props.model)}>
                {props.model.name}
-                <label htmlFor={props.model.id} />
             </td>
-            <td className="p-table-column-checkbox-wrapper" onClick={(e) => props.onRowClick(props.model)}>
-                <input id={props.model.id} type="checkbox" checked={props.model.checked} readOnly={true}/>
+            <td className="p-table-column-checkbox-wrapper" onClick={(e) => props.onCheckBoxClick(props.model)}>
+                <input type="checkbox" checked={props.model.checked} readOnly={true}/>
             </td>
             <td className={`info ${getClassName(props.model)}`}>
                 <i className="fa fa-info-circle bg-blue"></i>
@@ -109,4 +114,5 @@ interface ITogglingRowProps {
     model: IProductGroupIdentityModel;
     onExpanderClick: (model: IProductGroupIdentityModel) => void;
     onRowClick: (model: IProductGroupIdentityModel) => void;
+    onCheckBoxClick: (model: IProductGroupIdentityModel) => void;
 }

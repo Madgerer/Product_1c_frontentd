@@ -7,7 +7,7 @@ export default function Tree() {
     return <div className="tree-container">
         <TreeSelectorBlock/>
         <div className="tree-category-group-list-container">
-            <CategoryForm/>
+            <CategoryForm highlightedCategories={[]}/>
         </div>
         <TreeGroupList/>
     </div>

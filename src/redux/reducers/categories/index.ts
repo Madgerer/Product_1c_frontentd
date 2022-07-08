@@ -68,14 +68,6 @@ const categorySlice = createSlice({
         clearToolbarState(state: CategoriesState) {
             state.categoryCurrentName = ""
             state.selectedCategory = null
-        },
-        setHighlightedCategories(state: CategoriesState, action: PayloadAction<number[]>){
-            clearHighlighting(state.categories)
-            action.payload.forEach(x => {
-                const category = findCategory(state.categories, x);
-                if(category !== null)
-                    category.highlighted = true;
-            })
         }
     },
     extraReducers: builder => {
@@ -142,13 +134,6 @@ const categorySlice = createSlice({
     }
 })
 
-function clearHighlighting(categories: ICategoryIdentityModel[]) {
-    categories.forEach(x => {
-        x.highlighted = false;
-        if(x.children.length !== 0)
-            clearHighlighting(x.children)
-    })
-}
 
 function createCategory(parentId: number, id: number, name: string): ICategoryIdentityModel {
     return {
@@ -158,7 +143,6 @@ function createCategory(parentId: number, id: number, name: string): ICategoryId
         children: [],
         selected: false,
         parentId: parentId,
-        highlighted: false
     }
 }
 
