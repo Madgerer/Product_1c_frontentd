@@ -7,6 +7,7 @@ import {
     getCategoriesThunk,
     updateCategoryNameThunk
 } from "./thunk";
+import {addProductGroupToCatsThunk} from "../local/categoryComponent/thunk";
 
 export type CategoriesState = {
     categories: ICategoryIdentityModel[],
@@ -138,6 +139,16 @@ const categorySlice = createSlice({
             console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
+        //Реагируем на присвоение продуктовой группы категориям на странице categories
+        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state) => {
+            state.checkCategories.forEach(x => {
+                const category = findCategory(state.categories, x.id)
+                if(category !== null) {
+                    category.checked = false;
+                }
+            })
+            state.checkCategories=[];
+        })
     }
 })
 

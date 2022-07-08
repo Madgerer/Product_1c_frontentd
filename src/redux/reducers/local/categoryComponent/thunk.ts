@@ -15,3 +15,8 @@ export const getProductGroupCatsThunk = createApiThunk({
     typePrefix: "get/product-group-cats",
     apiCall: Api.category.getProductGroupCats
 })
+
+export const addProductGroupToCatsThunk = createApiThunk({
+    typePrefix: "add/product-groups-to-cats",
+    apiCall: Api.category.addProductGroupToCats
+})

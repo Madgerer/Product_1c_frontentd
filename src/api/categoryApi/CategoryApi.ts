@@ -19,4 +19,8 @@ export default class CategoryApi extends BaseApi {
 
     getProductGroupCats = (data: {productGroupId: string, catalogGroup: number, languageId: number}): Promise<IApplicationResponse<IProductGroupWithCategoryPath[]>> =>
         this.sendQuery('/api/category/product-group-cats', data, actionTypes.get, true);
+
+    addProductGroupToCats = (data: {productGroupIds: string[], categoriesIds: number[], catalogGroup: number, catalogId: number | null})
+        : Promise<IApplicationResponse<void>> =>
+        this.sendQuery('/api/category/add-product-groups-to-cats', data, actionTypes.post, true);
 }

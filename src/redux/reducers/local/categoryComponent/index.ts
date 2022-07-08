@@ -1,5 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getProductGroupCatsThunk, getProductGroupsByCatalogsThunk, getProductsByGroupThunk} from "./thunk";
+import {
+    addProductGroupToCatsThunk,
+    getProductGroupCatsThunk,
+    getProductGroupsByCatalogsThunk,
+    getProductsByGroupThunk
+} from "./thunk";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 import {IProductGroupWithCategoryPath} from "../../../../domain/types";
 
@@ -45,7 +50,6 @@ const categorySlice = createSlice({
             if(index > -1) {
                 state.productGroups[index].checked = !action.payload.checked
             }
-
         }
     },
     extraReducers: builder => {
@@ -69,6 +73,7 @@ const categorySlice = createSlice({
             state.productGroupsWithCategoriesPath = []
             return state;
         })
+
         builder.addCase(getProductGroupsByCatalogsThunk.rejected, (state, action) => {
             state.isGroupsLoading = false;
             console.log(`Can't get products groups. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
@@ -79,6 +84,7 @@ const categorySlice = createSlice({
             if(index >= 0)
                 state.productGroups[index].isLoading = true;
         })
+
         builder.addCase(getProductsByGroupThunk.fulfilled, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
             if(index >= 0) {
@@ -97,6 +103,14 @@ const categorySlice = createSlice({
             state.productGroupsWithCategoriesPath.push(...action.payload)
         })
         builder.addCase(getProductGroupCatsThunk.rejected, (state, action) => {
+            console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
+            //удаляем присвоенные группы из списка
+            state.productGroups = state.productGroups.filter(x => action.meta.arg.productGroupIds.findIndex(id => id === x.id) === -1)
+        })
+        builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
             console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
