@@ -7,6 +7,7 @@ import {getProductGroupsBasicThunk, getProductsByGroupThunk} from "./thunks";
 
 export type TreeComponentState = {
     productGroups: IProductGroupBasicModel[],
+    selectedGroups: IProductGroupBasicModel[],
     filter: string,
     isProductGroupsLoading: boolean,
     sortNumber: string,
@@ -15,6 +16,7 @@ export type TreeComponentState = {
 }
 
 const INITIAL_STATE: TreeComponentState = {
+    selectedGroups: [],
     productGroups: [],
     filter: "",
     isProductGroupsLoading: false,
@@ -48,6 +50,20 @@ const slice = createSlice({
         setSelectedCardType(state: TreeComponentState, action: PayloadAction<number>) {
             state.selectedCardType = state.cardTypes.find(x => x.value === action.payload) ?? state.selectedCardType;
             return state;
+        },
+        setSelectedGroups(state: TreeComponentState, action: PayloadAction<IProductGroupBasicModel>) {
+            const selectedIndex = state.selectedGroups.findIndex(x => x.id === action.payload.id);
+            const index = state.productGroups.findIndex(x => x.id === action.payload.id)
+
+            if(selectedIndex > -1) {
+                state.selectedGroups = state.selectedGroups.splice(selectedIndex, 1)
+            }
+            else {
+                state.selectedGroups.push(action.payload);
+            }
+            if(index > -1) {
+                state.productGroups[index].checked = !action.payload.checked
+            }
         }
     },
     extraReducers: builder => {
