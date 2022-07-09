@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IProductGroupIdentity} from "../../domain/types";
+import {IProductGroupIdentity, IProductGroupSort} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
 
@@ -23,4 +23,7 @@ export default class ProductGroupApi extends BaseApi {
                                       catalogId: number | null,
                                       categoryId: number}): Promise<IApplicationResponse<IProductGroupIdentity[]>> =>
         this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity/by-category', data, actionTypes.get, true);
+
+    recountProductGroupSort = async (data: {catalogId: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
+        this.sendQuery<IProductGroupSort[]>('/api/product-group/recount-sort', data, actionTypes.post, true);
 }

@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
-import {getProductGroupsBasicThunk, getProductsByGroupThunk} from "./thunks";
+import {getProductGroupsBasicThunk, getProductsByGroupThunk, recountProductGroupSort} from "./thunks";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
 
@@ -89,7 +89,7 @@ const slice = createSlice({
         })
         builder.addCase(getProductGroupsBasicThunk.rejected, (state, action) => {
             state.isProductGroupsLoading = false;
-            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            console.log(`Can't get product groups identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getProductsByGroupThunk.pending, (state, action) => {
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
@@ -109,6 +109,19 @@ const slice = createSlice({
             const index = state.productGroups.findIndex(x => x.id === action.meta.arg.productGroupId)
             if(index >= 0)
                 state.productGroups[index].isLoading = false;
+            console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(recountProductGroupSort.fulfilled, (state, action) => {
+            state.productGroups.forEach(pg => {
+                const pgSort = action.payload.find(x => x.id == pg.id);
+                if(pgSort !== undefined) {
+                    pg.sort = pgSort.sort
+                }
+            })
+        })
+
+        builder.addCase(recountProductGroupSort.rejected, (state, action) => {
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

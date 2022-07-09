@@ -46,6 +46,11 @@ export interface IProductGroupIdentity {
     sort: number | null
 }
 
+export interface IProductGroupSort {
+    id: string,
+    sort: number
+}
+
 export interface ICardDistributionType extends IOptionType {
 
 }

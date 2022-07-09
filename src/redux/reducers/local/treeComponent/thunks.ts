@@ -10,3 +10,8 @@ export const getProductsByGroupThunk = createApiThunk({
     typePrefix: "tree-page/get-product-by-group",
     apiCall: Api.product.getProductsIdentityByGroup
 })
+
+export const recountProductGroupSort = createApiThunk({
+    typePrefix: 'tree-page/recount-product-groups-sort',
+    apiCall: Api.productGroups.recountProductGroupSort
+})
