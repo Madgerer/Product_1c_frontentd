@@ -33,10 +33,12 @@ export default function TreeGroupTable() {
                 searchString: local.filter
             }))
         }
+        else {
+            dispatch(actions.setProductGroupsEmpty())
+        }
     }, [
         languageState.selected.id,
         catalogGroupState.selected.id,
-        catalogState.selected.id,
         local.selectedCardType.value,
         categoryState.selectedCategory?.id,
         local.filter

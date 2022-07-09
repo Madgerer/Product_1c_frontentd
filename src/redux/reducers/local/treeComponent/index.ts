@@ -72,6 +72,10 @@ const slice = createSlice({
                 state.selectedGroup = action.payload;
                 state.productGroups[index].checked = true;
             }
+        },
+        setProductGroupsEmpty(state: TreeComponentState) {
+            state.isProductGroupsLoading = false
+            state.productGroups = []
         }
     },
     extraReducers: builder => {
