@@ -8,7 +8,6 @@ import {
     recountProductGroupSortThunk
 } from "./thunks";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
-import {CategoryComponentState} from "../categoryComponent";
 
 
 export type TreeComponentState = {
@@ -63,12 +62,12 @@ const slice = createSlice({
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
             const selectedIndex = state.selectedGroups.findIndex(x => x.id === action.payload.id);
             for (const productGroup of state.productGroups) {
-                if(productGroup.id == action.payload.id) {
+                if(productGroup.id === action.payload.id) {
                     productGroup.isLastActive = true;
                     state.lastSelected = action.payload;
                     state.sortNumber = productGroup?.sort?.toString() ?? ""
                 }
-                productGroup.isLastActive = productGroup.id == action.payload.id;
+                productGroup.isLastActive = productGroup.id === action.payload.id;
             }
 
             if(selectedIndex > -1) {
@@ -139,7 +138,7 @@ const slice = createSlice({
 
         builder.addCase(recountProductGroupSortThunk.fulfilled, (state, action) => {
             state.productGroups.forEach(pg => {
-                const pgSort = action.payload.find(x => x.id == pg.id);
+                const pgSort = action.payload.find(x => x.id === pg.id);
                 if(pgSort !== undefined) {
                     pg.sort = pgSort.sort
                 }
@@ -152,7 +151,7 @@ const slice = createSlice({
 
         builder.addCase(changeProductGroupSortThunk.fulfilled, (state, action) => {
             action.payload.forEach(sort => {
-                const index = state.productGroups.findIndex(x => x.id == sort.id)
+                const index = state.productGroups.findIndex(x => x.id === sort.id)
                 if(index > -1) {
                     state.productGroups[index].sort = sort.sort;
                 }

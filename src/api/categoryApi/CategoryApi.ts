@@ -23,4 +23,8 @@ export default class CategoryApi extends BaseApi {
     addProductGroupToCats = (data: {productGroupIds: string[], categoriesIds: number[], catalogGroup: number, catalogId: number | null})
         : Promise<IApplicationResponse<void>> =>
         this.sendQuery('/api/category/add-product-groups-to-cats', data, actionTypes.post, true);
+
+    removeProductGroupsFromCats = (data: {productGroupIds: string, categoryId: number, catalogGroup: number, catalogId: number | null})
+        : Promise<IApplicationResponse<void>> =>
+        this.sendQuery('/api/category/remove-product-groups-from-cats', data, actionTypes.delete, true);
 }
