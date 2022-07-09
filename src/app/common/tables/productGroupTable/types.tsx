@@ -1,9 +1,10 @@
 import {ILoadingModel} from "../../../../redux/types";
 import {ICategory, IProductGroupIdentity, IProductIdentity} from "../../../../domain/types";
 
+//isLastActive нужна только для того, чтобы подсвечивать последний выбранный элемент на странице /tree
 export type IProductGroupIdentityModel = IProductGroupIdentity
     & ILoadingModel
-    & { products: IProductIdentity[] | null, checked : boolean }
+    & { products: IProductIdentity[] | null, checked : boolean, isLastActive }
 
 export type ICategoryIdentityModel = {
     id: number,

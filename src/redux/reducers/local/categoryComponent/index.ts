@@ -67,7 +67,8 @@ const categorySlice = createSlice({
                     isDescriptionChecked: x.isDescriptionChecked,
                     isLoading: false,
                     isImageChecked: x.isImageChecked,
-                    sort: null
+                    sort: null,
+                    isLastActive: false
                 }
             });
             state.isGroupsLoading = false;

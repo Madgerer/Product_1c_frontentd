@@ -52,7 +52,7 @@ export default function TreeGroupTable() {
     }
 
     function setSelected(productGroup: IProductGroupIdentityModel) {
-        dispatch(actions.setSelectedGroup(productGroup))
+        dispatch(actions.setSelectedProductGroup(productGroup))
     }
 
     return <div className="table-sm p-table__scroll-wrapper">

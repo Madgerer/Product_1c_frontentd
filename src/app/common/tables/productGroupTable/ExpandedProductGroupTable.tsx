@@ -50,8 +50,14 @@ interface IExpandedProductGroupTableProps {
 function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
     const [isToggle, setIsToggle] = useState(false)
 
+    const rowClass = props.model.isLastActive
+        ? "table-row--lastActive"
+        : props.model.checked
+            ? "table-row--selected"
+            : "";
+
     return <>
-        <tr className={props.model.checked ? "table-row--selected" : ""}>
+        <tr className={rowClass}>
             <td className="product-right-column-plus-wrapper" onClick={_ => {
                 //проверка на то что уже загружено поддерево
                 if(props.model.products != null && !isToggle) {

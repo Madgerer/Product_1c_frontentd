@@ -10,6 +10,7 @@ import {
     recountProductGroupSortThunk
 } from "../../../redux/reducers/local/treeComponent/thunks";
 import "./TreeGroupToolbar.scss"
+import {useEffect} from "react";
 
 export default function TreeGroupToolbar() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
@@ -35,7 +36,7 @@ export default function TreeGroupToolbar() {
     }
 
     function changeSort(addition: number, ) {
-        const selected = local.selectedGroup;
+        const selected = local.lastSelected;
         if(selected == null)
         {
             alert("Выберите продуктовую группу для изменения сортировки")
@@ -63,7 +64,7 @@ export default function TreeGroupToolbar() {
     }
 
     function setSpecificSort() {
-        const selected = local.selectedGroup;
+        const selected = local.lastSelected;
         if(selected == null)
         {
             alert("Выберите продуктовую группу для изменения сортировки")

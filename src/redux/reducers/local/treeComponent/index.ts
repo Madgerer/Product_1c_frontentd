@@ -8,11 +8,13 @@ import {
     recountProductGroupSortThunk
 } from "./thunks";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
+import {CategoryComponentState} from "../categoryComponent";
 
 
 export type TreeComponentState = {
     productGroups: IProductGroupIdentityModel[],
-    selectedGroup: IProductGroupIdentityModel | null,
+    selectedGroups: IProductGroupIdentityModel[],
+    lastSelected: IProductGroupIdentityModel | null,
     filter: string,
     isProductGroupsLoading: boolean,
     sortNumber: string,
@@ -21,7 +23,7 @@ export type TreeComponentState = {
 }
 
 const INITIAL_STATE: TreeComponentState = {
-    selectedGroup: null,
+    selectedGroups: [],
     productGroups: [],
     filter: "",
     isProductGroupsLoading: false,
@@ -32,6 +34,7 @@ const INITIAL_STATE: TreeComponentState = {
         {label: "Непроверенное фото", value: 2},
         {label: "Проверено все", value: 3}
     ],
+    lastSelected: null,
     selectedCardType: {label: "Все карточки", value: 0}
 }
 
@@ -56,26 +59,33 @@ const slice = createSlice({
             state.selectedCardType = state.cardTypes.find(x => x.value === action.payload) ?? state.selectedCardType;
             return state;
         },
-        setSelectedGroup(state: TreeComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
+        setSelectedProductGroup(state: TreeComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
-            //в случае если "отщелкиваем" чекбокс, чтобы лишний раз не проходить по массиву
-            if(state.selectedGroup?.id === action.payload.id) {
-                state.selectedGroup = null;
-                state.productGroups[index].checked = false;
+            const selectedIndex = state.selectedGroups.findIndex(x => x.id === action.payload.id);
+            for (const productGroup of state.productGroups) {
+                if(productGroup.id == action.payload.id) {
+                    productGroup.isLastActive = true;
+                    state.lastSelected = action.payload;
+                    state.sortNumber = productGroup?.sort?.toString() ?? ""
+                }
+                productGroup.isLastActive = productGroup.id == action.payload.id;
+            }
+
+            if(selectedIndex > -1) {
+                state.selectedGroups = state.selectedGroups.splice(selectedIndex, 1)
             }
             else {
-                const previousSelectedIndex = state.productGroups.findIndex(x => x.id === state.selectedGroup?.id)
-                //если выбран хоть какой-то элемент до этого
-                if(previousSelectedIndex > -1){
-                    state.productGroups[previousSelectedIndex].checked = false;
-                }
-                state.selectedGroup = action.payload;
-                state.productGroups[index].checked = true;
+                state.selectedGroups.push(action.payload);
+            }
+            if(index > -1) {
+                state.productGroups[index].checked = !action.payload.checked
             }
         },
         setProductGroupsEmpty(state: TreeComponentState) {
             state.isProductGroupsLoading = false
             state.productGroups = []
+            state.sortNumber = ""
+            state.lastSelected = null
         }
     },
     extraReducers: builder => {
@@ -84,6 +94,8 @@ const slice = createSlice({
             return state;
         })
         builder.addCase(getProductGroupsBasicThunk.fulfilled, (state, action) => {
+            state.sortNumber = ""
+            state.lastSelected = null
             state.productGroups = action.payload.map(x => {
                 return{
                     id: x.id,
@@ -93,7 +105,8 @@ const slice = createSlice({
                     isLoading: false,
                     products: null,
                     isDescriptionChecked: x.isDescriptionChecked,
-                    sort: x.sort
+                    sort: x.sort,
+                    isLastActive: false
                 }
             });
             state.isProductGroupsLoading = false;
@@ -144,7 +157,8 @@ const slice = createSlice({
                     state.productGroups[index].sort = sort.sort;
                 }
             })
-            state.selectedGroup!.sort = action.meta.arg.targetSort;
+            state.lastSelected!.sort = action.meta.arg.targetSort;
+            state.sortNumber = action.meta.arg.targetSort.toString();
         })
 
         builder.addCase(changeProductGroupSortThunk.rejected, (state, action) => {
