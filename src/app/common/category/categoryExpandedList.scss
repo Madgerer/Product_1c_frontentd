@@ -1,11 +1,14 @@
 .cat-category-group-list__wrapper {
   list-style: none;
   padding: 0;
+  font-size: 13px;
+  border-bottom: 1px solid #ccc;
 }
 
 .cat-category-group-list__element {
   padding: 4px 0;
   border: 1px solid #ccc;
+  border-bottom: none;
 
   &.--selected {
     background: #007bff;

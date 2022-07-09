@@ -10,6 +10,7 @@ import {LanguageState} from "../../../redux/reducers/languages";
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {CategoriesState} from "../../../redux/reducers/categories";
 import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
+import _ from "lodash";
 
 export default function TreeGroupTable() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
@@ -50,7 +51,7 @@ export default function TreeGroupTable() {
 
     return <ExpandedProductGroupTable
                 isProductGroupsLoading={local.isProductGroupsLoading}
-                productGroups={local.productGroups}
+                productGroups={catalogGroupState.selected.id == CatalogGroup.Printed ? _.orderBy(local.productGroups, x => x.sort) : local.productGroups}
                 loadProducts={model => loadProducts(model)}
                 onRowClick={model => {}}
                 onCheckBoxClick={model => {}}

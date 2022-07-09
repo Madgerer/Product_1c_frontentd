@@ -2,6 +2,11 @@
     padding: 0;
 }
 
+.u-center-text {
+    text-align: center;
+    vertical-align: middle;
+}
+
 
 
 
@@ -42,6 +47,7 @@
     border: 1px solid #CCC;
     border-radius: 0.25em;
     background: white;
+    color: black;
 }
 
 /* стили при наведении курсора на checkbox */

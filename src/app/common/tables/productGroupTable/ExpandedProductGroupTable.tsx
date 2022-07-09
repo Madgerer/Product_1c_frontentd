@@ -70,19 +70,15 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
                {props.model.name}
             </td>
             {
-                props.showSortColumn ? <td>
+                props.showSortColumn ? <td onClick={(e) => props.onRowClick(props.model)}>
                     {props.model.sort}
                 </td> : <></>
             }
-            <td>
+            <td onClick={(e) => props.onRowClick(props.model)} className={`u-center-text ${props.model.isDescriptionChecked ? "" : "bg-red"}`}>
                 {
-                    <div className={props.model.isDescriptionChecked ? "" : "bg-red"}>
-                        {
-                            props.model.isImageChecked
-                                ? <i className="fa fa-check-circle-o" aria-hidden={true}/>
-                                : <></>
-                        }
-                    </div>
+                    props.model.isImageChecked
+                        ? <i className="fa fa-check-circle-o" aria-hidden={true}/>
+                        : <></>
                 }
             </td>
             <td className="p-table-column-checkbox-wrapper" onClick={(e) => props.onCheckBoxClick(props.model)}>

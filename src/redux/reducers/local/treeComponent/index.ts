@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
-import {getProductGroupsBasicThunk, getProductsByGroupThunk, recountProductGroupSort} from "./thunks";
+import {getProductGroupsBasicThunk, getProductsByGroupThunk, recountProductGroupSortThunk} from "./thunks";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
 
@@ -112,7 +112,7 @@ const slice = createSlice({
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(recountProductGroupSort.fulfilled, (state, action) => {
+        builder.addCase(recountProductGroupSortThunk.fulfilled, (state, action) => {
             state.productGroups.forEach(pg => {
                 const pgSort = action.payload.find(x => x.id == pg.id);
                 if(pgSort !== undefined) {
@@ -121,7 +121,7 @@ const slice = createSlice({
             })
         })
 
-        builder.addCase(recountProductGroupSort.rejected, (state, action) => {
+        builder.addCase(recountProductGroupSortThunk.rejected, (state, action) => {
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
