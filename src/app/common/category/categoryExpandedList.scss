@@ -3,6 +3,9 @@
   padding: 0;
   font-size: 13px;
   border-bottom: 1px solid #ccc;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  margin: 0;
 }
 
 .cat-category-group-list__element {

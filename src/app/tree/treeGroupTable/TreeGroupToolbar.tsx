@@ -9,6 +9,7 @@ import {
     changeProductGroupSortThunk,
     recountProductGroupSortThunk
 } from "../../../redux/reducers/local/treeComponent/thunks";
+import "./TreeGroupToolbar.scss"
 
 export default function TreeGroupToolbar() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
@@ -89,11 +90,11 @@ export default function TreeGroupToolbar() {
         }))
     }
 
-    return <div>
+    return <div  className="tree-group-toolbar">
         {
             catalogGroupState.selected.id === CatalogGroup.Printed
                 ? <>
-                    <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber}/>
+                    <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber} className="form-control input-group-sm tree-group-toolbar__input"/>
                     <button className="btn btn-dark" title="Изменить номер карточки на записанный в поле" onClick={() => setSpecificSort()}>
                         <i className="fa fa-arrows-v" aria-hidden="true"/>
                     </button>
@@ -120,6 +121,6 @@ export default function TreeGroupToolbar() {
                 </button>
                 : <></>
         }
-        <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter}/>
+        <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter} className="form-control" placeholder="Search"/>
     </div>
 }

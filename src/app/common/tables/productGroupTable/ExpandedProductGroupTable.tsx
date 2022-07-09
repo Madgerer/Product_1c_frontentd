@@ -13,9 +13,9 @@ export default function ExpandedProductGroupTable(props: IExpandedProductGroupTa
             {
                 props.showSortColumn ? <th>№</th> : <></>
             }
-            <th className="p-table-column-checkbox-wrapper"/>
-            <th></th>
-            <th className="info"/>
+            <th className="p-table-column-checkbox-wrapper u-width-30"/>
+            <th className="u-width-30"/>
+            <th className="info u-width-30"/>
         </tr>
         </thead>
         <tbody>

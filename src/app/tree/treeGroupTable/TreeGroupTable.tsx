@@ -55,11 +55,13 @@ export default function TreeGroupTable() {
         dispatch(actions.setSelectedGroup(productGroup))
     }
 
-    return <ExpandedProductGroupTable
-                isProductGroupsLoading={local.isProductGroupsLoading}
-                productGroups={catalogGroupState.selected.id == CatalogGroup.Printed ? _.orderBy(local.productGroups, x => x.sort) : local.productGroups}
-                loadProducts={model => loadProducts(model)}
-                onRowClick={model => {setSelected(model)}}
-                onCheckBoxClick={model => {setSelected(model)}}
-                showSortColumn={catalogGroupState.selected.id == CatalogGroup.Printed}/>
+    return <div className="table-sm p-table__scroll-wrapper">
+        <ExpandedProductGroupTable
+            isProductGroupsLoading={local.isProductGroupsLoading}
+            productGroups={catalogGroupState.selected.id == CatalogGroup.Printed ? _.orderBy(local.productGroups, x => x.sort) : local.productGroups}
+            loadProducts={model => loadProducts(model)}
+            onRowClick={model => {setSelected(model)}}
+            onCheckBoxClick={model => {setSelected(model)}}
+            showSortColumn={catalogGroupState.selected.id == CatalogGroup.Printed}/>
+    </div>
 }

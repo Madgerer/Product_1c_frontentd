@@ -7,6 +7,16 @@
     vertical-align: middle;
 }
 
+.u-width-30 {
+    width: 30px;
+    min-width: 30px;
+}
+
+.u-flex-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+}
 
 
 
