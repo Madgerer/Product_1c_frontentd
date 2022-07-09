@@ -6,6 +6,7 @@ import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogGroup} from "../../../domain/types";
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {recountProductGroupSortThunk} from "../../../redux/reducers/local/treeComponent/thunks";
+import "./TreeGroupToolbar.scss"
 
 export default function TreeGroupToolbar() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
@@ -30,12 +31,12 @@ export default function TreeGroupToolbar() {
         dispatch(recountProductGroupSortThunk({catalogId: catalogId}))
     }
 
-    return <div>
+    return <div className="tree-group-toolbar">
 
         {
             catalogGroupState.selected.id === CatalogGroup.Printed
                 ? <>
-                    <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber}/>
+                    <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber} className="form-control input-group-sm tree-group-toolbar__input"/>
                     <button className="btn btn-dark" title="Изменить номер карточки на записанный в поле"><i className="fa fa-arrows-v" aria-hidden="true"></i></button>
                     <button className="btn btn-dark" title="Номер +1"><i className="fa fa-arrow-down" aria-hidden="true"></i></button>
                     <button className="btn btn-dark" title="Номер -1"><i className="fa fa-arrow-up" aria-hidden="true"></i></button>
@@ -46,6 +47,6 @@ export default function TreeGroupToolbar() {
         <SimpleSelect value={local.selectedCardType} options={local.cardTypes} onChange={value => selectedCardDistributionType(value)} toOption={e => e} className={"selector"}/>
         <button className="btn btn-dark" title="Удалить выбранные карточки из раздела"><i className="fa fa-minus" aria-hidden="true"></i></button>
         <button className="btn btn-dark" title="Пересчитать порядок карточек" onClick={() => recountProductGroupsSort()}><i className="fa fa-calculator" aria-hidden="true"></i></button>
-        <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter}/>
+        <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter} className="form-control" placeholder="Search"/>
     </div>
 }

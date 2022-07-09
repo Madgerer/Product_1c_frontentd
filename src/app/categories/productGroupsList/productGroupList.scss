@@ -1,8 +1,9 @@
 .cat-product-group-list-container {
-  height: 90vh;
   width: 45%;
   border: 1px none;
   border-left-style: solid;
   padding-left: 10px;
+  display: flex;
+  flex-direction: column;
 }
 

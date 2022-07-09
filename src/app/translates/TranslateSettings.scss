@@ -1,0 +1,26 @@
+.translate-settings {
+
+  .translate-settings__select {
+
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-inline: auto;
+    width: 340px;
+  }
+
+  & > .form-inline {
+    border: 2px solid black; border-radius: 5px; margin-top: 20px;
+    padding: 20px;
+    justify-content: space-around;
+  }
+
+  .buttons-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-checkboxes {
+    flex-direction: column;
+    align-items: start;
+  }
+}

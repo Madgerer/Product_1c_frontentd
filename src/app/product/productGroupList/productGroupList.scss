@@ -1,4 +1,6 @@
 .product-right-column {
   flex: 1 1 0;
   margin-left: 15px;
+  display: flex;
+  flex-direction: column;
 }

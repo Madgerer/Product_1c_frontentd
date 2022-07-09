@@ -12,7 +12,7 @@ import Bullfacts from "../bullfacts/Bullfacts";
 
 function Layout() {
 
-    return <div>
+    return <div className="layout">
         <Navbar/>
         <div className={"layout-body"}>
             <Routes>

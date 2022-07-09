@@ -6,6 +6,7 @@ import SimpleSelect from "../common/SimpleSelect";
 import ToOptionProvider from "../../utils/ToOptionProvider";
 import CatalogSelector, {CatalogFilter} from "../common/catalogSelector/CatalogSelector";
 import WebsiteSelector from "../common/websiteSelector/WebsiteSelector";
+import "./TranslateSettings.scss"
 
 
 export function TranslateSettings() {
@@ -46,18 +47,18 @@ export function TranslateSettings() {
         dispatch(actions.setTechDescriptionChecked(isChecked))
     }
 
-    return <>
-        <div>
+    return <div className="translate-settings u-flex-column">
+        <div className="translate-settings__select">
             <SimpleSelect value={local.selectedLanguage} options={languageState.languages} onChange={setLocalLanguage} toOption={ToOptionProvider.websiteToOption} className={"selector"}/>
         </div>
-        <div>
+        <div className="translate-settings__select">
             <CatalogSelector filter={CatalogFilter.All}/>
         </div>
-        <div>
+        <div className="translate-settings__select">
             <WebsiteSelector/>
         </div>
-        <div className="row col-md-12">
-            <form className="form-inline col-md-4">
+        <div className="form-inline">
+            <form className="form-inline form-checkboxes">
                 <label className="form-check-label" style={{marginLeft:10}}>
                     <input type="checkbox" className="form-check-input"
                            checked={local.translateCategories.isPcChecked}
@@ -95,10 +96,10 @@ export function TranslateSettings() {
                     <span>ОписаниеК2У</span>
                 </label>
             </form>
-            <div className="col-md-8">
+            <div className="buttons-wrapper">
                 <button type="button" className="btn btn-dark" style={{marginTop:15}} onClick={() => setTranslateCategoryChecked(true)}>Выделить все</button>
                 <button type="button" className="btn btn-dark" style={{marginTop:15}} onClick={() => setTranslateCategoryChecked(false)}>Очистить все</button>
             </div>
         </div>
-    </>
+    </div>
 }
