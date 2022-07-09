@@ -45,7 +45,13 @@ export default function TreeGroupToolbar() {
 
         <SimpleSelect value={local.selectedCardType} options={local.cardTypes} onChange={value => selectedCardDistributionType(value)} toOption={e => e} className={"selector"}/>
         <button className="btn btn-dark" title="Удалить выбранные карточки из раздела"><i className="fa fa-minus" aria-hidden="true"></i></button>
-        <button className="btn btn-dark" title="Пересчитать порядок карточек" onClick={() => recountProductGroupsSort()}><i className="fa fa-calculator" aria-hidden="true"></i></button>
+        {
+            catalogGroupState.selected.id === CatalogGroup.Printed
+                ? <button className="btn btn-dark" title="Пересчитать порядок карточек" onClick={() => recountProductGroupsSort()}>
+                    <i className="fa fa-calculator" aria-hidden="true"/>
+                </button>
+                : <></>
+        }
         <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter}/>
     </div>
 }
