@@ -26,4 +26,7 @@ export default class ProductGroupApi extends BaseApi {
 
     recountProductGroupSort = async (data: {catalogId: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
         this.sendQuery<IProductGroupSort[]>('/api/product-group/recount-sort', data, actionTypes.post, true);
+
+    changeProductGroupSort = async (data: {}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
+        this.sendQuery<IProductGroupSort[]>('/api/product-group/change-sort', data, actionTypes.put, true);
 }
