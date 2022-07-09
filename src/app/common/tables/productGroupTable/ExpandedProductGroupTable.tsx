@@ -66,22 +66,23 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
                     ? <i className="fa fa-minus bg-blue"></i>
                     : <i className="fa fa-plus bg-blue"></i>}
             </td>
-            <td onClick={(e) => props.onRowClick(props.model)}>
+            <td onClick={() => props.onRowClick(props.model)}>
                {props.model.name}
             </td>
             {
-                props.showSortColumn ? <td onClick={(e) => props.onRowClick(props.model)}>
-                    {props.model.sort}
-                </td> : <></>
+                props.showSortColumn ?
+                    <td onClick={() => props.onRowClick(props.model)} className={"u-width-30 u-center-text"}>
+                        {props.model.sort}
+                    </td> : <></>
             }
-            <td onClick={(e) => props.onRowClick(props.model)} className={`u-center-text ${props.model.isDescriptionChecked ? "" : "bg-red"}`}>
+            <td onClick={() => props.onRowClick(props.model)} className={`u-center-text ${props.model.isDescriptionChecked ? "" : "bg-red"}`}>
                 {
                     props.model.isImageChecked
                         ? <i className="fa fa-check-circle-o" aria-hidden={true}/>
                         : <></>
                 }
             </td>
-            <td className="p-table-column-checkbox-wrapper" onClick={(e) => props.onCheckBoxClick(props.model)}>
+            <td className="p-table-column-checkbox-wrapper" onClick={() => props.onCheckBoxClick(props.model)}>
                 <input type="checkbox" checked={props.model.checked} readOnly={true}/>
             </td>
             <td className={`info`}>

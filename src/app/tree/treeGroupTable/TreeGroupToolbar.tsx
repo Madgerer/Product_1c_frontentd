@@ -121,6 +121,6 @@ export default function TreeGroupToolbar() {
                 </button>
                 : <></>
         }
-        <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter} className="form-control" placeholder="Search"/>
+        <input onChange={e => setFilter(e.currentTarget.value)} value={local.filter} className="form-control search" placeholder="Search"/>
     </div>
 }
