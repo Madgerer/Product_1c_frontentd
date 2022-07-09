@@ -66,7 +66,8 @@ const categorySlice = createSlice({
                     products: null,
                     isDescriptionChecked: x.isDescriptionChecked,
                     isLoading: false,
-                    isImageChecked: x.isImageChecked
+                    isImageChecked: x.isImageChecked,
+                    sort: null
                 }
             });
             state.isGroupsLoading = false;

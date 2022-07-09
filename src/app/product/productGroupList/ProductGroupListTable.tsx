@@ -42,6 +42,7 @@ function ProductGroupListTable() {
 
     return <div className="table-sm product-right-column-table p-table__scroll-wrapper">
         <ExpandedProductGroupTable
+            showSortColumn={false}
             isProductGroupsLoading={local.isProductGroupsLoading}
             productGroups={local.productGroups}
             loadProducts={loadProducts}

@@ -83,6 +83,7 @@ export default function ProductGroupListTable() {
 
     return <div className="table-sm p-table__scroll-wrapper">
         <ExpandedProductGroupTable
+            showSortColumn={false}
             isProductGroupsLoading={local.isGroupsLoading}
             productGroups={local.productGroups}
             loadProducts={loadProducts}

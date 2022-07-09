@@ -1,13 +1,13 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IProductGroupBasicModel} from "../../../../app/common/tables/productGroupTable/types";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
 import {getProductGroupsBasicThunk, getProductsByGroupThunk} from "./thunks";
+import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
 
 export type TreeComponentState = {
-    productGroups: IProductGroupBasicModel[],
-    selectedGroups: IProductGroupBasicModel[],
+    productGroups: IProductGroupIdentityModel[],
+    selectedGroups: IProductGroupIdentityModel[],
     filter: string,
     isProductGroupsLoading: boolean,
     sortNumber: string,
@@ -51,7 +51,7 @@ const slice = createSlice({
             state.selectedCardType = state.cardTypes.find(x => x.value === action.payload) ?? state.selectedCardType;
             return state;
         },
-        setSelectedGroups(state: TreeComponentState, action: PayloadAction<IProductGroupBasicModel>) {
+        setSelectedGroups(state: TreeComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
             const selectedIndex = state.selectedGroups.findIndex(x => x.id === action.payload.id);
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
 
@@ -81,7 +81,6 @@ const slice = createSlice({
                     isLoading: false,
                     products: null,
                     isDescriptionChecked: x.isDescriptionChecked,
-                    showStatus: x.showStatus,
                     sort: x.sort
                 }
             });

@@ -43,15 +43,6 @@ export interface IProductGroupIdentity {
     name: string,
     isDescriptionChecked: boolean,
     isImageChecked: boolean,
-
-}
-
-export interface IProductGroupBasic {
-    id: string,
-    name: string,
-    isDescriptionChecked: boolean,
-    isImageChecked: boolean,
-    showStatus: boolean,
     sort: number | null
 }
 

@@ -44,7 +44,7 @@ const categorySlice = createSlice({
             return state;
         },
         setSelectedCategory(state: CategoriesState, action: PayloadAction<{selected: boolean, categoryId: number}>) {
-            if(state.selectedCategory !== null && state.selectedCategory.id == action.payload.categoryId) {
+            if(state.selectedCategory !== null && state.selectedCategory.id === action.payload.categoryId) {
                 state.categoryCurrentName = ""
                 state.selectedCategory = null;
                 return state;
@@ -119,17 +119,17 @@ const categorySlice = createSlice({
         builder.addCase(deleteCategoryThunk.fulfilled, (state, action) => {
             const category = findCategory(state.categories, action.meta.arg.id);
             if(category !== null) {
-                if(category.parentId != 0) {
+                if(category.parentId !== 0) {
                     const parent = findCategory(state.categories, category.parentId);
                     if(parent !== null) {
-                        parent.children = parent.children.filter(x => x.id != category.id);
+                        parent.children = parent.children.filter(x => x.id !== category.id);
                     }
                 }
                 else {
-                    state.categories = state.categories.filter(x => x.id != category.id);
+                    state.categories = state.categories.filter(x => x.id !== category.id);
                 }
                 //после удаления категории нужно выставить selected = null
-                if(state.selectedCategory !== null && state.selectedCategory.id == category.id) {
+                if(state.selectedCategory !== null && state.selectedCategory.id === category.id) {
                     state.selectedCategory = null;
                     state.categoryCurrentName = "";
                 }

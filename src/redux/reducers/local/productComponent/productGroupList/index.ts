@@ -53,7 +53,7 @@ const productGroupComponentSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(getProductGroupsIdentityThunk.pending, (state, action) => {
+        builder.addCase(getProductGroupsIdentityThunk.pending, (state) => {
             state.isProductGroupsLoading = false;
             return state;
         })
@@ -66,7 +66,8 @@ const productGroupComponentSlice = createSlice({
                     products: null,
                     isDescriptionChecked: x.isDescriptionChecked,
                     isLoading: false,
-                    isImageChecked: x.isImageChecked
+                    isImageChecked: x.isImageChecked,
+                    sort: null
                 }
             });
             state.isProductGroupsLoading = false;

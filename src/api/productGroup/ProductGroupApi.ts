@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {ICardDistributionType, IProductGroupBasic, IProductGroupIdentity} from "../../domain/types";
+import {IProductGroupIdentity} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
 
@@ -21,6 +21,6 @@ export default class ProductGroupApi extends BaseApi {
                                       catalogGroup: number,
                                       validationType: number,
                                       catalogId: number | null,
-                                      categoryId: number}): Promise<IApplicationResponse<IProductGroupBasic[]>> =>
-        this.sendQuery<IProductGroupBasic[]>('/api/product-group/identity/by-category', data, actionTypes.get, true);
+                                      categoryId: number}): Promise<IApplicationResponse<IProductGroupIdentity[]>> =>
+        this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity/by-category', data, actionTypes.get, true);
 }

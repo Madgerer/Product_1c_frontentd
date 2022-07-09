@@ -4,12 +4,17 @@ import InformationTableRow from "../../ErrorTableRow";
 import {IProductGroupIdentityModel} from "./types";
 
 export default function ExpandedProductGroupTable(props: IExpandedProductGroupTableProps) {
+    const colSpan = props.showSortColumn ? 6 : 5;
     return <Table bordered hover className={"p-table"}>
         <thead>
         <tr>
             <th className="product-right-column-plus-wrapper"/>
             <th>Наименование</th>
+            {
+                props.showSortColumn ? <th>№</th> : <></>
+            }
             <th className="p-table-column-checkbox-wrapper"/>
+            <th></th>
             <th className="info"/>
         </tr>
         </thead>
@@ -17,15 +22,17 @@ export default function ExpandedProductGroupTable(props: IExpandedProductGroupTa
         {
             !props.isProductGroupsLoading
                 ? props.productGroups.length === 0
-                    ? <InformationTableRow text={"No matching records found"} colSpan={4}/>
+                    ? <InformationTableRow text={"No matching records found"} colSpan={colSpan}/>
                     : props.productGroups
                         .map(x => <ProductGroupTogglingRow
                             key={x.id + x.name}
                             model={x}
+                            colSpan={colSpan}
+                            showSortColumn={props.showSortColumn}
                             onCheckBoxClick={props.onCheckBoxClick}
                             onExpanderClick={props.loadProducts}
                             onRowClick={props.onRowClick}/>)
-                : (<InformationTableRow text={"Loading..."} colSpan={4}/>)
+                : (<InformationTableRow text={"Loading..."} colSpan={colSpan}/>)
         }
         </tbody>
     </Table>
@@ -37,6 +44,7 @@ interface IExpandedProductGroupTableProps {
     loadProducts: (productGroup: IProductGroupIdentityModel) => void,
     onRowClick: (productGroup: IProductGroupIdentityModel) => void
     onCheckBoxClick: (model: IProductGroupIdentityModel) => void;
+    showSortColumn: boolean
 }
 
 function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
@@ -61,15 +69,31 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
             <td onClick={(e) => props.onRowClick(props.model)}>
                {props.model.name}
             </td>
+            {
+                props.showSortColumn ? <td>
+                    {props.model.sort}
+                </td> : <></>
+            }
+            <td>
+                {
+                    <div className={props.model.isDescriptionChecked ? "" : "bg-red"}>
+                        {
+                            props.model.isImageChecked
+                                ? <i className="fa fa-check-circle-o" aria-hidden={true}/>
+                                : <></>
+                        }
+                    </div>
+                }
+            </td>
             <td className="p-table-column-checkbox-wrapper" onClick={(e) => props.onCheckBoxClick(props.model)}>
                 <input type="checkbox" checked={props.model.checked} readOnly={true}/>
             </td>
-            <td className={`info ${getClassName(props.model)}`}>
+            <td className={`info`}>
                 <i className="fa fa-info-circle bg-blue"></i>
             </td>
         </tr>
         <tr className={`detail-view ${isToggle ? "-open" : ""}`}>
-            <td colSpan={4}>
+            <td colSpan={props.colSpan}>
                 {
                     //если данные по продукту загружаются, то тогда пишет Loading(можно прикрутить спиннер например)
                     !props.model.isLoading
@@ -100,6 +124,7 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
     </>
 }
 
+/*
 function getClassName(row: IProductGroupIdentityModel): string {
     if (!row.isDescriptionChecked && !row.isImageChecked)
         return "bg-red"
@@ -109,10 +134,13 @@ function getClassName(row: IProductGroupIdentityModel): string {
         return "bg-yellow"
     return "bg-green";
 }
+*/
 
 interface ITogglingRowProps {
     model: IProductGroupIdentityModel;
     onExpanderClick: (model: IProductGroupIdentityModel) => void;
     onRowClick: (model: IProductGroupIdentityModel) => void;
     onCheckBoxClick: (model: IProductGroupIdentityModel) => void;
+    colSpan: number
+    showSortColumn: boolean
 }

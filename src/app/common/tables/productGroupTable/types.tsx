@@ -1,5 +1,5 @@
 import {ILoadingModel} from "../../../../redux/types";
-import {ICategory, IProductGroupBasic, IProductGroupIdentity, IProductIdentity} from "../../../../domain/types";
+import {ICategory, IProductGroupIdentity, IProductIdentity} from "../../../../domain/types";
 
 export type IProductGroupIdentityModel = IProductGroupIdentity
     & ILoadingModel
@@ -13,10 +13,6 @@ export type ICategoryIdentityModel = {
     checked: boolean,
     selected: boolean,
 }
-
-export type IProductGroupBasicModel = IProductGroupBasic
-    & ILoadingModel
-    & { products: IProductIdentity[] | null, checked : boolean }
 
 export function mapCategoryToModel(category: ICategory): ICategoryIdentityModel {
     return {
