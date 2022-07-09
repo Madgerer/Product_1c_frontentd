@@ -5,7 +5,10 @@ import {AppState} from "../../../redux/reducers";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogGroup} from "../../../domain/types";
 import {CatalogState} from "../../../redux/reducers/catalogs";
-import {recountProductGroupSortThunk} from "../../../redux/reducers/local/treeComponent/thunks";
+import {
+    changeProductGroupSortThunk,
+    recountProductGroupSortThunk
+} from "../../../redux/reducers/local/treeComponent/thunks";
 
 export default function TreeGroupToolbar() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
@@ -30,20 +33,85 @@ export default function TreeGroupToolbar() {
         dispatch(recountProductGroupSortThunk({catalogId: catalogId}))
     }
 
-    return <div>
+    function changeSort(addition: number, ) {
+        const selected = local.selectedGroup;
+        if(selected == null)
+        {
+            alert("Выберите продуктовую группу для изменения сортировки")
+            return;
+        }
+        // @ts-ignore
+        // компилятор тупит и не смотря на проверку выше - не билдит, поэтому игнорим ее
+        const target = selected!.sort + addition;
 
+        if(target < 1) {
+            alert("Новое значение сортировки выходит за границы доступного")
+            return;
+        }
+
+        // @ts-ignore
+        // компилятор тупит и не смотря на проверку выше - не билдит, поэтому игнорим ее
+        dispatch(changeProductGroupSortThunk({
+            catalogId: catalogState.selected!.id,
+            // @ts-ignore
+            currentSort: selected!.sort,
+            // @ts-ignore
+            productGroupId: selected!.id,
+            targetSort: target
+        }))
+    }
+
+    function setSpecificSort() {
+        const selected = local.selectedGroup;
+        if(selected == null)
+        {
+            alert("Выберите продуктовую группу для изменения сортировки")
+            return;
+        }
+        const target = Number(local.sortNumber);
+        if(isNaN(target)) {
+            alert("Введено неккоректное число")
+            return;
+        }
+        if(target < 1) {
+            alert("Новое значение сортировки выходит за границы доступного")
+            return;
+        }
+
+        // компилятор тупит и не смотря на проверку выше - не билдит, поэтому игнорим ее
+        dispatch(changeProductGroupSortThunk({
+            catalogId: catalogState.selected.id,
+            // @ts-ignore
+            currentSort: selected.sort,
+            // @ts-ignore
+            productGroupId: selected.id,
+            targetSort: target
+        }))
+    }
+
+    return <div>
         {
             catalogGroupState.selected.id === CatalogGroup.Printed
                 ? <>
                     <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber}/>
-                    <button className="btn btn-dark" title="Изменить номер карточки на записанный в поле"><i className="fa fa-arrows-v" aria-hidden="true"></i></button>
-                    <button className="btn btn-dark" title="Номер +1"><i className="fa fa-arrow-down" aria-hidden="true"></i></button>
-                    <button className="btn btn-dark" title="Номер -1"><i className="fa fa-arrow-up" aria-hidden="true"></i></button>
+                    <button className="btn btn-dark" title="Изменить номер карточки на записанный в поле" onClick={() => setSpecificSort()}>
+                        <i className="fa fa-arrows-v" aria-hidden="true"/>
+                    </button>
+                    <button className="btn btn-dark" title="Номер +1" onClick={() => changeSort(1)}>
+                        <i className="fa fa-arrow-down" aria-hidden="true"/>
+                    </button>
+                    <button className="btn btn-dark" title="Номер -1" onClick={() => changeSort(-1)}>
+                        <i className="fa fa-arrow-up" aria-hidden="true"/>
+                    </button>
                 </>
                 : <></>
         }
 
-        <SimpleSelect value={local.selectedCardType} options={local.cardTypes} onChange={value => selectedCardDistributionType(value)} toOption={e => e} className={"selector"}/>
+        <SimpleSelect value={local.selectedCardType}
+                      options={local.cardTypes}
+                      onChange={value => selectedCardDistributionType(value)}
+                      toOption={e => e}
+                      className={"selector"}/>
         <button className="btn btn-dark" title="Удалить выбранные карточки из раздела"><i className="fa fa-minus" aria-hidden="true"></i></button>
         {
             catalogGroupState.selected.id === CatalogGroup.Printed

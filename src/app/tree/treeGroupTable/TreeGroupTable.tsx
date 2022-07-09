@@ -2,7 +2,7 @@ import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {TreeComponentState} from "../../../redux/reducers/local/treeComponent";
+import {actions, TreeComponentState} from "../../../redux/reducers/local/treeComponent";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogGroup} from "../../../domain/types";
 import {getProductGroupsBasicThunk, getProductsByGroupThunk} from "../../../redux/reducers/local/treeComponent/thunks";
@@ -49,11 +49,15 @@ export default function TreeGroupTable() {
         ))
     }
 
+    function setSelected(productGroup: IProductGroupIdentityModel) {
+        dispatch(actions.setSelectedGroup(productGroup))
+    }
+
     return <ExpandedProductGroupTable
                 isProductGroupsLoading={local.isProductGroupsLoading}
                 productGroups={catalogGroupState.selected.id == CatalogGroup.Printed ? _.orderBy(local.productGroups, x => x.sort) : local.productGroups}
                 loadProducts={model => loadProducts(model)}
-                onRowClick={model => {}}
-                onCheckBoxClick={model => {}}
+                onRowClick={model => {setSelected(model)}}
+                onCheckBoxClick={model => {setSelected(model)}}
                 showSortColumn={catalogGroupState.selected.id == CatalogGroup.Printed}/>
 }

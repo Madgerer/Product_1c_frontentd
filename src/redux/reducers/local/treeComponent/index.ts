@@ -1,13 +1,18 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {numericRestrictions} from "../../../../utils/regexpUtlis";
 import {ICardDistributionType} from "../../../../domain/types";
-import {getProductGroupsBasicThunk, getProductsByGroupThunk, recountProductGroupSortThunk} from "./thunks";
+import {
+    changeProductGroupSortThunk,
+    getProductGroupsBasicThunk,
+    getProductsByGroupThunk,
+    recountProductGroupSortThunk
+} from "./thunks";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
 
 export type TreeComponentState = {
     productGroups: IProductGroupIdentityModel[],
-    selectedGroups: IProductGroupIdentityModel[],
+    selectedGroup: IProductGroupIdentityModel | null,
     filter: string,
     isProductGroupsLoading: boolean,
     sortNumber: string,
@@ -16,7 +21,7 @@ export type TreeComponentState = {
 }
 
 const INITIAL_STATE: TreeComponentState = {
-    selectedGroups: [],
+    selectedGroup: null,
     productGroups: [],
     filter: "",
     isProductGroupsLoading: false,
@@ -51,18 +56,21 @@ const slice = createSlice({
             state.selectedCardType = state.cardTypes.find(x => x.value === action.payload) ?? state.selectedCardType;
             return state;
         },
-        setSelectedGroups(state: TreeComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
-            const selectedIndex = state.selectedGroups.findIndex(x => x.id === action.payload.id);
+        setSelectedGroup(state: TreeComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
-
-            if(selectedIndex > -1) {
-                state.selectedGroups = state.selectedGroups.splice(selectedIndex, 1)
+            //в случае если "отщелкиваем" чекбокс, чтобы лишний раз не проходить по массиву
+            if(state.selectedGroup?.id === action.payload.id) {
+                state.selectedGroup = null;
+                state.productGroups[index].checked = false;
             }
             else {
-                state.selectedGroups.push(action.payload);
-            }
-            if(index > -1) {
-                state.productGroups[index].checked = !action.payload.checked
+                const previousSelectedIndex = state.productGroups.findIndex(x => x.id === state.selectedGroup?.id)
+                //если выбран хоть какой-то элемент до этого
+                if(previousSelectedIndex > -1){
+                    state.productGroups[previousSelectedIndex].checked = false;
+                }
+                state.selectedGroup = action.payload;
+                state.productGroups[index].checked = true;
             }
         }
     },
@@ -123,6 +131,23 @@ const slice = createSlice({
 
         builder.addCase(recountProductGroupSortThunk.rejected, (state, action) => {
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(changeProductGroupSortThunk.fulfilled, (state, action) => {
+            action.payload.forEach(sort => {
+                const index = state.productGroups.findIndex(x => x.id == sort.id)
+                if(index > -1) {
+                    state.productGroups[index].sort = sort.sort;
+                }
+            })
+            state.selectedGroup!.sort = action.meta.arg.targetSort;
+        })
+
+        builder.addCase(changeProductGroupSortThunk.rejected, (state, action) => {
+            console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            //временно
+            if(action.payload?.statusCode === 422)
+                alert(`Сортировка текущих данных выполнена неверно. Есть несколько записей с сортировочными номером '№${action.meta.arg.targetSort}'`)
         })
     }
 })
