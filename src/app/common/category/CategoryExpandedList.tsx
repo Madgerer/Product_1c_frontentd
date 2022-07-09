@@ -44,7 +44,7 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
                     <input type="checkbox" className="my-custom-checkbox" id={String(props.category.id)} checked={props.category.checked} onChange={() => props.onCheckboxClicked(props.category)}/>
                     <label htmlFor={String(props.category.id)}/>
                 </div>
-                <div onClick={() => props.onRowClicked(props.category)}>
+                <div className={"cat-category-group-list__name"} onClick={() => props.onRowClicked(props.category)}>
                     {props.category.name}
                 </div>
             </div>

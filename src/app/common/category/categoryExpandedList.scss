@@ -34,9 +34,13 @@
 .cat-category-group-list {
   display: flex;
   align-items: center;
-
+  width: 100%;
   padding-left: 22px;
   position: relative;
+
+  .cat-category-group-list__name {
+    width: 100%;
+  }
 
   .fa {
     padding: 4px;
