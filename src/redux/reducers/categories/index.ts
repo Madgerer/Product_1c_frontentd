@@ -44,14 +44,16 @@ const categorySlice = createSlice({
             return state;
         },
         setSelectedCategory(state: CategoriesState, action: PayloadAction<{selected: boolean, categoryId: number}>) {
-            if(state.selectedCategory !== null && state.selectedCategory.id === action.payload.categoryId) {
-                state.categoryCurrentName = ""
-                state.selectedCategory = null;
-                return state;
-            }
-
             const category = findCategory(state.categories, action.payload.categoryId);
             if(category != null) {
+                if(state.selectedCategory !== null && state.selectedCategory.id === action.payload.categoryId) {
+                    state.categoryCurrentName = ""
+                    state.selectedCategory = null;
+                    category.selected = false
+
+                    return state;
+                }
+
                 if(state.selectedCategory != null) {
                     const previousCategory = findCategory(state.categories, state.selectedCategory.id)
                     previousCategory!.selected = false;
