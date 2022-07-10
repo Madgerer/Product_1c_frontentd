@@ -73,6 +73,7 @@ const productComponentSlice = createSlice({
         })
         builder.addCase(addProductToGroupAsyncThunk.fulfilled, (state, action) => {
             state.products = state.products.filter(p => action.meta.arg.productIds.findIndex(x => x === p.id) === -1)
+            state.selectedProducts = []
         })
         builder.addCase(addProductToGroupAsyncThunk.rejected, (state, action) => {
             console.log(`Can't update. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
