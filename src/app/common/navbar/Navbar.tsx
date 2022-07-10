@@ -3,14 +3,20 @@ import './navbar.scss'
 import {Link} from "react-router-dom";
 import {} from "react-router-dom";
 import {useLocation} from "react-router";
+import {useDispatch} from "react-redux";
+import {actions} from "../../../redux/reducers/auth";
 
 function Navbar() {
     const history = useLocation();
+    const dispatch = useDispatch();
+
+    const logout = () => {
+        dispatch(actions.clearCredentials())
+    }
 
     return <div className={"navbar-wrapper"}>
         <div className={"item col-md-12 navbar-container"}>
             <nav className={"navbar navbar-expand-lg navbar-dark bg-dark"}>
-                {/*todo: add href*/}
                 <a className={"navbar-brand"}>
                     <img src={"/images/avtodelo.png"} className={".navbar_logo_image d-inline-block align-top"}/>
                 </a>
@@ -30,15 +36,18 @@ function Navbar() {
                         </li>
                         {
                             history.pathname == "/products"
-                                ? <button style={{cursor: "pointer", backgroundColor: "chocolate", borderRadius: 4, fontWeight: "bold", color: "white", border: "none"}}>Новая карточка</button>
+                                ? <button style={{cursor: "pointer", backgroundColor: "chocolate", borderRadius: 4, fontWeight: "bold", color: "white", border: "none"}}>
+                                    <Link to={"/new-product"} target="_blank">Новая карточка</Link>
+                                </button>
                                 : <></>
                         }
                     </ul>
                     <form className="form-inline">
                         <LanguageSelector/>
                         <div className="form-group navbar-logout-button">
-                            <button type="button" title="Выйти из системы" id="logOut"
-                                    className="btn btn-danger btn-sm"><i className="fa fa-sign-out" aria-hidden="true"/></button>
+                            <button type="button" title="Выйти из системы" id="logOut" className="btn btn-danger btn-sm" onClick={() => logout()}>
+                                <i className="fa fa-sign-out" aria-hidden="true"/>
+                            </button>
                         </div>
                     </form>
                 </div>

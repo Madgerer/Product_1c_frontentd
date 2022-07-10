@@ -4,9 +4,10 @@ import Select from "react-select";
 interface INullableSelectorProps<T> {
     value: T | null
     options: T[],
-    onChange: (value: number) => void,
+    onChange: (value: number | null) => void,
     toOption: (value: T ) => IOptionType
     className: string | null
+    placeholder: string
 }
 
 
@@ -40,8 +41,11 @@ export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
         options={options}
         className={props.className ?? ""}
         styles={styles}
-        onChange={(newValue) => props.onChange(newValue?.value ?? selected!.value)}
+        onChange={(newValue) => {
+            props.onChange(newValue?.value ?? null)
+        }}
         value={selected}
+        placeholder={props.placeholder}
         isClearable={true}
     />
 }

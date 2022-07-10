@@ -7,6 +7,9 @@ import SellmarkApi from "./sellmarkApi/SellmarkApi";
 import ProductGroupApi from "./productGroup/ProductGroupApi";
 import CategoryApi from "./categoryApi/CategoryApi";
 import WebsitesApi from "./websites/WebsitesApi";
+import AttributeApi from "./attribute/AttributeApi";
+import SeriesApi from "./series/SeriesApi";
+import SignApi from "./sign/SignApi";
 
 interface IApplicationApi {
     auth: AuthApi,
@@ -17,7 +20,10 @@ interface IApplicationApi {
     sellmarks: SellmarkApi,
     productGroups: ProductGroupApi,
     category: CategoryApi,
-    websites: WebsitesApi
+    websites: WebsitesApi,
+    attributes: AttributeApi,
+    series: SeriesApi,
+    sign: SignApi
 }
 
 /**
@@ -46,7 +52,10 @@ export class ApiGateway implements IApplicationApi {
     sellmarks: SellmarkApi;
     productGroups: ProductGroupApi;
     category: CategoryApi;
-    websites: WebsitesApi
+    websites: WebsitesApi;
+    attributes: AttributeApi;
+    series: SeriesApi;
+    sign: SignApi;
 
     constructor() {
         this.auth = new AuthApi();
@@ -58,5 +67,8 @@ export class ApiGateway implements IApplicationApi {
         this.productGroups = new ProductGroupApi()
         this.category = new CategoryApi();
         this.websites = new WebsitesApi();
+        this.attributes = new AttributeApi();
+        this.series = new SeriesApi();
+        this.sign = new SignApi();
     }
 }

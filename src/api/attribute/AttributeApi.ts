@@ -4,6 +4,6 @@ import {IAttribute} from "../../domain/types";
 
 export default class AttributeApi extends BaseApi {
 
-    getAttributes = async (): Promise<IApplicationResponse<IAttribute[]>> =>
-        this.sendQuery<IAttribute[]>('/api/attributes', null, actionTypes.get, true);
+    getAttributes = async (data: {languageId: number}): Promise<IApplicationResponse<IAttribute[]>> =>
+        this.sendQuery<IAttribute[]>('/api/attributes', data, actionTypes.get, true);
 }

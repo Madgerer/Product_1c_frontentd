@@ -1,30 +1,22 @@
-import {PhraseTypes} from "../../../redux/reducers/local/translateComponent";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
-import {NewProductState} from "../../../redux/reducers/local/newProduct";
+import {actions, NewProductState} from "../../../redux/reducers/local/newProduct";
 import {Link} from "react-router-dom";
+import NewProductSelectorBlock from "./NewProductSelectorBlock";
 
 export default function NewProductToolbar() {
     const local = useSelector<AppState, NewProductState>(x => x.local.newProductState);
+    const dispatch = useDispatch();
 
-    function setId(id: string) {
-
+    const setId = (id: string) => dispatch(actions.setId(id))
+    const setName = (name: string) => dispatch(actions.setName(name))
+    const setIsToolset = () => {
     }
 
-    function setName(name: string) {
-
+    const setIsDescriptionChecked = () => {
     }
 
-    function setIsToolset() {
-
-    }
-
-    function setIsDescriptionChecked() {
-
-    }
-
-    function setIsPhotoChecked() {
-
+    const setIsPhotoChecked = () => {
     }
 
     return <>
@@ -55,9 +47,6 @@ export default function NewProductToolbar() {
         <button type="button" className="btn btn-dark btn-sm"><Link to={"/"} target="_blank">Вернуться на главную</Link></button>
         <button type="button" className="btn btn-dark btn-sm">• в буффер обмена</button>
 
-        <div>Селектор серии</div>
-        <div>Селектор значков</div>
-        <div>Селектор аттрибутов</div>
-        <div>Селектор торговой марки</div>
+        <NewProductSelectorBlock/>
     </>
 }

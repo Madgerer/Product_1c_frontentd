@@ -20,8 +20,8 @@ function Layout() {
                 <Route path={"/categories"} element={<Categories/>}/>
                 <Route path={"/tree"} element={<Tree/>}/>
                 <Route path={"/translate"} element={<Translate/>}/>
-                <Route path={"/newProduct"} element={<NewProduct/>}/>
-                <Route path={"/newProduct/:productGroupId"} element={<NewProduct/>}/>
+                <Route path={"/new-product"} element={<NewProduct/>}/>
+                <Route path={"/new-product/:productGroupId"} element={<NewProduct/>}/>
                 <Route path={"/try"} element={<Bullfacts/>}/>
                 <Route path={"/*"} element={<Navigate to="/products" replace />}/>
             </Routes>
