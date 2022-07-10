@@ -18,16 +18,35 @@ export interface IProductGroup {
     name: string | null,
     description: string | null,
     descriptionWeb: string | null,
-    descriptionChecked: string | null,
     attributesColumnOrder: number[] | null,
     seriesId: number | null,
     signId: number | null,
     sellmarkId: number | null,
     priceGroupId: number | null,
     mainAttributeId: number | null,
+    isDescriptionChecked: boolean | null,
     isToolset: boolean | null,
     isImageChecked: boolean | null,
-    siteId: number | null
+    siteId: number | null,
+    wasCreate: boolean
+}
+
+export interface ISeries {
+    id: number,
+    name: string,
+    titleEng: string,
+    imageUrl: string
+}
+
+export interface ISign {
+    id: number,
+    name: string,
+    imageUrl: string
+}
+
+export interface IAttribute {
+    id: number,
+    name: string
 }
 
 export interface IProductGroupWithCategoryPath {
