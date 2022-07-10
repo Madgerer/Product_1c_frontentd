@@ -59,7 +59,7 @@ const productGroupComponentSlice = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(getProductGroupsIdentityThunk.pending, (state) => {
-            state.isProductGroupsLoading = false;
+            state.isProductGroupsLoading = true;
             return state;
         })
         builder.addCase(getProductGroupsIdentityThunk.fulfilled, (state, action) => {

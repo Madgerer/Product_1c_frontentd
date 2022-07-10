@@ -7,28 +7,37 @@ type ProductsIdentityWithCheck = IProductIdentity & {checked: boolean}
 export type ProductListComponentState = {
     products: ProductsIdentityWithCheck[],
     filter: string,
-    isLoading: boolean
+    isLoading: boolean,
+    selectedProducts: ProductsIdentityWithCheck[]
 }
 
 const INITIAL_STATE: ProductListComponentState = {
     products: [],
     filter: "",
-    isLoading: true
+    isLoading: true,
+    selectedProducts: []
 }
 
 const productComponentSlice = createSlice({
     name: "productPage/list",
     initialState: INITIAL_STATE,
     reducers: {
-        setFilter(state: ProductListComponentState, action: PayloadAction<string>) {
-            state.filter = action.payload.toLowerCase()
-            return state;
-        },
-        setChecked(state: ProductListComponentState, action: PayloadAction<{id: string, checked: boolean}>) {
-            const product = state.products.find(x => x.id === action.payload.id)
+        setSelected(state: ProductListComponentState, action: PayloadAction<string>) {
+           const product = state.products.find(x => x.id === action.payload)
             if(product === undefined)
                 return state;
-            product.checked = action.payload.checked;
+            const selectedIndex = state.selectedProducts.findIndex(x => x.id === action.payload);
+
+            if(selectedIndex > -1)
+               state.selectedProducts = state.selectedProducts.splice(selectedIndex, 1);
+            else
+                state.selectedProducts.push(product)
+
+           product.checked = !product.checked;
+           return state;
+        },
+        setFilter(state: ProductListComponentState, action: PayloadAction<string>) {
+            state.filter = action.payload.toLowerCase()
             return state;
         },
         setLoading(state: ProductListComponentState, action: PayloadAction<boolean>) {
@@ -39,6 +48,7 @@ const productComponentSlice = createSlice({
             state.products = [];
             state.filter = "";
             state.isLoading = true
+            state.selectedProducts = []
         }
     },
     extraReducers: builder => {
@@ -62,7 +72,7 @@ const productComponentSlice = createSlice({
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(addProductToGroupAsyncThunk.fulfilled, (state, action) => {
-            state.products = state.products.filter(p => action.meta.arg.productIds.findIndex(x => x === p.id) < -1)
+            state.products = state.products.filter(p => action.meta.arg.productIds.findIndex(x => x === p.id) === -1)
         })
         builder.addCase(addProductToGroupAsyncThunk.rejected, (state, action) => {
             console.log(`Can't update. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

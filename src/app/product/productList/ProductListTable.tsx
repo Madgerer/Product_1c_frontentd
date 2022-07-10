@@ -21,8 +21,8 @@ function ProductListTable() {
     }, [languageState.selected.id, priceGroupStat.selected.id])
 
 
-    const setChecked = (id: string, checked: boolean) => {
-        dispatch(actions.setChecked({id: id, checked: checked}))
+    const setSelected = (id: string) => {
+        dispatch(actions.setSelected(id))
     }
 
     return <div className="table-sm product-left-column-table p-table__scroll-wrapper">
@@ -50,7 +50,7 @@ function ProductListTable() {
                                     </td>
                                     <td className="p-table-column-checkbox-wrapper">
 
-                                        <input id={x.id} checked={x.checked} type="checkbox" onChange={(e) => setChecked(x.id, e.target.checked)}/>
+                                        <input id={x.id} checked={x.checked} type="checkbox" onChange={(e) => setSelected(x.id)}/>
                                     </td>
                                 </tr>
                             })
