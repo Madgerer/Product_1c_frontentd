@@ -5,7 +5,7 @@ import {actions, CategoryComponentState} from "../../../redux/reducers/local/cat
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {SellmarkState} from "../../../redux/reducers/sellmarks";
-import {useEffect} from "react";
+import {useEffect, useLayoutEffect} from "react";
 import {
     getProductGroupCatsThunk,
     getProductGroupsByCatalogsThunk,
@@ -41,6 +41,10 @@ export default function ProductGroupListTable() {
             searchString: local.groupFilter
         }))
     }, 50);
+
+    useLayoutEffect(() => {
+
+    }, [])
 
     useEffect(() => {
         if(catalogState.wasInit) {

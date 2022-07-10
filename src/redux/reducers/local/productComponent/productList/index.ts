@@ -34,10 +34,15 @@ const productComponentSlice = createSlice({
         setLoading(state: ProductListComponentState, action: PayloadAction<boolean>) {
             state.isLoading = action.payload
             return state;
+        },
+        clearStateOnUnmount(state: ProductListComponentState) {
+            state.products = [];
+            state.filter = "";
+            state.isLoading = true
         }
     },
     extraReducers: builder => {
-        builder.addCase(getProductIdentityThunk.pending, (state, action) => {
+        builder.addCase(getProductIdentityThunk.pending, (state) => {
             state.isLoading = true;
             return state
         })

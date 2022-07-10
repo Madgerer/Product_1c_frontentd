@@ -78,6 +78,13 @@ const categorySlice = createSlice({
         clearToolbarState(state: CategoriesState) {
             state.categoryCurrentName = ""
             state.selectedCategory = null
+        },
+        clearOnUnmount(state: CategoriesState) {
+            state.selectedCategory = null
+            state.categories = []
+            state.newCategoryName = ""
+            state.checkCategories = []
+            state.categoryCurrentName = ""
         }
     },
     extraReducers: builder => {

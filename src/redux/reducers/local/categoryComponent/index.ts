@@ -50,6 +50,12 @@ const categorySlice = createSlice({
             if(index > -1) {
                 state.productGroups[index].checked = !action.payload.checked
             }
+        },
+        clearStateOnUnmount(state: CategoryComponentState) {
+            state.productGroups = []
+            state.selectedGroups = []
+            state.productGroupsWithCategoriesPath = []
+            state.groupFilter = ""
         }
     },
     extraReducers: builder => {

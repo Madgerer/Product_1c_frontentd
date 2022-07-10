@@ -50,6 +50,11 @@ const productGroupComponentSlice = createSlice({
                 state.productGroups[index].checked = true;
             }
             return state;
+        },
+        clearStateOnUnmount(state: ProductGroupListComponentState) {
+            state.productGroups = []
+            state.filter = ""
+            state.selectedProductGroup = null
         }
     },
     extraReducers: builder => {

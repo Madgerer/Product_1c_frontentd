@@ -21,7 +21,7 @@ export default function TreeGroupTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(categoryState.selectedCategory !== null) {
+        if(categoryState.selectedCategory !== null && local.wasInit) {
             dispatch(getProductGroupsBasicThunk({
                 languageId: languageState.selected.id,
                 catalogGroup: catalogGroupState.selected.id,

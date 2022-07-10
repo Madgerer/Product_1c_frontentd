@@ -1,7 +1,7 @@
 import {AppState} from "../../../redux/reducers";
 import {useDispatch, useSelector} from "react-redux";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
-import {useEffect} from "react";
+import {useEffect, useLayoutEffect} from "react";
 import {LanguageState} from "../../../redux/reducers/languages";
 import {ICategoryIdentityModel} from "../tables/productGroupTable/types";
 import CategoryExpandedList from "./CategoryExpandedList";
@@ -26,6 +26,13 @@ export default function CategoryGroupTree(props: ICategoryGroupTreeProps) {
     function onRowClicked(category: ICategoryIdentityModel) {
         dispatch(actions.setSelectedCategory({categoryId: category.id, selected: !category.selected}))
     }
+
+    useLayoutEffect (() => {
+        return function () {
+            dispatch(actions.clearOnUnmount())
+        }
+    }, [])
+
 
     return <>
         {categoriesState.isCategoriesLoading

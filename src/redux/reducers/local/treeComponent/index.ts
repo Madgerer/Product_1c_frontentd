@@ -20,6 +20,7 @@ export type TreeComponentState = {
     sortNumber: string,
     selectedCardType: ICardDistributionType,
     cardTypes: ICardDistributionType[],
+    wasInit: boolean
 }
 
 const INITIAL_STATE: TreeComponentState = {
@@ -35,7 +36,8 @@ const INITIAL_STATE: TreeComponentState = {
         {label: "Проверено все", value: 3}
     ],
     lastSelected: null,
-    selectedCardType: {label: "Все карточки", value: 0}
+    selectedCardType: {label: "Все карточки", value: 0},
+    wasInit: false
 }
 
 const sortValidationRegex = numericRestrictions();
@@ -44,6 +46,9 @@ const slice = createSlice({
     name: "treePage/groupList",
     initialState: INITIAL_STATE,
     reducers: {
+        setWasInit(state: TreeComponentState) {
+          state.wasInit = true
+        },
         setFilter(state: TreeComponentState, action: PayloadAction<string>) {
             state.filter = action.payload.toLowerCase()
             return state;
@@ -86,6 +91,16 @@ const slice = createSlice({
             state.productGroups = []
             state.sortNumber = ""
             state.lastSelected = null
+            state.selectedGroups = []
+        },
+        clearStateOnUnmount(state: TreeComponentState) {
+            state.wasInit = false
+            state.isProductGroupsLoading = false
+            state.productGroups = []
+            state.sortNumber = ""
+            state.lastSelected = null
+            state.selectedGroups = []
+            state.filter = ""
         }
     },
     extraReducers: builder => {
