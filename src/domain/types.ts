@@ -13,6 +13,23 @@ export interface ICategory {
     children: ICategory[]
 }
 
+export interface IProductGroup {
+    id: string,
+    name: string | null,
+    description: string | null,
+    descriptionWeb: string | null,
+    descriptionChecked: string | null,
+    attributesColumnOrder: number[] | null,
+    seriesId: number | null,
+    signId: number | null,
+    sellmarkId: number | null,
+    priceGroupId: number | null,
+    mainAttributeId: number | null,
+    isToolset: boolean | null,
+    isImageChecked: boolean | null,
+    siteId: number | null
+}
+
 export interface IProductGroupWithCategoryPath {
     productGroupId: string,
     categoryPath: number[]
