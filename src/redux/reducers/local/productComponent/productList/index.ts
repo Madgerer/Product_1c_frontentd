@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getProductIdentityThunk} from "./thunks";
+import {addProductToGroupAsyncThunk, getProductIdentityThunk} from "./thunks";
 import {IProductIdentity} from "../../../../../domain/types";
 
 type ProductsIdentityWithCheck = IProductIdentity & {checked: boolean}
@@ -60,6 +60,12 @@ const productComponentSlice = createSlice({
         builder.addCase(getProductIdentityThunk.rejected, (state, action) => {
             state.isLoading = false;
             console.log(`Can't get products identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(addProductToGroupAsyncThunk.fulfilled, (state, action) => {
+            state.products = state.products.filter(p => action.meta.arg.productIds.findIndex(x => x === p.id) < -1)
+        })
+        builder.addCase(addProductToGroupAsyncThunk.rejected, (state, action) => {
+            console.log(`Can't update. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 });

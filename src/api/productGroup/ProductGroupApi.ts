@@ -29,4 +29,7 @@ export default class ProductGroupApi extends BaseApi {
 
     changeProductGroupSort = async (data: {productGroupId: number, catalogId: number, targetSort: number, currentSort: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
         this.sendQuery<IProductGroupSort[]>('/api/product-group/change-sort', data, actionTypes.put, true);
+
+    addProductToGroupAsync = async (data: {productGroupId: number, productIds: string[]}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/change-sort', data, actionTypes.post, true);
 }

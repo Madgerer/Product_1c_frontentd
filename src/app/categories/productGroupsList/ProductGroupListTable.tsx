@@ -59,13 +59,10 @@ export default function ProductGroupListTable() {
 
         if(distributedState.selected.value == DistributionType.Distributed) {
             if(local.productGroupsWithCategoriesPath.find(x => x.productGroupId == productGroup.id) === undefined) {
-                //при нажатии на чек бокс не должно происходить подсветки
-                //if(!fromCheckBox) {
                     dispatch(getProductGroupCatsThunk({
                         productGroupId: productGroup.id,
                         languageId: languageState.selected.id,
                         catalogGroup: catalogGroupState.selected.id}))
-                //}
             }
             else {
                 //при отключении чекбокса должно происходить отключение подсветки
