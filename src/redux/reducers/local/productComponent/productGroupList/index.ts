@@ -35,19 +35,25 @@ const productGroupComponentSlice = createSlice({
         },
         setSelectedProductGroup(state: ProductGroupListComponentState, action: PayloadAction<IProductGroupIdentityModel>) {
             const index = state.productGroups.findIndex(x => x.id === action.payload.id)
+            console.log('here')
             //в случае если "отщелкиваем" чекбокс, чтобы лишний раз не проходить по массиву
-            if(state.selectedProductGroup === action.payload) {
-                state.selectedProductGroup = null;
-                state.productGroups[index].checked = false;
+            if(state.selectedProductGroup === null) {
+                state.productGroups[index].checked = true;
+                state.selectedProductGroup = state.productGroups[index]
             }
             else {
-                const previousSelectedIndex = state.productGroups.findIndex(x => x.id === state.selectedProductGroup?.id)
-                //если выбран хоть какой-то элемент до этого
-                if(previousSelectedIndex > -1){
-                    state.productGroups[previousSelectedIndex].checked = false;
+                if(state.selectedProductGroup.id === action.payload.id) {
+                    state.selectedProductGroup = null;
+                    state.productGroups[index].checked = false;
+                }else {
+                    const previousSelectedIndex = state.productGroups.findIndex(x => x.id === state.selectedProductGroup?.id)
+                    //если выбран хоть какой-то элемент до этого
+                    if(previousSelectedIndex > -1){
+                        state.productGroups[previousSelectedIndex].checked = false;
+                    }
+                    state.selectedProductGroup = action.payload;
+                    state.productGroups[index].checked = true;
                 }
-                state.selectedProductGroup = action.payload;
-                state.productGroups[index].checked = true;
             }
             return state;
         },
