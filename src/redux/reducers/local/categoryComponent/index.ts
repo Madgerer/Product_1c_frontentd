@@ -111,6 +111,7 @@ const categorySlice = createSlice({
         builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
             //удаляем присвоенные группы из списка
             state.productGroups = state.productGroups.filter(x => action.meta.arg.productGroupIds.findIndex(id => id === x.id) === -1)
+            state.selectedGroups = []
         })
         builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
             console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

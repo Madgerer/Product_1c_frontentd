@@ -7,15 +7,16 @@ import {CatalogGroup} from "../../../domain/types";
 import {CatalogState} from "../../../redux/reducers/catalogs";
 import {
     changeProductGroupSortThunk,
-    recountProductGroupSortThunk
+    recountProductGroupSortThunk, removeProductGroupFromCatsThunk
 } from "../../../redux/reducers/local/treeComponent/thunks";
 import "./TreeGroupToolbar.scss"
-import {useEffect} from "react";
+import {CategoriesState} from "../../../redux/reducers/categories";
 
 export default function TreeGroupToolbar() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
     const catalogGroupState = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState);
     const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState);
+    const categoriesState = useSelector<AppState, CategoriesState>(x => x.categoriesState);
     const dispatch = useDispatch();
 
     function setSortNumber(newValue: string) {
@@ -91,6 +92,25 @@ export default function TreeGroupToolbar() {
         }))
     }
 
+    function removeProductGroupsFromCategories() {
+        if(local.selectedGroups.length == 0)
+        {
+            alert("Выберите группы продуктов, которые должны быть удалены из категории")
+            return;
+        }
+        if(categoriesState.selectedCategory?.children.length != 0)
+        {
+            alert("Выберите категорию последнего уровня")
+            return;
+        }
+        dispatch(removeProductGroupFromCatsThunk({
+            productGroupIds:local.selectedGroups.map(x => x.id),
+            catalogGroup: catalogGroupState.selected.id,
+            catalogId: catalogState.selected.id,
+            categoryId: categoriesState.selectedCategory.id
+        }))
+    }
+
     return <div  className="tree-group-toolbar">
         {
             catalogGroupState.selected.id === CatalogGroup.Printed
@@ -114,7 +134,9 @@ export default function TreeGroupToolbar() {
                       onChange={value => selectedCardDistributionType(value)}
                       toOption={e => e}
                       className={"selector"}/>
-        <button className="btn btn-dark" title="Удалить выбранные карточки из раздела"><i className="fa fa-minus" aria-hidden="true"></i></button>
+        <button className="btn btn-dark" title="Удалить выбранные карточки из раздела" onClick={() => removeProductGroupsFromCategories()}>
+            <i className="fa fa-minus" aria-hidden="true"/>
+        </button>
         {
             catalogGroupState.selected.id === CatalogGroup.Printed
                 ? <button className="btn btn-dark" title="Пересчитать порядок карточек" onClick={() => recountProductGroupsSort()}>

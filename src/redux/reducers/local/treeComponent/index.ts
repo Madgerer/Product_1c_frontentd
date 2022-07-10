@@ -5,7 +5,8 @@ import {
     changeProductGroupSortThunk,
     getProductGroupsBasicThunk,
     getProductsByGroupThunk,
-    recountProductGroupSortThunk
+    recountProductGroupSortThunk,
+    removeProductGroupFromCatsThunk
 } from "./thunks";
 import {IProductGroupIdentityModel} from "../../../../app/common/tables/productGroupTable/types";
 
@@ -165,6 +166,14 @@ const slice = createSlice({
             //временно
             if(action.payload?.statusCode === 422)
                 alert(`Сортировка текущих данных выполнена неверно. Есть несколько записей с сортировочными номером '№${action.meta.arg.targetSort}'`)
+        })
+
+        builder.addCase(removeProductGroupFromCatsThunk.fulfilled, (state, action) => {
+            //удаляем присвоенные группы из списка
+            state.productGroups = state.productGroups.filter(x => action.meta.arg.productGroupIds.findIndex(id => id === x.id) === -1)
+        })
+        builder.addCase(removeProductGroupFromCatsThunk.rejected, (state, action) => {
+            console.log(`Can't remove from categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

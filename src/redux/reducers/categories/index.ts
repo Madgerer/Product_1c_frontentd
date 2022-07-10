@@ -139,6 +139,8 @@ const categorySlice = createSlice({
         })
         builder.addCase(deleteCategoryThunk.rejected, (state, action) => {
             console.log(`Can't remove category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            if(action.payload?.statusCode === 403)
+                alert(action.payload.exception)
         })
 
         //Реагируем на присвоение продуктовой группы категориям на странице categories

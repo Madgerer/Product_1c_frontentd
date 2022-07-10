@@ -20,3 +20,8 @@ export const changeProductGroupSortThunk = createApiThunk({
     typePrefix: 'tree-page/change-product-groups-sort',
     apiCall: Api.productGroups.changeProductGroupSort
 })
+
+export const removeProductGroupFromCatsThunk = createApiThunk({
+    typePrefix: "add/remove-product-groups-from-cats",
+    apiCall: Api.category.removeProductGroupsFromCats
+})
