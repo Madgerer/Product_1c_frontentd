@@ -16,6 +16,7 @@ import {
     getSeriesThunk,
     getSignsThunk
 } from "./thunks";
+import CategoryTreeUtils from "../../../../CategoryTreeUtils";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -28,9 +29,9 @@ export type NewProductState = {
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
     categoriesWeb: ICategory[],
-    selectedCategoryWeb: ICategory | null
+    selectedWebCategory: ICategory[]
     categoriesPrinted: ICategory[],
-    selectedCategoryPrinted: ICategory | null
+    selectedPrintedCategoryPath: ICategory[]
 }
 
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
@@ -65,9 +66,9 @@ const INITIAL_STATE: NewProductState = {
     priceGroups: INITIAL_PRICEGROUPS,
     selectedPriceGroup: INITIAL_PRICEGROUPS[0],
     categoriesPrinted: [],
-    selectedCategoryPrinted: null,
+    selectedPrintedCategoryPath: [],
     categoriesWeb: [],
-    selectedCategoryWeb: null
+    selectedWebCategory: []
 }
 
 const slice = createSlice({
@@ -77,19 +78,19 @@ const slice = createSlice({
         setSelectedPrintedCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
-                    state.selectedCategoryPrinted = action.payload;
+                    state.selectedPrintedCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesPrinted);
                 }
                 else
-                    state.selectedCategoryPrinted = null
+                    state.selectedPrintedCategoryPath = []
             }
         },
         setSelectedWebCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
-                    state.selectedCategoryWeb = action.payload;
+                    state.selectedWebCategory = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesWeb);
                 }
                 else
-                    state.selectedCategoryWeb = null
+                    state.selectedWebCategory = []
             }
         },
         setId(state: NewProductState, action: PayloadAction<string>) {

@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../redux/reducers";
 import {actions, NewProductState} from "../../../../redux/reducers/local/newProduct";
 import {ICategory} from "../../../../domain/types";
+import CategoryDynamicTable from "../CategoryDynamicTable";
 
 export default function CategoryTab() {
     const local = useSelector<AppState, NewProductState>(x => x.local.newProductState)
@@ -28,6 +29,12 @@ export default function CategoryTab() {
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow categories={local.categoriesPrinted} onChange={c => {setSelectedPrintedCategory(c)}}/>
             </div>
+            Вот тут какая-то нерабочая таблица
+
+            <CategoryDynamicTable categories={[
+                [{id: 106, parentId:0, children:[], name: "Ehehhe"}, {id: 107, parentId:106, children:[], name: "child"}],
+                [{id: 106, parentId:0, children:[], name: "Ehehhe"}, {id: 107, parentId:106, children:[], name: "child"}, {id: 108, parentId:107, children:[], name: "child"}]
+            ]}/>
             Вот тут какая-то нерабочая таблица
         </div>
         <div className="item col-md-12">
