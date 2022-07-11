@@ -1,12 +1,7 @@
 import {ICategoryIdentityModel, mapCategoryToModel} from "../../../app/common/tables/productGroupTable/types";
-import {ICategory} from "../../../domain/types";
+import {CatalogGroup, ICategory} from "../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {
-    createCategoryThunk,
-    deleteCategoryThunk,
-    getCategoriesThunk,
-    updateCategoryNameThunk
-} from "./thunk";
+import {createCategoryThunk, deleteCategoryThunk, getCategoriesThunk, updateCategoryNameThunk} from "./thunk";
 import {addProductGroupToCatsThunk} from "../local/categoryComponent/thunk";
 
 export type CategoriesState = {
@@ -114,11 +109,15 @@ const categorySlice = createSlice({
         })
         builder.addCase(createCategoryThunk.fulfilled, (state, action) => {
             if(action.meta.arg.parentId == null) {
-                state.categories.unshift(createCategory(action.meta.arg.parentId ?? 0, action.payload, action.meta.arg.name))
+                const baseParent = action.meta.arg.catalogGroup == CatalogGroup.Printed ? 0 : 2000;
+                const parentId = action.meta.arg.parentId ?? baseParent;
+                state.categories.unshift(createCategory(parentId, action.payload, action.meta.arg.name))
             }
             else {
                 const category = findCategory(state.categories, action.meta.arg.parentId);
                 category!.children.push(createCategory(action.meta.arg.parentId, action.payload, action.meta.arg.name))
+                //после добавления новой категории - выставляем selected заново, чтобы у selected были children
+                state.selectedCategory = category
             }
             state.newCategoryName = ""
         })
