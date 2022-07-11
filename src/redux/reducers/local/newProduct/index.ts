@@ -74,6 +74,9 @@ const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
+        setSelectedPrintedCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
+            state.selectedCategoryPrinted = action.payload;
+        },
         setId(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.id = action.payload
         },

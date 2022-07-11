@@ -1,33 +1,23 @@
-import './ExpandedCategoryRow.scss'
-import {useSelector} from "react-redux";
-import {AppState} from "../../../redux/reducers";
-import {LanguageState} from "../../../redux/reducers/languages";
-import {NewProductState} from "../../../redux/reducers/local/newProduct";
+import './categorySelectRow.scss'
 import NullableSelect from "../../common/NullableSelect";
 import { ICategory } from '../../../domain/types';
 import ToOptionProvider from "../../../utils/ToOptionProvider";
 import {useState} from "react";
 
-export default function ExpandedCategoryRow() {
-    const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
-    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState);
 
-    return <>
-        <RowElement categories={local.categoriesPrinted}/>
-    </>
-}
-
-function RowElement(props: IRowElementProps) {
+export default function CategorySelectRow(props: IRowElementProps) {
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null)
 
     const onChange = (id: number | null) => {
         if(id === null)
         {
             setSelectedCategory(null)
+            props.onChange(null)
         }
         else {
             const category = findCategory(props.categories, id)
             setSelectedCategory(category)
+            props.onChange(category)
         }
     };
 
@@ -41,7 +31,7 @@ function RowElement(props: IRowElementProps) {
                         placeholder={"Выберите кателогию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
-                ? <RowElement key={selectedCategory.id} categories={selectedCategory.children}/>
+                ? <CategorySelectRow onChange={props.onChange} key={selectedCategory.id} categories={selectedCategory.children}/>
                 : <></>
         }
     </>
@@ -49,6 +39,7 @@ function RowElement(props: IRowElementProps) {
 
 interface IRowElementProps {
     categories: ICategory[]
+    onChange: (category: ICategory | null) => void;
 }
 
 function findCategory(categories: ICategory[], id: number): ICategory | null {

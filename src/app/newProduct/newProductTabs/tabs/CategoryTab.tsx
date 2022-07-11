@@ -1,7 +1,15 @@
 import CatalogSelector, {CatalogFilter} from "../../../common/catalogSelector/CatalogSelector";
-import ExpandedCategoryRow from "../ExpandedCategoryRow";
+import CategorySelectRow from "../CategorySelectRow";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "../../../../redux/reducers";
+import {actions, NewProductState} from "../../../../redux/reducers/local/newProduct";
+import {ICategory} from "../../../../domain/types";
 
 export default function CategoryTab() {
+    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState)
+    const dispatch = useDispatch();
+
+    const setSelectedPrintedCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
 
 
     return <div className="tab-pane row">
@@ -18,7 +26,7 @@ export default function CategoryTab() {
                     <i className="fa fa fa-minus" aria-hidden="true"></i>
                 </button>
                 <CatalogSelector filter={CatalogFilter.Printed}/>
-                <ExpandedCategoryRow/>
+                <CategorySelectRow categories={local.categoriesPrinted} onChange={c => {setSelectedPrintedCategory(c)}}/>
             </div>
             Вот тут какая-то нерабочая таблица
         </div>
