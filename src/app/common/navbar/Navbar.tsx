@@ -1,7 +1,6 @@
 import LanguageSelector from "./LanguageSelector";
 import './navbar.scss'
 import {Link} from "react-router-dom";
-import {} from "react-router-dom";
 import {useLocation} from "react-router";
 import {useDispatch} from "react-redux";
 import {actions} from "../../../redux/reducers/auth";
@@ -35,11 +34,12 @@ function Navbar() {
                             <Link to={"/translate"} className="nav-link">Переводы</Link>
                         </li>
                         {
-                            history.pathname == "/products"
+
+                           /* history.pathname == "/products"
                                 ? <button style={{cursor: "pointer", backgroundColor: "chocolate", borderRadius: 4, fontWeight: "bold", color: "white", border: "none"}}>
                                     <Link to={"/new-product"} target="_blank">Новая карточка</Link>
                                 </button>
-                                : <></>
+                                : <></>*/
                         }
                     </ul>
                     <form className="form-inline">
