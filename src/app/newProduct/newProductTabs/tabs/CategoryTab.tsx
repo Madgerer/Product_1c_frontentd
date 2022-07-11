@@ -10,7 +10,7 @@ export default function CategoryTab() {
     const dispatch = useDispatch();
 
     const setSelectedPrintedCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
-
+    const setSelectedWebCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
 
     return <div className="tab-pane row">
         <div className="item col-md-12">
@@ -40,12 +40,13 @@ export default function CategoryTab() {
                     <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </button>
                 <button type="button" className="btn btn-dark">
-                    Сделать главной
-                </button>
-                <button type="button" className="btn btn-dark">
                     <i className="fa fa fa-minus" aria-hidden="true"></i>
                 </button>
-                <div>Раскрывающийся селектор</div>
+                <CatalogSelector filter={CatalogFilter.Web} />
+                <button type="button" className="btn btn-dark">
+                    Сделать главной
+                </button>
+                <CategorySelectRow categories={local.categoriesWeb} onChange={c => {setSelectedWebCategory(c)}}/>
             </div>
             Вот тут какая-то нерабочая таблица
         </div>

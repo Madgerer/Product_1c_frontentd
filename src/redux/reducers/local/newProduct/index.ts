@@ -75,7 +75,22 @@ const slice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         setSelectedPrintedCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
-            state.selectedCategoryPrinted = action.payload;
+            if(action.payload !== null) {
+                if(action.payload.children.length === 0) {
+                    state.selectedCategoryPrinted = action.payload;
+                }
+                else
+                    state.selectedCategoryPrinted = null
+            }
+        },
+        setSelectedWebCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
+            if(action.payload !== null) {
+                if(action.payload.children.length === 0) {
+                    state.selectedCategoryWeb = action.payload;
+                }
+                else
+                    state.selectedCategoryWeb = null
+            }
         },
         setId(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.id = action.payload
