@@ -57,6 +57,15 @@ const slice = createSlice({
         setName(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.name = action.payload
         },
+        setIsToolset(state: NewProductState) {
+            state.productGroup.isToolset = !state.productGroup.isToolset
+        },
+        setIsImageChecked(state: NewProductState) {
+            state.productGroup.isImageChecked = !state.productGroup.isImageChecked
+        },
+        setIsDescrChecked(state: NewProductState) {
+            state.productGroup.isDescriptionChecked = !state.productGroup.isDescriptionChecked
+        },
         setSelectedSeries(state: NewProductState, action: PayloadAction<number | null>) {
             const series = state.series.find(x => x.id == action.payload);
             if(series === undefined) {
@@ -74,11 +83,11 @@ const slice = createSlice({
             }
         },
         setSelectedAttribute(state: NewProductState, action: PayloadAction<number | null>) {
-            const series = state.attributes.find(x => x.id == action.payload);
-            if(series === undefined) {
+            const attribute = state.attributes.find(x => x.id == action.payload);
+            if(attribute === undefined) {
                 state.selectedAttribute = null;
             }else {
-                state.selectedAttribute = series;
+                state.selectedAttribute = attribute;
             }
         },
         setSelectedPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
@@ -113,7 +122,7 @@ const slice = createSlice({
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getPriceGroupsThunk.fulfilled, (state, action) => {
-            state.attributes = action.payload
+            state.priceGroups = action.payload
             state.selectedPriceGroup = null
         })
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {

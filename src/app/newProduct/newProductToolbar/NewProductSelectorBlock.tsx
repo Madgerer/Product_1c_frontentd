@@ -1,5 +1,4 @@
 import './newProductSelectorBlock.scss'
-import SimpleSelect from "../../common/SimpleSelect";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {actions, NewProductState} from "../../../redux/reducers/local/newProduct";

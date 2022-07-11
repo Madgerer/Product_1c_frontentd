@@ -10,14 +10,9 @@ export default function NewProductToolbar() {
 
     const setId = (id: string) => dispatch(actions.setId(id))
     const setName = (name: string) => dispatch(actions.setName(name))
-    const setIsToolset = () => {
-    }
-
-    const setIsDescriptionChecked = () => {
-    }
-
-    const setIsPhotoChecked = () => {
-    }
+    const setIsToolset = () => dispatch(actions.setIsToolset())
+    const setIsDescriptionChecked = () => dispatch(actions.setIsDescrChecked())
+    const setIsPhotoChecked = () => dispatch(actions.setIsImageChecked())
 
     return <>
         <div className="col-md-1 input-group-sm" style={{marginTop: 20}}>
@@ -26,18 +21,22 @@ export default function NewProductToolbar() {
         <div className="col-md-4 input-group-sm" style={{marginTop: 20}}>
             <input className="form-control" onChange={e => setName(e.target.value)} value={local.productGroup.name ?? ""} placeholder="Наименование новой карточки"/>
         </div>
-        <label className="form-check-label" style={{marginLeft:10}} onClick={() => {setIsToolset()}}>
-            <input type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
-            <span>Набор</span>
+
+        <input id="isToolset" type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
+        <label htmlFor="isToolset" className="form-check-label" style={{marginLeft:10}} onClick={() => {setIsToolset()}}>
+            Набор
         </label>
-        <label className="form-check-label" style={{marginLeft:10}} onClick={() => setIsDescriptionChecked()}>
-            <input type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
-            <span>Описание</span>
+
+        <input id="isDescrChecked" type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
+        <label htmlFor="isDescrChecked" className="form-check-label" style={{marginLeft:10}} onClick={() => setIsDescriptionChecked()}>
+            Описание
         </label>
-        <label className="form-check-label" style={{marginLeft:10}}  onClick={() => setIsPhotoChecked()}>
-            <input type="checkbox" className="form-check-input" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
-            <span>Фото</span>
+
+        <input id="isImageChecked" type="checkbox" className="form-check-input" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
+        <label htmlFor="isImageChecked" className="form-check-label" style={{marginLeft:10}}  onClick={() => setIsPhotoChecked()}>
+            Фото
         </label>
+
         <button id="save" title="Сохранить изменения" type="button" className="btn btn-dark btn-sm">
             <i className="fa fa-floppy-o" aria-hidden="true"/>
         </button>
