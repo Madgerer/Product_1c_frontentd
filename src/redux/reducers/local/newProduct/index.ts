@@ -1,6 +1,21 @@
-import {IAttribute, IPriceGroup, IProductGroup, ISeries, ISign} from "../../../../domain/types";
+import {
+    CatalogGroup,
+    IAttribute,
+    ICategory,
+    IPriceGroup,
+    IProductGroup,
+    ISeries,
+    ISign
+} from "../../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getAttributesThunk, getOrCreateThunk, getPriceGroupsThunk, getSeriesThunk, getSignsThunk} from "./thunks";
+import {
+    getAttributesThunk,
+    getCategoriesThunk,
+    getOrCreateThunk,
+    getPriceGroupsThunk,
+    getSeriesThunk,
+    getSignsThunk
+} from "./thunks";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -12,6 +27,10 @@ export type NewProductState = {
     selectedAttribute: IAttribute | null,
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
+    categoriesWeb: ICategory[],
+    selectedCategoryWeb: ICategory | null
+    categoriesPrinted: ICategory[],
+    selectedCategoryPrinted: ICategory | null
 }
 
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
@@ -44,7 +63,11 @@ const INITIAL_STATE: NewProductState = {
     attributes: INITIAL_ATTRIBUTES,
     selectedAttribute: INITIAL_ATTRIBUTES[0],
     priceGroups: INITIAL_PRICEGROUPS,
-    selectedPriceGroup: INITIAL_PRICEGROUPS[0]
+    selectedPriceGroup: INITIAL_PRICEGROUPS[0],
+    categoriesPrinted: [],
+    selectedCategoryPrinted: null,
+    categoriesWeb: [],
+    selectedCategoryWeb: null
 }
 
 const slice = createSlice({
@@ -133,6 +156,15 @@ const slice = createSlice({
         })
         builder.addCase(getOrCreateThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
+            if(action.meta.arg.catalogGroup == CatalogGroup.Printed)
+                state.categoriesPrinted = action.payload
+            else
+                state.categoriesWeb = action.payload
+        })
+        builder.addCase(getCategoriesThunk.rejected, (state, action) => {
+            console.log(`Can't load categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

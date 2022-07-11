@@ -1,4 +1,9 @@
+import CatalogSelector, {CatalogFilter} from "../../../common/catalogSelector/CatalogSelector";
+import ExpandedCategoryRow from "../ExpandedCategoryRow";
+
 export default function CategoryTab() {
+
+
     return <div className="tab-pane row">
         <div className="item col-md-12">
             <div>
@@ -12,8 +17,8 @@ export default function CategoryTab() {
                 <button type="button" className="btn btn-dark">
                     <i className="fa fa fa-minus" aria-hidden="true"></i>
                 </button>
-                Селектор печатных каталогов
-                <div>Раскрывающийся селектор</div>
+                <CatalogSelector filter={CatalogFilter.Printed}/>
+                <ExpandedCategoryRow/>
             </div>
             Вот тут какая-то нерабочая таблица
         </div>

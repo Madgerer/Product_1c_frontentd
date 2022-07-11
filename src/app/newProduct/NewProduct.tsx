@@ -5,9 +5,10 @@ import {AppState} from "../../redux/reducers";
 import {LanguageState} from "../../redux/reducers/languages";
 import {useEffect} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {getOrCreateThunk} from "../../redux/reducers/local/newProduct/thunks";
+import {getCategoriesThunk, getOrCreateThunk} from "../../redux/reducers/local/newProduct/thunks";
 import {useLocation} from "react-router";
 import {NewProductState} from "../../redux/reducers/local/newProduct";
+import {CatalogGroup} from "../../domain/types";
 
 export default function NewProduct() {
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
@@ -26,6 +27,8 @@ export default function NewProduct() {
         if(languageState.selected.id == 0)
             return;
         dispatch(getOrCreateThunk({productGroupId: paramGroupId, languageId: languageState.selected.id}))
+        dispatch(getCategoriesThunk({catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
+        dispatch(getCategoriesThunk({catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
     },[languageState.selected.id])
 
     return <div>

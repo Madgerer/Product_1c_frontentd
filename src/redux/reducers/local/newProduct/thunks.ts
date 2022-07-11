@@ -25,3 +25,8 @@ export const getOrCreateThunk = createApiThunk({
     typePrefix: 'new-product/get-or-product-group',
     apiCall: Api.productGroups.getOrCreateAsync
 })
+
+export const getCategoriesThunk = createApiThunk({
+    typePrefix: 'new-product/get-categories',
+    apiCall: Api.category.getCategoriesByCatalogGroups
+})
