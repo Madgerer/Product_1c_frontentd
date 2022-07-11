@@ -20,3 +20,8 @@ export const getPriceGroupsThunk = createNoArgsApiThunk({
     typePrefix: 'new-product/get-price-groups',
     apiCall: Api.priceGroup.getPriceGroups
 })
+
+export const getOrCreateThunk = createApiThunk({
+    typePrefix: 'new-product/get-or-product-group',
+    apiCall: Api.productGroups.getOrCreateAsync
+})

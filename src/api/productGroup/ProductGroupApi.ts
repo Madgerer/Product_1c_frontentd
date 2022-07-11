@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IProductGroupIdentity, IProductGroupSort} from "../../domain/types";
+import {IProductGroup, IProductGroupIdentity, IProductGroupSort} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
 
@@ -32,4 +32,7 @@ export default class ProductGroupApi extends BaseApi {
 
     addProductToGroupAsync = async (data: {productGroupId: string, productIds: string[]}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product-group/add-product-to-group', data, actionTypes.post, true);
+
+    getOrCreateAsync = async (data: {productGroupId: string | null, languageId: number}): Promise<IApplicationResponse<IProductGroup>> =>
+        this.sendQuery<IProductGroup>('/api/product-group/get-or-create', data, actionTypes.get, true);
 }

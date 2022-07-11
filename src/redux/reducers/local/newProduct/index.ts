@@ -1,6 +1,6 @@
 import {IAttribute, IPriceGroup, IProductGroup, ISeries, ISign} from "../../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getAttributesThunk, getPriceGroupsThunk, getSeriesThunk, getSignsThunk} from "./thunks";
+import {getAttributesThunk, getOrCreateThunk, getPriceGroupsThunk, getSeriesThunk, getSignsThunk} from "./thunks";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -126,6 +126,12 @@ const slice = createSlice({
             state.selectedPriceGroup = null
         })
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
+            console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(getOrCreateThunk.fulfilled, (state, action) => {
+            state.productGroup = action.payload
+        })
+        builder.addCase(getOrCreateThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

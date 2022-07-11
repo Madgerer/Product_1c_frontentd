@@ -42,7 +42,6 @@ export class LocalStorageProvider {
     static setLanguage(language: ILanguage) {
         localStorage.setItem(LocalStorageKeys.LanguageIdKey, language.id.toString());
         localStorage.setItem(LocalStorageKeys.LanguageNameKey, language.name);
-
     }
 
     private static removeLanguage() {
