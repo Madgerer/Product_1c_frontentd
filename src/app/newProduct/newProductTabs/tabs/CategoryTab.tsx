@@ -20,17 +20,17 @@ export default function CategoryTab() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        let isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
+        let isCategoriesLoaded = local.categoriesState.categoriesWeb.length != 0 && local.categoriesState.categoriesPrinted.length != 0;
         if(local.productGroup.wasCreate && isCategoriesLoaded) {
             dispatch(getProductGroupCategoriesThunk({productGroupId: local.productGroup.id, catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
             dispatch(getProductGroupCategoriesThunk({productGroupId: local.productGroup.id, catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
         }
-    },[languageState.selected.id, local.categoriesPrinted, local.categoriesWeb])
+    },[languageState.selected.id, local.categoriesState.categoriesPrinted, local.categoriesState.categoriesWeb])
 
     const setSelectedPrintedCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
     const setSelectedWebCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
     const addPrinterCategory = async () => {
-        const lastLevelCategory = local.selectedPrintedCategoryPath
+        const lastLevelCategory = local.categoriesState.rowPrintedCategoryPath
             .filter(x => x.children.length === 0)
             .map(x => x.id)
 
@@ -60,9 +60,11 @@ export default function CategoryTab() {
                     <i className="fa fa fa-minus" aria-hidden="true"></i>
                 </button>
                 <CatalogSelector filter={CatalogFilter.Printed}/>
-                <CategorySelectRow categories={local.categoriesPrinted} onChange={c => {setSelectedPrintedCategory(c)}}/>
+                <CategorySelectRow
+                    categories={local.categoriesState.categoriesPrinted}
+                    onChange={(cat) => {setSelectedPrintedCategory(cat)}}/>
             </div>
-            <CategoryDynamicTable categories={local.currentPrintedCategories}/>
+            <CategoryDynamicTable categories={local.categoriesState.currentPrintedCategories}/>
         </div>
         <div className="item col-md-12">
             <div>
@@ -80,7 +82,7 @@ export default function CategoryTab() {
                 <button type="button" className="btn btn-dark">
                     Сделать главной
                 </button>
-                <CategorySelectRow categories={local.categoriesWeb} onChange={c => {setSelectedWebCategory(c)}}/>
+                <CategorySelectRow categories={local.categoriesState.categoriesWeb} onChange={c => {setSelectedWebCategory(c)}}/>
             </div>
             Вот тут какая-то нерабочая таблица
         </div>
