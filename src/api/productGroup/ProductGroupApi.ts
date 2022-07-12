@@ -39,7 +39,7 @@ export default class ProductGroupApi extends BaseApi {
     createProductGroup = async (data: {id: string,
                                 name: string,
                                 seriesId: number | null,
-                                signId: string | null,
+                                signId: number | null,
                                 sellmarkId: number | null,
                                 priceGroupId: number | null,
                                 languageId: number | null }): Promise<IApplicationResponse<void>> =>

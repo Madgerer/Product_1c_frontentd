@@ -9,6 +9,7 @@ import {getCategoriesThunk, getOrReserveThunk} from "../../redux/reducers/local/
 import {useLocation} from "react-router";
 import {NewProductState} from "../../redux/reducers/local/newProduct";
 import {CatalogGroup} from "../../domain/types";
+import {Spinner} from "react-bootstrap";
 
 export default function NewProduct() {
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
@@ -19,7 +20,8 @@ export default function NewProduct() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    if(paramGroupId == null && local.productGroup.id != "") {
+    if((paramGroupId == null && local.productGroup.id != "")
+        || (paramGroupId != null && local.productGroup.id != "" && (paramGroupId != local.productGroup.id))) {
         navigate(location.pathname+`?productGroupId=${local.productGroup.id}`, {replace:true} /*''*/)
     }
 
@@ -32,11 +34,17 @@ export default function NewProduct() {
     },[languageState.selected.id])
 
     return <div>
-        <NewProductToolbar/>
         {
-            local.productGroup.wasCreate
-                ? <NewProductTabs/>
-                : <></>
+            local.loadingState.isPageLoading
+                ? <Spinner animation={'border'} />
+                : <>
+                    <NewProductToolbar/>
+                    {
+                        local.productGroup.wasCreate
+                            ? <NewProductTabs/>
+                            : <></>
+                    }
+                </>
         }
     </div>
 }

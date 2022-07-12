@@ -9,7 +9,7 @@ import {
 } from "../../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
-    addProductGroupToCatsThunk,
+    createProductGroupThunk, deleteProductGroupThunk, discardReserveThunk,
     getAttributesThunk,
     getCategoriesThunk,
     getOrReserveThunk,
@@ -34,7 +34,14 @@ export type NewProductState = {
     categoriesPrinted: ICategory[],
     selectedPrintedCategoryPath: ICategory[]
     currentPrintedCategories: ICategory[][],
-    currentWebCategories: ICategory[][]
+    currentWebCategories: ICategory[][],
+    loadingState: INewProductLoadingState
+}
+
+interface INewProductLoadingState {
+    isSaveLoading: boolean,
+    isRejectLoading: boolean,
+    isPageLoading: boolean
 }
 
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
@@ -73,7 +80,12 @@ const INITIAL_STATE: NewProductState = {
     categoriesWeb: [],
     selectedWebCategory: [],
     currentPrintedCategories: [],
-    currentWebCategories: []
+    currentWebCategories: [],
+    loadingState: {
+        isRejectLoading: false,
+        isSaveLoading: false,
+        isPageLoading: true
+    }
 }
 
 const slice = createSlice({
@@ -179,12 +191,6 @@ const slice = createSlice({
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(getOrReserveThunk.fulfilled, (state, action) => {
-            state.productGroup = action.payload
-        })
-        builder.addCase(getOrReserveThunk.rejected, (state, action) => {
-            console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
         builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
             if(action.meta.arg.catalogGroup == CatalogGroup.Printed)
                 state.categoriesPrinted = action.payload
@@ -211,19 +217,51 @@ const slice = createSlice({
         builder.addCase(getProductGroupCategoriesThunk.rejected, (state, action) => {
             console.log(`Can't load product group categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
-            switch (action.meta.arg.catalogGroup) {
-                case CatalogGroup.Web:
-                    const map: (ICategory | null)[] = action.meta.arg.categoriesIds.map(x => CategoryTreeUtils.findCategory(x, state.categoriesWeb));
-                    state.currentWebCategories.push();
-                    break;
-                case CatalogGroup.Printed:
-                    state.currentPrintedCategories.push();
-                    break;
-            }
+
+        builder.addCase(getOrReserveThunk.pending, (state) => {
+            state.loadingState.isPageLoading = true
         })
-        builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
-            console.log(`Can't add product to category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        builder.addCase(getOrReserveThunk.fulfilled, (state, action) => {
+            state.productGroup = action.payload
+            state.loadingState.isPageLoading = false
+        })
+        builder.addCase(getOrReserveThunk.rejected, (state, action) => {
+            state.loadingState.isPageLoading = false
+            console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(createProductGroupThunk.pending, (state) => {
+            state.loadingState.isSaveLoading = true
+        })
+        builder.addCase(createProductGroupThunk.fulfilled, (state) => {
+            state.productGroup.wasCreate = true
+            state.loadingState.isSaveLoading = false
+        })
+        builder.addCase(createProductGroupThunk.rejected, (state, action) => {
+            state.loadingState.isSaveLoading = false
+            console.log(`Can't create product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(discardReserveThunk.pending, (state) => {
+            state.loadingState.isRejectLoading = true
+        })
+        builder.addCase(discardReserveThunk.fulfilled, (state) => {
+            state.loadingState.isRejectLoading = false;
+        })
+        builder.addCase(discardReserveThunk.rejected, (state, action) => {
+            state.loadingState.isRejectLoading = false;
+            console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(deleteProductGroupThunk.pending, (state) => {
+            state.loadingState.isRejectLoading = true;
+        })
+        builder.addCase(deleteProductGroupThunk.fulfilled, (state) => {
+            state.loadingState.isRejectLoading = false;
+        })
+        builder.addCase(deleteProductGroupThunk.rejected, (state, action) => {
+            state.loadingState.isRejectLoading = false;
+            console.log(`Can't delete product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

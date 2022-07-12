@@ -51,7 +51,7 @@ export const discardReserveThunk = createApiThunk({
     apiCall: Api.productGroups.discardReserve
 })
 
-export const deleteProductGroup = createApiThunk({
+export const deleteProductGroupThunk = createApiThunk({
     typePrefix: 'new-product/delete-product-group',
     apiCall: Api.productGroups.deleteProductGroup
 })
