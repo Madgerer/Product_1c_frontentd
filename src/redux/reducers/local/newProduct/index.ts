@@ -10,11 +10,14 @@ import {
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addProductGroupToCatsThunk,
-    createProductGroupThunk, deleteProductGroupThunk, discardReserveThunk,
+    createProductGroupThunk,
+    deleteProductGroupThunk,
+    discardReserveThunk,
     getAttributesThunk,
     getCategoriesThunk,
     getOrReserveThunk,
-    getPriceGroupsThunk, getProductGroupCategoriesThunk,
+    getPriceGroupsThunk,
+    getProductGroupCategoriesThunk,
     getSeriesThunk,
     getSignsThunk
 } from "./thunks";
@@ -53,7 +56,9 @@ interface ICategoriesState {
 
     //выбранная категория в ряду
     rowWebCategoryPath: ICategory[]
-    rowPrintedCategoryPath: ICategory[],
+    rowPrintedCategoryPath: ICategory[]
+    shouldResetPrinted: boolean,
+    shouldResetWeb: boolean
 
     //выбранная категория в таблице
     selectedPrintedCategory: ICategory | null,
@@ -100,6 +105,8 @@ const INITIAL_STATE: NewProductState = {
         currentWebCategories: [],
         selectedWebCategory: null,
         selectedPrintedCategory: null,
+        shouldResetPrinted: false,
+        shouldResetWeb: false
     },
     loadingState: {
         isRejectLoading: false,
@@ -112,6 +119,16 @@ const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
+        setShouldReset(state: NewProductState, action: PayloadAction<CatalogGroup>) {
+            if(action.payload === CatalogGroup.Printed) {
+                console.log('Cat state shouldReset1: ' + state.categoriesState.shouldResetPrinted)
+                state.categoriesState.shouldResetPrinted = !state.categoriesState.shouldResetPrinted
+                console.log('Cat state shouldReset2: ' + state.categoriesState.shouldResetPrinted)
+            }
+            else {
+                state.categoriesState.shouldResetWeb = !state.categoriesState.shouldResetWeb
+            }
+        },
         setPrintedRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
@@ -272,6 +289,7 @@ const slice = createSlice({
                 model: state.categoriesState.rowPrintedCategoryPath,
                 selected: false
             })
+            state.categoriesState.shouldResetPrinted = true
             state.categoriesState.rowPrintedCategoryPath = []
         })
         builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {

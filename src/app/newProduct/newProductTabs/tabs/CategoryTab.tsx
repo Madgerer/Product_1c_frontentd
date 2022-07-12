@@ -47,6 +47,8 @@ export default function CategoryTab() {
         }))
     }
 
+    const onRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
+
     return <div className="tab-pane row">
         <div className="item col-md-12">
             <div>
@@ -62,10 +64,12 @@ export default function CategoryTab() {
                 </button>
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow
+                    shouldReset={local.categoriesState.shouldResetPrinted}
+                    onReset={() => onRowReset(CatalogGroup.Printed)}
                     categories={local.categoriesState.categoriesPrinted}
                     onChange={(cat) => {setPrintedRowPath(cat)}}/>
             </div>
-            <CategoryDynamicTable nameAccessorFn={category => category.name} rows={local.categoriesState.currentPrintedCategories}/>
+            <CategoryDynamicTable onRowClicked={() => {}} nameAccessorFn={category => category.name} rows={local.categoriesState.currentPrintedCategories}/>
         </div>
         <div className="item col-md-12">
             <div>
@@ -83,7 +87,7 @@ export default function CategoryTab() {
                 <button type="button" className="btn btn-dark">
                     Сделать главной
                 </button>
-                <CategorySelectRow categories={local.categoriesState.categoriesWeb} onChange={c => {setWebRowPath(c)}}/>
+                {/*<CategorySelectRow categories={local.categoriesState.categoriesWeb} onChange={c => {setWebRowPath(c)}}/>*/}
             </div>
             Вот тут какая-то нерабочая таблица
         </div>

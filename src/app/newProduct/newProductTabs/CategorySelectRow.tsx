@@ -8,6 +8,8 @@ import CategoryTreeUtils from "../../../CategoryTreeUtils";
 interface IRowElementProps {
     categories: ICategory[]
     onChange: (category: ICategory | null) => void;
+    shouldReset: boolean;
+    onReset: () => void;
 }
 
 export default function CategorySelectRow(props: IRowElementProps) {
@@ -16,14 +18,19 @@ export default function CategorySelectRow(props: IRowElementProps) {
     const onChange = (id: number | null) => {
         if(id === null) {
             setSelectedCategory(null)
-            //props.onChange(null)
         }
         else {
             const category = CategoryTreeUtils.findCategory(id, props.categories)
             setSelectedCategory(category)
-            //props.onChange(category)
         }
     };
+
+    useEffect(() => {
+        if(props.shouldReset) {
+            props.onReset();
+            setSelectedCategory(null)
+        }
+    },[props.shouldReset])
 
     return <>
         <NullableSelect value={selectedCategory}

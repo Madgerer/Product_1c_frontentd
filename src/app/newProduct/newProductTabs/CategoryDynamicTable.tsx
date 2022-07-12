@@ -26,6 +26,7 @@ export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProp
 }
 
 interface ICategoryDynamicTableProps<T> {
-    rows: ISelectableIndexModel<T>[]
-    nameAccessorFn: (T) => string
+    rows: ISelectableIndexModel<T>[];
+    nameAccessorFn: (T) => string;
+    onRowClicked: (model: T[]) => void;
 }
