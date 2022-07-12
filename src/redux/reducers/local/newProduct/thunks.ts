@@ -21,12 +21,37 @@ export const getPriceGroupsThunk = createNoArgsApiThunk({
     apiCall: Api.priceGroup.getPriceGroups
 })
 
-export const getOrCreateThunk = createApiThunk({
-    typePrefix: 'new-product/get-or-product-group',
-    apiCall: Api.productGroups.getOrCreateAsync
+export const getOrReserveThunk = createApiThunk({
+    typePrefix: 'new-product/get-or-reserve-product-group',
+    apiCall: Api.productGroups.getOrReserve
 })
 
 export const getCategoriesThunk = createApiThunk({
     typePrefix: 'new-product/get-categories',
     apiCall: Api.category.getCategoriesByCatalogGroups
+})
+
+export const getProductGroupCategoriesThunk = createApiThunk({
+    typePrefix: 'new-product/get-product-group-cats',
+    apiCall: Api.category.getProductGroupCats
+})
+
+export const addProductGroupToCatsThunk = createApiThunk({
+    typePrefix: 'new-product/add-product-group-to-cat',
+    apiCall: Api.category.addProductGroupToCats
+})
+
+export const createProductGroupThunk = createApiThunk({
+    typePrefix: 'new-product/create-product-group',
+    apiCall: Api.productGroups.createProductGroup
+})
+
+export const discardReserveThunk = createApiThunk({
+    typePrefix: 'new-product/discard-reserve',
+    apiCall: Api.productGroups.discardReserve
+})
+
+export const deleteProductGroup = createApiThunk({
+    typePrefix: 'new-product/delete-product-group',
+    apiCall: Api.productGroups.deleteProductGroup
 })

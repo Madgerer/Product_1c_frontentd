@@ -30,9 +30,24 @@ export default class ProductGroupApi extends BaseApi {
     changeProductGroupSort = async (data: {productGroupId: number, catalogId: number, targetSort: number, currentSort: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
         this.sendQuery<IProductGroupSort[]>('/api/product-group/change-sort', data, actionTypes.put, true);
 
-    addProductToGroupAsync = async (data: {productGroupId: string, productIds: string[]}): Promise<IApplicationResponse<void>> =>
+    addProductToGroup = async (data: {productGroupId: string, productIds: string[]}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product-group/add-product-to-group', data, actionTypes.post, true);
 
-    getOrCreateAsync = async (data: {productGroupId: string | null, languageId: number}): Promise<IApplicationResponse<IProductGroup>> =>
-        this.sendQuery<IProductGroup>('/api/product-group/get-or-create', data, actionTypes.get, true);
+    getOrReserve = async (data: {productGroupId: string | null, languageId: number}): Promise<IApplicationResponse<IProductGroup>> =>
+        this.sendQuery<IProductGroup>('/api/product-group/get-or-reserve', data, actionTypes.get, true);
+
+    createProductGroup = async (data: {id: string,
+                                name: string,
+                                seriesId: number | null,
+                                signId: string | null,
+                                sellmarkId: number | null,
+                                priceGroupId: number | null,
+                                languageId: number | null }): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/create', data, actionTypes.post, true);
+
+    deleteProductGroup = async (data: {id: string}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group', data, actionTypes.delete, true);
+
+    discardReserve = async (data: {id: string}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/discard-reserve', data, actionTypes.delete, true);
 }

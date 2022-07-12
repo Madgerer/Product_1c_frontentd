@@ -22,20 +22,26 @@ export default function NewProductToolbar() {
             <input className="form-control" onChange={e => setName(e.target.value)} value={local.productGroup.name ?? ""} placeholder="Наименование новой карточки"/>
         </div>
 
-        <input id="isToolset" type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
-        <label htmlFor="isToolset" className="form-check-label" style={{marginLeft:10}} onClick={() => {setIsToolset()}}>
-            Набор
-        </label>
+        {
+            local.productGroup.wasCreate
+                ? <>
+                    <input id="isToolset" type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
+                    <label htmlFor="isToolset" className="form-check-label" style={{marginLeft:10}} onClick={() => {setIsToolset()}}>
+                        Набор
+                    </label>
 
-        <input id="isDescrChecked" type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
-        <label htmlFor="isDescrChecked" className="form-check-label" style={{marginLeft:10}} onClick={() => setIsDescriptionChecked()}>
-            Описание
-        </label>
+                    <input id="isDescrChecked" type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
+                    <label htmlFor="isDescrChecked" className="form-check-label" style={{marginLeft:10}} onClick={() => setIsDescriptionChecked()}>
+                        Описание
+                    </label>
 
-        <input id="isImageChecked" type="checkbox" className="form-check-input" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
-        <label htmlFor="isImageChecked" className="form-check-label" style={{marginLeft:10}}  onClick={() => setIsPhotoChecked()}>
-            Фото
-        </label>
+                    <input id="isImageChecked" type="checkbox" className="form-check-input" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
+                    <label htmlFor="isImageChecked" className="form-check-label" style={{marginLeft:10}}  onClick={() => setIsPhotoChecked()}>
+                        Фото
+                    </label>
+                </>
+                : <></>
+        }
 
         <button id="save" title="Сохранить изменения" type="button" className="btn btn-dark btn-sm">
             <i className="fa fa-floppy-o" aria-hidden="true"/>

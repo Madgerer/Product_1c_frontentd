@@ -5,7 +5,7 @@ import {AppState} from "../../redux/reducers";
 import {LanguageState} from "../../redux/reducers/languages";
 import {useEffect} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {getCategoriesThunk, getOrCreateThunk} from "../../redux/reducers/local/newProduct/thunks";
+import {getCategoriesThunk, getOrReserveThunk} from "../../redux/reducers/local/newProduct/thunks";
 import {useLocation} from "react-router";
 import {NewProductState} from "../../redux/reducers/local/newProduct";
 import {CatalogGroup} from "../../domain/types";
@@ -26,13 +26,17 @@ export default function NewProduct() {
     useEffect(() => {
         if(languageState.selected.id == 0)
             return;
-        dispatch(getOrCreateThunk({productGroupId: paramGroupId, languageId: languageState.selected.id}))
+        dispatch(getOrReserveThunk({productGroupId: paramGroupId, languageId: languageState.selected.id}))
         dispatch(getCategoriesThunk({catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
         dispatch(getCategoriesThunk({catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
     },[languageState.selected.id])
 
     return <div>
         <NewProductToolbar/>
-        <NewProductTabs/>
+        {
+            local.productGroup.wasCreate
+                ? <NewProductTabs/>
+                : <></>
+        }
     </div>
 }

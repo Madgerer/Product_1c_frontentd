@@ -9,10 +9,11 @@ import {
 } from "../../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
+    addProductGroupToCatsThunk,
     getAttributesThunk,
     getCategoriesThunk,
-    getOrCreateThunk,
-    getPriceGroupsThunk,
+    getOrReserveThunk,
+    getPriceGroupsThunk, getProductGroupCategoriesThunk,
     getSeriesThunk,
     getSignsThunk
 } from "./thunks";
@@ -32,6 +33,8 @@ export type NewProductState = {
     selectedWebCategory: ICategory[]
     categoriesPrinted: ICategory[],
     selectedPrintedCategoryPath: ICategory[]
+    currentPrintedCategories: ICategory[][],
+    currentWebCategories: ICategory[][]
 }
 
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
@@ -68,13 +71,19 @@ const INITIAL_STATE: NewProductState = {
     categoriesPrinted: [],
     selectedPrintedCategoryPath: [],
     categoriesWeb: [],
-    selectedWebCategory: []
+    selectedWebCategory: [],
+    currentPrintedCategories: [],
+    currentWebCategories: []
 }
 
 const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
+        addNewCurrent(state: NewProductState) {
+            let items = state.selectedPrintedCategoryPath;
+            state.currentPrintedCategories.push(items)
+        },
         setSelectedPrintedCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
@@ -170,10 +179,10 @@ const slice = createSlice({
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(getOrCreateThunk.fulfilled, (state, action) => {
+        builder.addCase(getOrReserveThunk.fulfilled, (state, action) => {
             state.productGroup = action.payload
         })
-        builder.addCase(getOrCreateThunk.rejected, (state, action) => {
+        builder.addCase(getOrReserveThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
@@ -184,6 +193,37 @@ const slice = createSlice({
         })
         builder.addCase(getCategoriesThunk.rejected, (state, action) => {
             console.log(`Can't load categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(getProductGroupCategoriesThunk.fulfilled, (state, action) => {
+            switch (action.meta.arg.catalogGroup) {
+                case CatalogGroup.Web:
+                    state.currentWebCategories = action.payload.map(x => {
+                        return x.categoryPath.map(y => CategoryTreeUtils.findCategory(y, state.categoriesPrinted)).filter(x => x != null).map(x => x!)
+                    });
+                    break;
+                case CatalogGroup.Printed:
+                    state.currentPrintedCategories = action.payload.map(x => {
+                        return x.categoryPath.map(y => CategoryTreeUtils.findCategory(y, state.categoriesWeb)).filter(x => x != null).map(x => x!)
+                    });
+                    break;
+            }
+        })
+        builder.addCase(getProductGroupCategoriesThunk.rejected, (state, action) => {
+            console.log(`Can't load product group categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
+            switch (action.meta.arg.catalogGroup) {
+                case CatalogGroup.Web:
+                    const map: (ICategory | null)[] = action.meta.arg.categoriesIds.map(x => CategoryTreeUtils.findCategory(x, state.categoriesWeb));
+                    state.currentWebCategories.push();
+                    break;
+                case CatalogGroup.Printed:
+                    state.currentPrintedCategories.push();
+                    break;
+            }
+        })
+        builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
+            console.log(`Can't add product to category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })
