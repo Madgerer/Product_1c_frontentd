@@ -41,6 +41,11 @@ export const addProductGroupToCatsThunk = createApiThunk({
     apiCall: Api.category.addProductGroupToCats
 })
 
+export const removeProductGroupFromCatsThunk = createApiThunk({
+    typePrefix: 'new-product/remove-product-group-from-cat',
+    apiCall: Api.category.removeProductGroupsFromCats
+})
+
 export const createProductGroupThunk = createApiThunk({
     typePrefix: 'new-product/create-product-group',
     apiCall: Api.productGroups.createProductGroup

@@ -19,7 +19,7 @@ import {
     getPriceGroupsThunk,
     getProductGroupCategoriesThunk,
     getSeriesThunk,
-    getSignsThunk
+    getSignsThunk, removeProductGroupFromCatsThunk
 } from "./thunks";
 import CategoryTreeUtils from "../../../../CategoryTreeUtils";
 import {ISelectableIndexModel} from "../../../types";
@@ -55,8 +55,8 @@ interface ICategoriesState {
     categoriesPrinted: ICategory[],
 
     //выбранная категория в ряду
-    rowWebCategoryPath: ICategory[]
-    rowPrintedCategoryPath: ICategory[]
+    webCategoryToAlterPath: ICategory[]
+    printedCategoryToAlterPath: ICategory[]
     shouldResetPrinted: boolean,
     shouldResetWeb: boolean
 
@@ -97,10 +97,10 @@ const INITIAL_STATE: NewProductState = {
     priceGroups: INITIAL_PRICEGROUPS,
     selectedPriceGroup: INITIAL_PRICEGROUPS[0],
     categoriesState: {
-        rowWebCategoryPath: [],
+        webCategoryToAlterPath: [],
         categoriesPrinted: [],
         categoriesWeb: [],
-        rowPrintedCategoryPath: [],
+        printedCategoryToAlterPath: [],
         currentPrintedCategories: [],
         currentWebCategories: [],
         selectedWebCategory: null,
@@ -119,32 +119,46 @@ const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
+        setSelectedCategory(state: NewProductState, action: PayloadAction<{rowIndex: number, catalogGroup: CatalogGroup}>) {
+            let categoryFound = false;
+            if(action.payload.catalogGroup === CatalogGroup.Printed) {
+                for (const row of state.categoriesState.currentPrintedCategories) {
+                    if(row.index == action.payload.rowIndex)
+                    {
+                        row.selected = true
+                        categoryFound = true;
+                        //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
+                        state.categoriesState.selectedPrintedCategory = row.model[row.model.length - 1];
+                    }
+                    else
+                        row.selected = false
+                }
+                if(!categoryFound)
+                    state.categoriesState.selectedPrintedCategory = null
+            }
+        },
         setShouldReset(state: NewProductState, action: PayloadAction<CatalogGroup>) {
-            if(action.payload === CatalogGroup.Printed) {
-                console.log('Cat state shouldReset1: ' + state.categoriesState.shouldResetPrinted)
+            if(action.payload === CatalogGroup.Printed)
                 state.categoriesState.shouldResetPrinted = !state.categoriesState.shouldResetPrinted
-                console.log('Cat state shouldReset2: ' + state.categoriesState.shouldResetPrinted)
-            }
-            else {
+            else
                 state.categoriesState.shouldResetWeb = !state.categoriesState.shouldResetWeb
-            }
         },
         setPrintedRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
-                    state.categoriesState.rowPrintedCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesPrinted);
+                    state.categoriesState.printedCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesPrinted);
                 }
                 else
-                    state.categoriesState.rowPrintedCategoryPath = []
+                    state.categoriesState.printedCategoryToAlterPath = []
             }
         },
         setWebRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
-                    state.categoriesState.rowWebCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesWeb);
+                    state.categoriesState.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesWeb);
                 }
                 else
-                    state.categoriesState.rowWebCategoryPath = []
+                    state.categoriesState.webCategoryToAlterPath = []
             }
         },
         setId(state: NewProductState, action: PayloadAction<string>) {
@@ -280,20 +294,39 @@ const slice = createSlice({
         })
 
         builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
-            //чтобы не перерасчитывать индексы всех рядов - просто отправляем индекс в минус,
-            //он нужен только для внутренних вычислений, поэтому без разницы какой он
-            state.categoriesState.currentPrintedCategories.unshift({
-                index: state.categoriesState.currentPrintedCategories.length !== 0
-                    ? state.categoriesState.currentPrintedCategories[0].index - 1
-                    : 0,
-                model: state.categoriesState.rowPrintedCategoryPath,
-                selected: false
-            })
-            state.categoriesState.shouldResetPrinted = true
-            state.categoriesState.rowPrintedCategoryPath = []
+            if(action.meta.arg.catalogGroup == CatalogGroup.Printed) {
+                //чтобы не перерасчитывать индексы всех рядов - просто отправляем индекс в минус,
+                //он нужен только для внутренних вычислений, поэтому без разницы какой он
+                state.categoriesState.currentPrintedCategories.unshift({
+                    index: state.categoriesState.currentPrintedCategories.length !== 0
+                        ? state.categoriesState.currentPrintedCategories[0].index - 1
+                        : 0,
+                    model: state.categoriesState.printedCategoryToAlterPath,
+                    selected: false
+                })
+                state.categoriesState.shouldResetPrinted = true
+                state.categoriesState.printedCategoryToAlterPath = []
+            } else {
+                state.categoriesState.currentWebCategories.unshift({
+                    index: state.categoriesState.currentWebCategories.length !== 0
+                        ? state.categoriesState.currentWebCategories[0].index - 1
+                        : 0,
+                    model: state.categoriesState.webCategoryToAlterPath,
+                    selected: false
+                })
+                state.categoriesState.shouldResetWeb = true
+                state.categoriesState.webCategoryToAlterPath = []
+            }
+
         })
         builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
-            state.loadingState.isRejectLoading = false;
+            console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(removeProductGroupFromCatsThunk.fulfilled, (state, action) => {
+            //todo: fix
+        })
+        builder.addCase(removeProductGroupFromCatsThunk.rejected, (state, action) => {
             console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 

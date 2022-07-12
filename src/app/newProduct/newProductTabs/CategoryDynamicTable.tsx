@@ -1,6 +1,7 @@
 import _ from "lodash";
 import {Table} from "react-bootstrap";
 import {ISelectableIndexModel} from "../../../redux/types";
+import './categoryDynamicTable.scss'
 
 export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProps<T>) {
     const maxColumnLength = _.max(props.rows.map(x => x.model.length))
@@ -8,7 +9,7 @@ export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProp
         <tbody>
         {
             props.rows.map(row => {
-                return <tr>
+                return <tr className={row.selected ? "dynamic-table-row--selected" : ""} onClick={() => props.onRowClicked(row)}>
                     {
                         Array.from(Array(maxColumnLength).keys()).map(columnNumber => {
                             const column = row.model[columnNumber]
@@ -28,5 +29,5 @@ export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProp
 interface ICategoryDynamicTableProps<T> {
     rows: ISelectableIndexModel<T>[];
     nameAccessorFn: (T) => string;
-    onRowClicked: (model: T[]) => void;
+    onRowClicked: (row: ISelectableIndexModel<T>) => void;
 }
