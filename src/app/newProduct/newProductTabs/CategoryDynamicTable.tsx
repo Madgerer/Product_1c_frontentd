@@ -1,25 +1,21 @@
-import {ICategory} from "../../../domain/types";
 import _ from "lodash";
 import {Table} from "react-bootstrap";
+import {ISelectableIndexModel} from "../../../redux/types";
 
-export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) {
-    const maxColumnLength = _.max(props.categories.map(x => x.length))
-    console.log('RowsCount: ' + props.categories.length)
-    console.log('ColumnsCount: ' + maxColumnLength)
+export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProps<T>) {
+    const maxColumnLength = _.max(props.rows.map(x => x.model.length))
     return <Table>
         <tbody>
         {
-            Array.from(Array(props.categories.length).keys()).map(x => {
+            props.rows.map(row => {
                 return <tr>
                     {
-                        Array.from(Array(maxColumnLength).keys()).map(c => {
-                            let categories = props.categories[x];
-                            if(categories.length > c) {
-                                const category = categories[c];
-                                return <td>{category.name}</td>
+                        Array.from(Array(maxColumnLength).keys()).map(columnNumber => {
+                            const column = row.model[columnNumber]
+                            if(column === undefined) {
+                                return <td></td>
                             }
-                            else
-                                return <td/>
+                            return <td>{props.nameAccessorFn(column)}</td>
                         })
                     }
                 </tr>
@@ -29,6 +25,7 @@ export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) 
     </Table>
 }
 
-interface ICategoryDynamicTableProps {
-    categories: ICategory[][]
+interface ICategoryDynamicTableProps<T> {
+    rows: ISelectableIndexModel<T>[]
+    nameAccessorFn: (T) => string
 }

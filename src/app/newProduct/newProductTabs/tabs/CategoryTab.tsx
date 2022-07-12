@@ -27,8 +27,9 @@ export default function CategoryTab() {
         }
     },[languageState.selected.id, local.categoriesState.categoriesPrinted, local.categoriesState.categoriesWeb])
 
-    const setSelectedPrintedCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
-    const setSelectedWebCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
+    const setPrintedRowPath = (category: ICategory | null) => dispatch(actions.setPrintedRowPath(category))
+    const setWebRowPath = (category: ICategory | null) => dispatch(actions.setWebRowPath(category))
+
     const addPrinterCategory = async () => {
         const lastLevelCategory = local.categoriesState.rowPrintedCategoryPath
             .filter(x => x.children.length === 0)
@@ -62,9 +63,9 @@ export default function CategoryTab() {
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow
                     categories={local.categoriesState.categoriesPrinted}
-                    onChange={(cat) => {setSelectedPrintedCategory(cat)}}/>
+                    onChange={(cat) => {setPrintedRowPath(cat)}}/>
             </div>
-            <CategoryDynamicTable categories={local.categoriesState.currentPrintedCategories}/>
+            <CategoryDynamicTable nameAccessorFn={category => category.name} rows={local.categoriesState.currentPrintedCategories}/>
         </div>
         <div className="item col-md-12">
             <div>
@@ -82,7 +83,7 @@ export default function CategoryTab() {
                 <button type="button" className="btn btn-dark">
                     Сделать главной
                 </button>
-                <CategorySelectRow categories={local.categoriesState.categoriesWeb} onChange={c => {setSelectedWebCategory(c)}}/>
+                <CategorySelectRow categories={local.categoriesState.categoriesWeb} onChange={c => {setWebRowPath(c)}}/>
             </div>
             Вот тут какая-то нерабочая таблица
         </div>

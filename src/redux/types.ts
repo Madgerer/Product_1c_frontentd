@@ -6,3 +6,13 @@ export interface IRejectQueryThunk {
 export interface ILoadingModel {
     isLoading: boolean
 }
+
+export interface ISelectable {
+    selected: boolean
+}
+
+export interface ISelectableIndexModel<T> {
+    selected: boolean,
+    index: number,
+    model: T[]
+}

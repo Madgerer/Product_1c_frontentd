@@ -19,6 +19,7 @@ import {
     getSignsThunk
 } from "./thunks";
 import CategoryTreeUtils from "../../../../CategoryTreeUtils";
+import {ISelectableIndexModel} from "../../../types";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -34,6 +35,7 @@ export type NewProductState = {
     categoriesState: ICategoriesState
 }
 
+
 interface INewProductLoadingState {
     isSaveLoading: boolean,
     isRejectLoading: boolean,
@@ -42,14 +44,17 @@ interface INewProductLoadingState {
 
 interface ICategoriesState {
     //текущие категории, которые есть у группы продуктов
-    currentPrintedCategories: ICategory[][],
-    currentWebCategories: ICategory[][],
+    currentPrintedCategories: ISelectableIndexModel<ICategory>[],
+    currentWebCategories: ISelectableIndexModel<ICategory>[],
+
     //все категории
     categoriesWeb: ICategory[],
     categoriesPrinted: ICategory[],
+
     //выбранная категория в ряду
     rowWebCategoryPath: ICategory[]
     rowPrintedCategoryPath: ICategory[],
+
     //выбранная категория в таблице
     selectedPrintedCategory: ICategory | null,
     selectedWebCategory: ICategory | null
@@ -107,7 +112,7 @@ const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
-        setSelectedPrintedCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
+        setPrintedRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
                     state.categoriesState.rowPrintedCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesPrinted);
@@ -116,7 +121,7 @@ const slice = createSlice({
                     state.categoriesState.rowPrintedCategoryPath = []
             }
         },
-        setSelectedWebCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
+        setWebRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
                     state.categoriesState.rowWebCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesWeb);
@@ -214,21 +219,29 @@ const slice = createSlice({
         builder.addCase(getProductGroupCategoriesThunk.fulfilled, (state, action) => {
             switch (action.meta.arg.catalogGroup) {
                 case CatalogGroup.Web:
-                    state.categoriesState.currentWebCategories = action.payload.map(x => {
-                        return x.categoryPath.map(y => CategoryTreeUtils
-                            .findCategory(y, state.categoriesState.categoriesWeb))
-                            .filter(x => x != null)
-                            .map(x => x!)
-                            .reverse()
-                    });
+                    state.categoriesState.currentWebCategories = action.payload.map((x, i) => {
+                        return {
+                            selected: false,
+                            index: i,
+                            model: x.categoryPath.map(y => CategoryTreeUtils
+                                .findCategory(y, state.categoriesState.categoriesWeb))
+                                .filter(x => x != null)
+                                .map(x => x!)
+                                .reverse()
+                        }
+                    })
                     break;
                 case CatalogGroup.Printed:
-                    state.categoriesState.currentPrintedCategories = action.payload.map(x => {
-                        return x.categoryPath.map(y => CategoryTreeUtils
-                            .findCategory(y, state.categoriesState.categoriesPrinted))
-                            .filter(x => x != null)
-                            .map(x => x!)
-                            .reverse()
+                    state.categoriesState.currentPrintedCategories = action.payload.map((x, i) => {
+                        return {
+                            index: i,
+                            selected: false,
+                            model: x.categoryPath.map(y => CategoryTreeUtils
+                                .findCategory(y, state.categoriesState.categoriesPrinted))
+                                .filter(x => x != null)
+                                .map(x => x!)
+                                .reverse()
+                        }
                     });
                     break;
             }
@@ -249,8 +262,16 @@ const slice = createSlice({
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state) => {
-            state.categoriesState.currentPrintedCategories.push(state.categoriesState.rowPrintedCategoryPath)
+        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
+            //чтобы не перерасчитывать индексы всех рядов - просто отправляем индекс в минус,
+            //он нужен только для внутренних вычислений, поэтому без разницы какой он
+            state.categoriesState.currentPrintedCategories.unshift({
+                index: state.categoriesState.currentPrintedCategories.length !== 0
+                    ? state.categoriesState.currentPrintedCategories[0].index - 1
+                    : 0,
+                model: state.categoriesState.rowPrintedCategoryPath,
+                selected: false
+            })
             state.categoriesState.rowPrintedCategoryPath = []
         })
         builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
