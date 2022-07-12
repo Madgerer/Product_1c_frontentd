@@ -9,6 +9,7 @@ import {
 } from "../../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
+    addProductGroupToCatsThunk,
     createProductGroupThunk, deleteProductGroupThunk, discardReserveThunk,
     getAttributesThunk,
     getCategoriesThunk,
@@ -29,19 +30,29 @@ export type NewProductState = {
     selectedAttribute: IAttribute | null,
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
-    categoriesWeb: ICategory[],
-    selectedWebCategory: ICategory[]
-    categoriesPrinted: ICategory[],
-    selectedPrintedCategoryPath: ICategory[]
-    currentPrintedCategories: ICategory[][],
-    currentWebCategories: ICategory[][],
     loadingState: INewProductLoadingState
+    categoriesState: ICategoriesState
 }
 
 interface INewProductLoadingState {
     isSaveLoading: boolean,
     isRejectLoading: boolean,
     isPageLoading: boolean
+}
+
+interface ICategoriesState {
+    //текущие категории, которые есть у группы продуктов
+    currentPrintedCategories: ICategory[][],
+    currentWebCategories: ICategory[][],
+    //все категории
+    categoriesWeb: ICategory[],
+    categoriesPrinted: ICategory[],
+    //выбранная категория в ряду
+    rowWebCategoryPath: ICategory[]
+    rowPrintedCategoryPath: ICategory[],
+    //выбранная категория в таблице
+    selectedPrintedCategory: ICategory | null,
+    selectedWebCategory: ICategory | null
 }
 
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
@@ -75,12 +86,16 @@ const INITIAL_STATE: NewProductState = {
     selectedAttribute: INITIAL_ATTRIBUTES[0],
     priceGroups: INITIAL_PRICEGROUPS,
     selectedPriceGroup: INITIAL_PRICEGROUPS[0],
-    categoriesPrinted: [],
-    selectedPrintedCategoryPath: [],
-    categoriesWeb: [],
-    selectedWebCategory: [],
-    currentPrintedCategories: [],
-    currentWebCategories: [],
+    categoriesState: {
+        rowWebCategoryPath: [],
+        categoriesPrinted: [],
+        categoriesWeb: [],
+        rowPrintedCategoryPath: [],
+        currentPrintedCategories: [],
+        currentWebCategories: [],
+        selectedWebCategory: null,
+        selectedPrintedCategory: null,
+    },
     loadingState: {
         isRejectLoading: false,
         isSaveLoading: false,
@@ -92,26 +107,22 @@ const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
-        addNewCurrent(state: NewProductState) {
-            let items = state.selectedPrintedCategoryPath;
-            state.currentPrintedCategories.push(items)
-        },
         setSelectedPrintedCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
-                    state.selectedPrintedCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesPrinted);
+                    state.categoriesState.rowPrintedCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesPrinted);
                 }
                 else
-                    state.selectedPrintedCategoryPath = []
+                    state.categoriesState.rowPrintedCategoryPath = []
             }
         },
         setSelectedWebCategory(state: NewProductState, action: PayloadAction<ICategory | null>) {
             if(action.payload !== null) {
                 if(action.payload.children.length === 0) {
-                    state.selectedWebCategory = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesWeb);
+                    state.categoriesState.rowWebCategoryPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesWeb);
                 }
                 else
-                    state.selectedWebCategory = []
+                    state.categoriesState.rowWebCategoryPath = []
             }
         },
         setId(state: NewProductState, action: PayloadAction<string>) {
@@ -193,9 +204,9 @@ const slice = createSlice({
         })
         builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
             if(action.meta.arg.catalogGroup == CatalogGroup.Printed)
-                state.categoriesPrinted = action.payload
+                state.categoriesState.categoriesPrinted = action.payload
             else
-                state.categoriesWeb = action.payload
+                state.categoriesState.categoriesWeb = action.payload
         })
         builder.addCase(getCategoriesThunk.rejected, (state, action) => {
             console.log(`Can't load categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
@@ -203,13 +214,21 @@ const slice = createSlice({
         builder.addCase(getProductGroupCategoriesThunk.fulfilled, (state, action) => {
             switch (action.meta.arg.catalogGroup) {
                 case CatalogGroup.Web:
-                    state.currentWebCategories = action.payload.map(x => {
-                        return x.categoryPath.map(y => CategoryTreeUtils.findCategory(y, state.categoriesPrinted)).filter(x => x != null).map(x => x!)
+                    state.categoriesState.currentWebCategories = action.payload.map(x => {
+                        return x.categoryPath.map(y => CategoryTreeUtils
+                            .findCategory(y, state.categoriesState.categoriesWeb))
+                            .filter(x => x != null)
+                            .map(x => x!)
+                            .reverse()
                     });
                     break;
                 case CatalogGroup.Printed:
-                    state.currentPrintedCategories = action.payload.map(x => {
-                        return x.categoryPath.map(y => CategoryTreeUtils.findCategory(y, state.categoriesWeb)).filter(x => x != null).map(x => x!)
+                    state.categoriesState.currentPrintedCategories = action.payload.map(x => {
+                        return x.categoryPath.map(y => CategoryTreeUtils
+                            .findCategory(y, state.categoriesState.categoriesPrinted))
+                            .filter(x => x != null)
+                            .map(x => x!)
+                            .reverse()
                     });
                     break;
             }
@@ -228,6 +247,15 @@ const slice = createSlice({
         builder.addCase(getOrReserveThunk.rejected, (state, action) => {
             state.loadingState.isPageLoading = false
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state) => {
+            state.categoriesState.currentPrintedCategories.push(state.categoriesState.rowPrintedCategoryPath)
+            state.categoriesState.rowPrintedCategoryPath = []
+        })
+        builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
+            state.loadingState.isRejectLoading = false;
+            console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(createProductGroupThunk.pending, (state) => {

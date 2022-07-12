@@ -4,6 +4,8 @@ import {Table} from "react-bootstrap";
 
 export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) {
     const maxColumnLength = _.max(props.categories.map(x => x.length))
+    console.log('RowsCount: ' + props.categories.length)
+    console.log('ColumnsCount: ' + maxColumnLength)
     return <Table>
         <tbody>
         {

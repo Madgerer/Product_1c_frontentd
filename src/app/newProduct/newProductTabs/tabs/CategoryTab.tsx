@@ -6,33 +6,45 @@ import {actions, NewProductState} from "../../../../redux/reducers/local/newProd
 import {CatalogGroup, ICategory} from "../../../../domain/types";
 import CategoryDynamicTable from "../CategoryDynamicTable";
 import {useEffect} from "react";
-import {getProductGroupCategoriesThunk} from "../../../../redux/reducers/local/newProduct/thunks";
+import {
+    addProductGroupToCatsThunk,
+    getProductGroupCategoriesThunk
+} from "../../../../redux/reducers/local/newProduct/thunks";
 import {LanguageState} from "../../../../redux/reducers/languages";
+import {CatalogState} from "../../../../redux/reducers/catalogs";
 
 export default function CategoryTab() {
     const local = useSelector<AppState, NewProductState>(x => x.local.newProductState)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
+    const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState)
     const dispatch = useDispatch();
 
-    const setSelectedPrintedCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
-    const setSelectedWebCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
-    const addPrinterCategory = () => {
-        console.error("Ahahah")
-        console.warn(local.selectedPrintedCategoryPath.length)
-        if(local.selectedPrintedCategoryPath.length == 0)
-        {
-            alert("Выберите категорию последнего уровня")
-            return
-        }
-        dispatch(actions.addNewCurrent())
-    }
-
     useEffect(() => {
-        if(local.productGroup.wasCreate) {
+        let isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
+        if(local.productGroup.wasCreate && isCategoriesLoaded) {
             dispatch(getProductGroupCategoriesThunk({productGroupId: local.productGroup.id, catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
             dispatch(getProductGroupCategoriesThunk({productGroupId: local.productGroup.id, catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
         }
-    },[languageState.selected.id])
+    },[languageState.selected.id, local.categoriesPrinted, local.categoriesWeb])
+
+    const setSelectedPrintedCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
+    const setSelectedWebCategory = (category: ICategory | null) => dispatch(actions.setSelectedPrintedCategory(category))
+    const addPrinterCategory = async () => {
+        const lastLevelCategory = local.selectedPrintedCategoryPath
+            .filter(x => x.children.length === 0)
+            .map(x => x.id)
+
+        if (lastLevelCategory.length !== 1) {
+            alert("Выберите категорию последнего уровня")
+            return
+        }
+        await dispatch(addProductGroupToCatsThunk({
+            productGroupIds: new Array(local.productGroup.id),
+            categoriesIds: lastLevelCategory,
+            catalogGroup: CatalogGroup.Printed,
+            catalogId: catalogState.selected.id
+        }))
+    }
 
     return <div className="tab-pane row">
         <div className="item col-md-12">
@@ -50,10 +62,7 @@ export default function CategoryTab() {
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow categories={local.categoriesPrinted} onChange={c => {setSelectedPrintedCategory(c)}}/>
             </div>
-            Вот тут какая-то нерабочая таблица
-
             <CategoryDynamicTable categories={local.currentPrintedCategories}/>
-            Вот тут какая-то нерабочая таблица
         </div>
         <div className="item col-md-12">
             <div>
