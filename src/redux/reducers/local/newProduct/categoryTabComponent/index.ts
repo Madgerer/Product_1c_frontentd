@@ -1,6 +1,6 @@
 import {ISelectableIndexModel} from "../../../../types";
 import {CatalogGroup, ICategory} from "../../../../../domain/types";
-import {createSlice, current, original, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import CategoryTreeUtils from "../../../../../CategoryTreeUtils";
 import {
     addProductGroupToCatsThunk,
@@ -8,7 +8,6 @@ import {
     getCategoriesThunk,
     getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk
 } from "../thunks";
-import _ from "lodash";
 
 export type CategoriesTabState = {
     //текущие категории, которые есть у группы продуктов
@@ -151,18 +150,17 @@ const slice = createSlice({
         })
 
         builder.addCase(changeProductGroupCategoryThunk.fulfilled, (state, action) => {
-            const originalState = original(state)!;
+            //const originalState = original(state)!;
             if(action.meta.arg.catalogGroup == CatalogGroup.Printed) {
-                const indexToChange: number = originalState.currentPrintedCategories.findIndex(x => {
+                const indexToChange: number = state.currentPrintedCategories.findIndex(x => {
                     for(let category of x.model) {
                         if(category.id === action.meta.arg.categoryId)
                             return true;
                     }
                     return false;
                 })
-                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(action.meta.arg.newCategoryId, originalState.categoriesPrinted)
-                const newVar = [...originalState.currentPrintedCategories];
-                const newObj: ISelectableIndexModel<ICategory> = {
+                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(action.meta.arg.newCategoryId, state.categoriesPrinted)
+                const newRow = {
                     index: indexToChange,
                     model: newCategoryRow.map(x => {
                         return {
@@ -172,43 +170,10 @@ const slice = createSlice({
                             children: x.children
                         }
                     }),
-                    selected: false
-                }
-                newVar.splice(indexToChange, 1, newObj)
-                return {
-                    ...originalState,
-                    currentPrintedCategories: newVar
-                }
-
-                //state.currentPrintedCategories = newVar.splice(indexToChange, 1, )
-               /* state.currentPrintedCategories.forEach(x => {
-                    if(indexToChange == x.index) {
-                        x.model = newCategoryRow.map(x => {
-                            return {
-                                id: x.id,
-                                name: x.name,
-                                parentId: x.parentId,
-                                children: x.children
-                            }
-                        })
-                    }
-                    return x;
-                });*/
-                   // state.currentPrintedCategories.filter(x => x.index !== indexToChange)
-
-                /*const newCurrent = state.currentPrintedCategories.splice(indexToChange, 0, {
-                    index: indexToChange,
-                    model: newCategoryRow.map(x => {
-                        return {
-                            id: x.id,
-                            name: x.name,
-                            parentId: x.parentId,
-                            children: x.children
-                        }
-                    }),
-                    selected: false
-                })
-                state.currentPrintedCategories = newCurrent*/
+                    selected: true
+                };
+                state.currentPrintedCategories.splice(indexToChange, 1, newRow)
+                state.selectedPrintedCategory = newRow.model[newRow.model.length - 1]
             } else {
                 const indexToChange: number = state.currentPrintedCategories.findIndex(x => {
                     for(let category of x.model) {
@@ -217,11 +182,21 @@ const slice = createSlice({
                     }
                     return false;
                 })
-                const newCategoryId = state.selectedWebCategory!.id;
-                const allCategories = state.categoriesWeb;
-                // noinspection UnnecessaryLocalVariableJS
-                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(newCategoryId, allCategories)
-                state.currentWebCategories[indexToChange].model = newCategoryRow;
+                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(action.meta.arg.newCategoryId, state.categoriesWeb)
+                const newRow = {
+                    index: indexToChange,
+                    model: newCategoryRow.map(x => {
+                        return {
+                            id: x.id,
+                            name: x.name,
+                            parentId: x.parentId,
+                            children: x.children
+                        }
+                    }),
+                    selected: true
+                };
+                state.currentWebCategories.splice(indexToChange, 1, newRow)
+                state.selectedWebCategory = newRow.model[newRow.model.length - 1]
             }
         })
 
