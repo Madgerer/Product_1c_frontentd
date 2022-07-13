@@ -19,7 +19,8 @@ import {
     getPriceGroupsThunk,
     getProductGroupCategoriesThunk,
     getSeriesThunk,
-    getSignsThunk, removeProductGroupFromCatsThunk
+    getSignsThunk,
+    removeProductGroupFromCatsThunk
 } from "./thunks";
 import CategoryTreeUtils from "../../../../CategoryTreeUtils";
 import {ISelectableIndexModel} from "../../../types";
@@ -136,6 +137,21 @@ const slice = createSlice({
                 if(!categoryFound)
                     state.categoriesState.selectedPrintedCategory = null
             }
+            else {
+                for (const row of state.categoriesState.currentWebCategories) {
+                    if(row.index == action.payload.rowIndex)
+                    {
+                        row.selected = true
+                        categoryFound = true;
+                        //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
+                        state.categoriesState.selectedWebCategory = row.model[row.model.length - 1];
+                    }
+                    else
+                        row.selected = false
+                }
+                if(!categoryFound)
+                    state.categoriesState.selectedPrintedCategory = null
+            }
         },
         setShouldReset(state: NewProductState, action: PayloadAction<CatalogGroup>) {
             if(action.payload === CatalogGroup.Printed)
@@ -143,19 +159,19 @@ const slice = createSlice({
             else
                 state.categoriesState.shouldResetWeb = !state.categoriesState.shouldResetWeb
         },
-        setPrintedRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
-            if(action.payload !== null) {
-                if(action.payload.children.length === 0) {
-                    state.categoriesState.printedCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesPrinted);
+        setRowPath(state: NewProductState, action: PayloadAction<{category: ICategory | null, catalogGroup: CatalogGroup}>) {
+            if(action.payload.category === null) {
+                return;
+            }
+            if (action.payload.catalogGroup === CatalogGroup.Printed) {
+                if(action.payload.category.children.length === 0) {
+                    state.categoriesState.printedCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesState.categoriesPrinted);
                 }
                 else
                     state.categoriesState.printedCategoryToAlterPath = []
-            }
-        },
-        setWebRowPath(state: NewProductState, action: PayloadAction<ICategory | null>) {
-            if(action.payload !== null) {
-                if(action.payload.children.length === 0) {
-                    state.categoriesState.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.id, state.categoriesState.categoriesWeb);
+            } else {
+                if(action.payload.category.children.length === 0) {
+                    state.categoriesState.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesState.categoriesPrinted);
                 }
                 else
                     state.categoriesState.webCategoryToAlterPath = []
@@ -324,7 +340,13 @@ const slice = createSlice({
         })
 
         builder.addCase(removeProductGroupFromCatsThunk.fulfilled, (state, action) => {
-            //todo: fix
+            if(action.meta.arg.catalogGroup === CatalogGroup.Printed) {
+                state.categoriesState.currentPrintedCategories = state.categoriesState.currentPrintedCategories
+                    .filter(x => x.model[x.model.length - 1].id !== action.meta.arg.categoryId);
+            }
+            else
+                state.categoriesState.currentWebCategories = state.categoriesState.currentWebCategories
+                    .filter(x => x.model[x.model.length - 1].id !== action.meta.arg.categoryId);
         })
         builder.addCase(removeProductGroupFromCatsThunk.rejected, (state, action) => {
             console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

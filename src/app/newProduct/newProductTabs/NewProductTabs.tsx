@@ -4,7 +4,7 @@ import TablePartTab from "./tabs/TablePartTab";
 import GraphicPartTab from "./tabs/GraphicPartTab";
 
 export default function NewProductTabs() {
-    return <Tabs defaultActiveKey="tablePart" id="newProductTabs" className="mb-3">
+    return <Tabs defaultActiveKey="category" id="newProductTabs" className="mb-3">
         <Tab eventKey="category" title="Категории">
             <CategoryTab/>
         </Tab>

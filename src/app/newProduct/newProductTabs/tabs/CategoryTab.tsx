@@ -8,7 +8,8 @@ import CategoryDynamicTable from "../CategoryDynamicTable";
 import {useEffect} from "react";
 import {
     addProductGroupToCatsThunk,
-    getProductGroupCategoriesThunk
+    getProductGroupCategoriesThunk,
+    removeProductGroupFromCatsThunk
 } from "../../../../redux/reducers/local/newProduct/thunks";
 import {LanguageState} from "../../../../redux/reducers/languages";
 import {CatalogState} from "../../../../redux/reducers/catalogs";
@@ -28,28 +29,56 @@ export default function CategoryTab() {
         }
     },[languageState.selected.id, local.categoriesState.categoriesPrinted, local.categoriesState.categoriesWeb])
 
-    const setPrintedRowPath = (category: ICategory | null) => dispatch(actions.setPrintedRowPath(category))
-    const setWebRowPath = (category: ICategory | null) => dispatch(actions.setWebRowPath(category))
+    const setPrintedRowPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
 
-    const addCategory = () => {
-        const lastLevelCategory = local.categoriesState.printedCategoryToAlterPath
-            .filter(x => x.children.length === 0)
-            .map(x => x.id)
+    const addCategory = (catalogGroup: CatalogGroup) => {
+        let lastLevelCategoryIds: number[];
+        if(catalogGroup === CatalogGroup.Printed)
+            lastLevelCategoryIds = local.categoriesState.printedCategoryToAlterPath
+                .filter(x => x.children.length === 0)
+                .map(x => x.id)
+        else
+            lastLevelCategoryIds = local.categoriesState.webCategoryToAlterPath
+                .filter(x => x.children.length === 0)
+                .map(x => x.id)
 
-        if (lastLevelCategory.length !== 1) {
+        if (lastLevelCategoryIds.length !== 1) {
             alert("Выберите категорию последнего уровня")
             return
         }
         dispatch(addProductGroupToCatsThunk({
             productGroupIds: new Array(local.productGroup.id),
-            categoriesIds: lastLevelCategory,
-            catalogGroup: CatalogGroup.Printed,
+            categoriesIds: lastLevelCategoryIds,
+            catalogGroup: catalogGroup,
             catalogId: catalogState.selected.id
         }))
     }
 
-    const removeCategory = () => {
-        //dispatch()
+    const removeCategory = (catalogGroup: CatalogGroup) => {
+        let categoryToRemove: number;
+        if(catalogGroup === CatalogGroup.Printed) {
+            if(local.categoriesState.selectedPrintedCategory === null)
+            {
+                alert("Выберите категорию для удаления")
+                return;
+            }
+            categoryToRemove = local.categoriesState.selectedPrintedCategory.id
+        }
+        else {
+            if(local.categoriesState.selectedWebCategory === null)
+            {
+                alert("Выберите категорию для удаления")
+                return;
+            }
+            categoryToRemove = local.categoriesState.selectedWebCategory.id
+        }
+
+        dispatch(removeProductGroupFromCatsThunk({
+            productGroupIds: new Array(local.productGroup.id),
+            categoryId: categoryToRemove,
+            catalogGroup: catalogGroup,
+            catalogId: catalogState.selected.id,
+        }))
     }
 
     const onRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
@@ -60,13 +89,13 @@ export default function CategoryTab() {
         <div className="item col-md-12">
             <div>
                 <h2>Категории в каталоге</h2>
-                <button type="button" className="btn btn-dark" onClick={() => addCategory()}>
+                <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Printed)}>
                     <i className="fa  fa-plus" aria-hidden="true"></i>
                 </button>
                 <button type="button" className="btn btn-dark">
                     <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </button>
-                <button type="button" className="btn btn-dark">
+                <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Printed)}>
                     <i className="fa fa fa-minus" aria-hidden="true"></i>
                 </button>
                 <CatalogSelector filter={CatalogFilter.Printed}/>
@@ -74,7 +103,7 @@ export default function CategoryTab() {
                     shouldReset={local.categoriesState.shouldResetPrinted}
                     onReset={() => onRowReset(CatalogGroup.Printed)}
                     categories={local.categoriesState.categoriesPrinted}
-                    onChange={(cat) => {setPrintedRowPath(cat)}}/>
+                    onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Printed)}}/>
             </div>
             <CategoryDynamicTable onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Printed)} nameAccessorFn={category => category.name} rows={local.categoriesState.currentPrintedCategories}/>
         </div>
