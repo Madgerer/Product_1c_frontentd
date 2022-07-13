@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../redux/reducers";
 import {NewProductState} from "../../../../redux/reducers/local/newProduct";
 import {CatalogGroup, ICategory} from "../../../../domain/types";
-import SimpleDynamicTable from "../CategoryDynamicTable";
 import {useEffect} from "react";
 import {
     addProductGroupToCatsThunk,
@@ -16,6 +15,7 @@ import {LanguageState} from "../../../../redux/reducers/languages";
 import {CatalogState} from "../../../../redux/reducers/catalogs";
 import {ISelectableIndexModel} from "../../../../redux/types";
 import {actions, CategoriesTabState} from "../../../../redux/reducers/local/newProduct/categoryTabComponent";
+import CategoryDynamicTable from "../CategoryDynamicTable";
 
 export default function CategoryTab() {
     const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
@@ -163,31 +163,36 @@ export default function CategoryTab() {
                     categories={local.categoriesPrinted}
                     onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Printed)}}/>
             </div>
-            <SimpleDynamicTable
+            <CategoryDynamicTable
+                catalogGroup={CatalogGroup.Printed}
                 onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Printed)}
-                nameAccessorFn={category => category.name}
-                keyAccessorFn={category => category.id}
                 rows={local.currentPrintedCategories}/>
         </div>
         <div className="item col-md-12">
             <div>
                 <h2>Категории на сайт</h2>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa  fa-plus" aria-hidden="true"></i>
+                <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Web)}>
+                    <i className="fa  fa-plus" aria-hidden="true"/>
                 </button>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <button type="button" className="btn btn-dark" onClick={() => changeCategory(CatalogGroup.Web)}>
+                    <i className="fa fa-pencil-square-o" aria-hidden="true"/>
                 </button>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa fa fa-minus" aria-hidden="true"></i>
+                <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Web)}>
+                    <i className="fa fa fa-minus" aria-hidden="true"/>
                 </button>
-                <CatalogSelector filter={CatalogFilter.Web} />
                 <button type="button" className="btn btn-dark">
                     Сделать главной
                 </button>
-                {/*<CategorySelectRow categories={local.categoriesWeb} onChange={c => {setWebRowPath(c)}}/>*/}
+                <CategorySelectRow
+                    shouldReset={local.shouldResetWeb}
+                    onReset={() => onRowReset(CatalogGroup.Web)}
+                    categories={local.categoriesWeb}
+                    onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Web)}}/>
             </div>
-            Вот тут какая-то нерабочая таблица
+            <CategoryDynamicTable
+                catalogGroup={CatalogGroup.Web}
+                onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Web)}
+                rows={local.currentWebCategories}/>
         </div>
         <div className="item col-md-12">
             <div>

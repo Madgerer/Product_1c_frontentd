@@ -8,11 +8,14 @@ import {
     getCategoriesThunk,
     getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk
 } from "../thunks";
+import _ from "lodash";
+
+export type ProductGroupCategory = ICategory & { mainCategory: boolean | null}
 
 export type CategoriesTabState = {
     //текущие категории, которые есть у группы продуктов
-    currentPrintedCategories: ISelectableIndexModel<ICategory>[],
-    currentWebCategories: ISelectableIndexModel<ICategory>[],
+    currentPrintedCategories: ISelectableIndexModel<ProductGroupCategory>[],
+    currentWebCategories: ISelectableIndexModel<ProductGroupCategory>[],
 
     //все категории
     categoriesWeb: ICategory[],
@@ -25,8 +28,8 @@ export type CategoriesTabState = {
     shouldResetWeb: boolean
 
     //выбранная категория в таблице
-    selectedPrintedCategory: ICategory | null,
-    selectedWebCategory: ICategory | null
+    selectedPrintedCategory: ProductGroupCategory | null,
+    selectedWebCategory: ProductGroupCategory | null
 }
 
 const INITIAL_STATE: CategoriesTabState = {
@@ -55,7 +58,14 @@ const slice = createSlice({
                         row.selected = true
                         categoryFound = true;
                         //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
-                        state.selectedPrintedCategory = row.model[row.model.length - 1];
+                        const category = row.model[row.model.length - 1];
+                        state.selectedPrintedCategory = {
+                            mainCategory: null,
+                            children: category.children,
+                            name: category.name,
+                            parentId: category.parentId,
+                            id: category.id
+                        }
                     }
                     else
                         row.selected = false
@@ -70,7 +80,14 @@ const slice = createSlice({
                         row.selected = true
                         categoryFound = true;
                         //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
-                        state.selectedWebCategory = row.model[row.model.length - 1];
+                        const category = row.model[row.model.length - 1];
+                        state.selectedPrintedCategory = {
+                            mainCategory: null,
+                            children: category.children,
+                            name: category.name,
+                            parentId: category.parentId,
+                            id: category.id
+                        }
                     }
                     else
                         row.selected = false
@@ -97,7 +114,7 @@ const slice = createSlice({
                     state.printedCategoryToAlterPath = []
             } else {
                 if(action.payload.category.children.length === 0) {
-                    state.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesPrinted);
+                    state.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesWeb);
                 }
                 else
                     state.webCategoryToAlterPath = []
@@ -111,17 +128,26 @@ const slice = createSlice({
         builder.addCase(getProductGroupCategoriesThunk.fulfilled, (state, action) => {
             switch (action.meta.arg.catalogGroup) {
                 case CatalogGroup.Web:
-                    state.currentWebCategories = action.payload.map((x, i) => {
+                    state.currentWebCategories = action.payload.map((pg, i) => {
                         return {
                             selected: false,
                             index: i,
-                            model: x.categoryPath.map(y => CategoryTreeUtils
+                            model: pg.categoryPath.map(y => CategoryTreeUtils
                                 .findCategory(y, state.categoriesWeb))
                                 .filter(x => x != null)
-                                .map(x => x!)
+                                .map(x => {
+                                    return {
+                                        mainCategory: pg.mainCategory,
+                                        children: x!.children,
+                                        name: x!.name,
+                                        parentId: x!.parentId,
+                                        id: x!.id
+                                    }
+                                })
                                 .reverse()
                         }
                     })
+                    console.log(state.currentWebCategories)
                     break;
                 case CatalogGroup.Printed:
                     state.currentPrintedCategories = action.payload.map((x, i) => {
@@ -131,7 +157,15 @@ const slice = createSlice({
                             model: x.categoryPath.map(y => CategoryTreeUtils
                                 .findCategory(y, state.categoriesPrinted))
                                 .filter(x => x != null)
-                                .map(x => x!)
+                                .map(x => {
+                                    return {
+                                        mainCategory: null,
+                                        children: x!.children,
+                                        name: x!.name,
+                                        parentId: x!.parentId,
+                                        id: x!.id
+                                    }
+                                })
                                 .reverse()
                         }
                     });
@@ -167,7 +201,8 @@ const slice = createSlice({
                             id: x.id,
                             name: x.name,
                             parentId: x.parentId,
-                            children: x.children
+                            children: x.children,
+                            mainCategory: null
                         }
                     }),
                     selected: true
@@ -182,6 +217,7 @@ const slice = createSlice({
                     }
                     return false;
                 })
+                const currentCategory = _.last(state.currentWebCategories[indexToChange].model);
                 const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(action.meta.arg.newCategoryId, state.categoriesWeb)
                 const newRow = {
                     index: indexToChange,
@@ -190,7 +226,8 @@ const slice = createSlice({
                             id: x.id,
                             name: x.name,
                             parentId: x.parentId,
-                            children: x.children
+                            children: x.children,
+                            mainCategory: currentCategory!.mainCategory
                         }
                     }),
                     selected: true
@@ -208,7 +245,15 @@ const slice = createSlice({
                     index: state.currentPrintedCategories.length !== 0
                         ? state.currentPrintedCategories[0].index - 1
                         : 0,
-                    model: state.printedCategoryToAlterPath,
+                    model: state.printedCategoryToAlterPath.map(x => {
+                        return {
+                            id: x.id,
+                            name: x.name,
+                            parentId: x.parentId,
+                            children: x.children,
+                            mainCategory: null
+                        }
+                    }),
                     selected: false
                 })
                 state.shouldResetPrinted = true
@@ -218,7 +263,15 @@ const slice = createSlice({
                     index: state.currentWebCategories.length !== 0
                         ? state.currentWebCategories[0].index - 1
                         : 0,
-                    model: state.webCategoryToAlterPath,
+                    model: state.webCategoryToAlterPath.map(x => {
+                        return {
+                            id: x.id,
+                            name: x.name,
+                            parentId: x.parentId,
+                            children: x.children,
+                            mainCategory: state.currentWebCategories.length === 0
+                        }
+                    }),
                     selected: false
                 })
                 state.shouldResetWeb = true

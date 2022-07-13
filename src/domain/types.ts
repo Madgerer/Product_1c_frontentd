@@ -52,6 +52,7 @@ export interface IAttribute {
 export interface IProductGroupWithCategoryPath {
     productGroupId: string,
     categoryPath: number[]
+    mainCategory: boolean | null
 }
 
 export enum DistributionType {
