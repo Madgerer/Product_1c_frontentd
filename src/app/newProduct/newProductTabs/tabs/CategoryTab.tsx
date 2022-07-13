@@ -14,7 +14,11 @@ import {
 import {LanguageState} from "../../../../redux/reducers/languages";
 import {CatalogState} from "../../../../redux/reducers/catalogs";
 import {ISelectableIndexModel} from "../../../../redux/types";
-import {actions, CategoriesTabState} from "../../../../redux/reducers/local/newProduct/categoryTabComponent";
+import {
+    actions,
+    CategoriesTabState,
+    ProductGroupCategory
+} from "../../../../redux/reducers/local/newProduct/categoryTabComponent";
 import CategoryDynamicTable from "../CategoryDynamicTable";
 
 export default function CategoryTab() {
@@ -32,7 +36,7 @@ export default function CategoryTab() {
         }
     },[languageState.selected.id, local.categoriesPrinted, local.categoriesWeb])
 
-    const setPrintedRowPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
+    const setCategoryPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
 
     const getCategoryIdByPath = (catalogGroup: CatalogGroup): number | null => {
         let lastLevelCategoryIds: number[];
@@ -140,7 +144,7 @@ export default function CategoryTab() {
     }
 
     const onRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
-    const setSelectedCategory = (tableRow: ISelectableIndexModel<ICategory>, catalogGroup: CatalogGroup) =>
+    const setSelectedCategory = (tableRow: ISelectableIndexModel<ProductGroupCategory>, catalogGroup: CatalogGroup) =>
         dispatch(actions.setSelectedCategory({rowIndex: tableRow.index, catalogGroup: catalogGroup}))
 
     return <div className="tab-pane row">
@@ -161,7 +165,7 @@ export default function CategoryTab() {
                     shouldReset={local.shouldResetPrinted}
                     onReset={() => onRowReset(CatalogGroup.Printed)}
                     categories={local.categoriesPrinted}
-                    onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Printed)}}/>
+                    onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Printed)}}/>
             </div>
             <CategoryDynamicTable
                 catalogGroup={CatalogGroup.Printed}
@@ -187,7 +191,7 @@ export default function CategoryTab() {
                     shouldReset={local.shouldResetWeb}
                     onReset={() => onRowReset(CatalogGroup.Web)}
                     categories={local.categoriesWeb}
-                    onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Web)}}/>
+                    onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Web)}}/>
             </div>
             <CategoryDynamicTable
                 catalogGroup={CatalogGroup.Web}

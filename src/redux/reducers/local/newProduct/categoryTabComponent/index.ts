@@ -72,6 +72,9 @@ const slice = createSlice({
                 }
                 if(!categoryFound)
                     state.selectedPrintedCategory = null
+                //отключаем выбранную веб категорию
+                state.currentWebCategories.forEach(x => x.selected = false)
+                state.selectedWebCategory = null;
             }
             else {
                 for (const row of state.currentWebCategories) {
@@ -81,8 +84,8 @@ const slice = createSlice({
                         categoryFound = true;
                         //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
                         const category = row.model[row.model.length - 1];
-                        state.selectedPrintedCategory = {
-                            mainCategory: null,
+                        state.selectedWebCategory = {
+                            mainCategory: category.mainCategory,
                             children: category.children,
                             name: category.name,
                             parentId: category.parentId,
@@ -94,6 +97,9 @@ const slice = createSlice({
                 }
                 if(!categoryFound)
                     state.selectedPrintedCategory = null
+                //отключаем выбранную категорию из каталога
+                state.currentPrintedCategories.forEach(x => x.selected = false)
+                state.selectedPrintedCategory = null;
             }
         },
         setShouldReset(state: CategoriesTabState, action: PayloadAction<CatalogGroup>) {
