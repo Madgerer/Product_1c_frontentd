@@ -44,7 +44,7 @@ export default class CategoryTreeUtils {
         return result;
     }
 
-    static getCategoriesByParentPrivate(id: number, categories: ICategory[], result: ICategory[]): ICategory[] {
+    private static getCategoriesByParentPrivate(id: number, categories: ICategory[], result: ICategory[]): ICategory[] {
         const find = this.findCategory(id, categories);
         if (find !== null)
         {

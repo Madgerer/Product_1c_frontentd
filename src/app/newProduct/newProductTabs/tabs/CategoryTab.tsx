@@ -4,16 +4,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../redux/reducers";
 import {actions, NewProductState} from "../../../../redux/reducers/local/newProduct";
 import {CatalogGroup, ICategory} from "../../../../domain/types";
-import CategoryDynamicTable from "../CategoryDynamicTable";
+import SimpleDynamicTable from "../CategoryDynamicTable";
 import {useEffect} from "react";
 import {
     addProductGroupToCatsThunk,
+    changeProductGroupCategoryThunk,
     getProductGroupCategoriesThunk,
     removeProductGroupFromCatsThunk
 } from "../../../../redux/reducers/local/newProduct/thunks";
 import {LanguageState} from "../../../../redux/reducers/languages";
 import {CatalogState} from "../../../../redux/reducers/catalogs";
 import {ISelectableIndexModel} from "../../../../redux/types";
+import CategoryTreeUtils from "../../../../CategoryTreeUtils";
 
 export default function CategoryTab() {
     const local = useSelector<AppState, NewProductState>(x => x.local.newProductState)
@@ -31,7 +33,7 @@ export default function CategoryTab() {
 
     const setPrintedRowPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
 
-    const addCategory = (catalogGroup: CatalogGroup) => {
+    const getCategoryIdByPath = (catalogGroup: CatalogGroup): number | null => {
         let lastLevelCategoryIds: number[];
         if(catalogGroup === CatalogGroup.Printed)
             lastLevelCategoryIds = local.categoriesState.printedCategoryToAlterPath
@@ -41,43 +43,98 @@ export default function CategoryTab() {
             lastLevelCategoryIds = local.categoriesState.webCategoryToAlterPath
                 .filter(x => x.children.length === 0)
                 .map(x => x.id)
+        if(lastLevelCategoryIds.length > 1) {
+            alert("Произошла внутренняя ошибки, перезагрузите страницу")
+            return null
+        }
 
         if (lastLevelCategoryIds.length !== 1) {
             alert("Выберите категорию последнего уровня")
-            return
+            return null;
+        }
+
+        return lastLevelCategoryIds[0]
+    }
+
+    const isCategoryAdded = (categoryId: number, catalogGroup: CatalogGroup): boolean => {
+        let existingCategories: ICategory[]
+        if(catalogGroup === CatalogGroup.Printed) {
+            existingCategories = local.categoriesState.currentPrintedCategories.flatMap(x => x.model)
+        } else {
+            existingCategories = local.categoriesState.currentWebCategories.flatMap(x => x.model)
+        }
+        const category = existingCategories.find(x => x.id == categoryId);
+        return category !== undefined;
+    }
+
+    const addCategory = (catalogGroup: CatalogGroup) => {
+        const categoryId = getCategoryIdByPath(catalogGroup);
+        if(categoryId === null)
+            return;
+        const isAdded = isCategoryAdded(categoryId, catalogGroup);
+        if(isAdded)
+        {
+            alert("Категория уже добавлена")
+            return;
         }
         dispatch(addProductGroupToCatsThunk({
-            productGroupIds: new Array(local.productGroup.id),
-            categoriesIds: lastLevelCategoryIds,
+            productGroupIds: Array.of(local.productGroup.id),
+            categoriesIds: Array.of(categoryId),
             catalogGroup: catalogGroup,
             catalogId: catalogState.selected.id
-        }))
+        }));
     }
 
     const removeCategory = (catalogGroup: CatalogGroup) => {
-        let categoryToRemove: number;
+        let categoryToRemove: number | null;
         if(catalogGroup === CatalogGroup.Printed) {
-            if(local.categoriesState.selectedPrintedCategory === null)
-            {
-                alert("Выберите категорию для удаления")
-                return;
-            }
-            categoryToRemove = local.categoriesState.selectedPrintedCategory.id
+            categoryToRemove = local.categoriesState.selectedPrintedCategory?.id ?? null
         }
         else {
-            if(local.categoriesState.selectedWebCategory === null)
-            {
-                alert("Выберите категорию для удаления")
-                return;
-            }
-            categoryToRemove = local.categoriesState.selectedWebCategory.id
+            categoryToRemove = local.categoriesState.selectedWebCategory?.id ?? null
+        }
+        if(categoryToRemove === null)
+        {
+            alert("Выберите категорию для удаления")
+            return;
         }
 
         dispatch(removeProductGroupFromCatsThunk({
-            productGroupIds: new Array(local.productGroup.id),
+            productGroupIds: Array.of(local.productGroup.id),
             categoryId: categoryToRemove,
             catalogGroup: catalogGroup,
             catalogId: catalogState.selected.id,
+        }))
+    }
+
+    const changeCategory = (catalogGroup: CatalogGroup) => {
+        let currentCatId: number | null;
+        const newCategoryId = getCategoryIdByPath(catalogGroup);
+        if(newCategoryId === null)
+            return;
+        if(isCategoryAdded(newCategoryId, catalogGroup))
+        {
+            alert("Категория уже добавлена")
+            return;
+        }
+
+        if(catalogGroup === CatalogGroup.Printed)
+            currentCatId = local.categoriesState.selectedPrintedCategory?.id ?? null;
+        else
+            currentCatId = local.categoriesState.selectedWebCategory?.id ?? null;
+
+        if(currentCatId === null)
+        {
+            alert("Выберите категорию для обновления")
+            return;
+        }
+
+        dispatch(changeProductGroupCategoryThunk({
+            productGroupId: local.productGroup.id,
+            categoryId: currentCatId,
+            catalogGroup: catalogGroup,
+            catalogId: catalogState.selected.id,
+            newCategoryId: newCategoryId
         }))
     }
 
@@ -90,13 +147,13 @@ export default function CategoryTab() {
             <div>
                 <h2>Категории в каталоге</h2>
                 <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Printed)}>
-                    <i className="fa  fa-plus" aria-hidden="true"></i>
+                    <i className="fa  fa-plus" aria-hidden="true"/>
                 </button>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <button type="button" className="btn btn-dark" onClick={() => changeCategory(CatalogGroup.Printed)}>
+                    <i className="fa fa-pencil-square-o" aria-hidden="true"/>
                 </button>
                 <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Printed)}>
-                    <i className="fa fa fa-minus" aria-hidden="true"></i>
+                    <i className="fa fa fa-minus" aria-hidden="true"/>
                 </button>
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow
@@ -105,7 +162,11 @@ export default function CategoryTab() {
                     categories={local.categoriesState.categoriesPrinted}
                     onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Printed)}}/>
             </div>
-            <CategoryDynamicTable onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Printed)} nameAccessorFn={category => category.name} rows={local.categoriesState.currentPrintedCategories}/>
+            <SimpleDynamicTable
+                onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Printed)}
+                nameAccessorFn={category => category.name}
+                keyAccessorFn={category => category.id}
+                rows={local.categoriesState.currentPrintedCategories}/>
         </div>
         <div className="item col-md-12">
             <div>

@@ -52,3 +52,9 @@ type ApiThunkOptions<TArgs, TReturnType> = {
     apiCall: () => Promise<IApplicationResponse<TReturnType>>,
     typePrefix: string
 }
+
+type ExtendedThunkOptions<TArgs, TReturnType> = {
+    apiCall: (args: TArgs) => Promise<IApplicationResponse<TReturnType>>,
+    typePrefix: string,
+    beforeActions: <TState>(args: TArgs, state: TState) => boolean;
+}

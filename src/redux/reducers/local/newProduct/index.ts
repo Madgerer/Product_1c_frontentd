@@ -7,9 +7,9 @@ import {
     ISeries,
     ISign
 } from "../../../../domain/types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, current, PayloadAction} from "@reduxjs/toolkit";
 import {
-    addProductGroupToCatsThunk,
+    addProductGroupToCatsThunk, changeProductGroupCategoryThunk,
     createProductGroupThunk,
     deleteProductGroupThunk,
     discardReserveThunk,
@@ -24,6 +24,7 @@ import {
 } from "./thunks";
 import CategoryTreeUtils from "../../../../CategoryTreeUtils";
 import {ISelectableIndexModel} from "../../../types";
+import _ from "lodash";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -307,6 +308,64 @@ const slice = createSlice({
         builder.addCase(getOrReserveThunk.rejected, (state, action) => {
             state.loadingState.isPageLoading = false
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(changeProductGroupCategoryThunk.fulfilled, (state, action) => {
+            if(action.meta.arg.catalogGroup == CatalogGroup.Printed) {
+                const indexToChange: number = state.categoriesState.currentPrintedCategories.findIndex(x => {
+                    for(let category of x.model) {
+                        if(category.id === action.meta.arg.categoryId)
+                            return true;
+                    }
+                    return false;
+                })
+                const newCategoryId = state.categoriesState.selectedPrintedCategory!.id;
+                const allCategories = state.categoriesState.categoriesPrinted;
+                // noinspection UnnecessaryLocalVariableJS
+                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(newCategoryId, allCategories)
+                console.log(current(state.categoriesState.currentPrintedCategories))
+                console.log(newCategoryRow)
+                /*state.categoriesState.currentPrintedCategories.splice(indexToChange, 1)
+
+                state.categoriesState.currentPrintedCategories.splice()*/
+                const currentCats = {...state.categoriesState.currentPrintedCategories};
+                return {
+                    ...state,
+                    categoriesState: {...state.categoriesState, currentPrintedCategories: _.cloneDeep(
+                            state.categoriesState.currentPrintedCategories.map((x) => {
+                                if(x.index != indexToChange)
+                                    return x;
+                                return {
+                                    index: indexToChange,
+                                    model: newCategoryRow.map(x => {
+                                        return {
+                                            id: x.id,
+                                            name: x.name,
+                                            parentId: x.parentId,
+                                            children: x.children
+                                        }
+                                    }),
+                                    selected: false
+                                }
+
+                            })
+                        )
+                    }
+                }
+            } else {
+                const indexToChange: number = state.categoriesState.currentPrintedCategories.findIndex(x => {
+                    for(let category of x.model) {
+                        if(category.id === action.meta.arg.categoryId)
+                            return true;
+                    }
+                    return false;
+                })
+                const newCategoryId = state.categoriesState.selectedWebCategory!.id;
+                const allCategories = state.categoriesState.categoriesWeb;
+                // noinspection UnnecessaryLocalVariableJS
+                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(newCategoryId, allCategories)
+                state.categoriesState.currentWebCategories[indexToChange].model = newCategoryRow;
+            }
         })
 
         builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {

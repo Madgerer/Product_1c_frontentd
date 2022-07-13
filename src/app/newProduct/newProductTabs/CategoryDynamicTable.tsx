@@ -9,14 +9,14 @@ export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProp
         <tbody>
         {
             props.rows.map(row => {
-                return <tr className={row.selected ? "dynamic-table-row--selected" : ""} onClick={() => props.onRowClicked(row)}>
+                return <tr key={row.index} className={row.selected ? "dynamic-table-row--selected" : ""} onClick={() => props.onRowClicked(row)}>
                     {
-                        Array.from(Array(maxColumnLength).keys()).map(columnNumber => {
+                        Array.from(Array(maxColumnLength).keys()).map((columnNumber, i) => {
                             const column = row.model[columnNumber]
                             if(column === undefined) {
-                                return <td></td>
+                                return <td key={i}></td>
                             }
-                            return <td>{props.nameAccessorFn(column)}</td>
+                            return <td key={props.keyAccessorFn(column)}>{props.nameAccessorFn(column)}</td>
                         })
                     }
                 </tr>
@@ -29,5 +29,6 @@ export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProp
 interface ICategoryDynamicTableProps<T> {
     rows: ISelectableIndexModel<T>[];
     nameAccessorFn: (T) => string;
+    keyAccessorFn: (T) => string;
     onRowClicked: (row: ISelectableIndexModel<T>) => void;
 }
