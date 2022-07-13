@@ -2,7 +2,7 @@ import CatalogSelector, {CatalogFilter} from "../../../common/catalogSelector/Ca
 import CategorySelectRow from "../CategorySelectRow";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../redux/reducers";
-import {actions, NewProductState} from "../../../../redux/reducers/local/newProduct";
+import {NewProductState} from "../../../../redux/reducers/local/newProduct";
 import {CatalogGroup, ICategory} from "../../../../domain/types";
 import SimpleDynamicTable from "../CategoryDynamicTable";
 import {useEffect} from "react";
@@ -15,32 +15,33 @@ import {
 import {LanguageState} from "../../../../redux/reducers/languages";
 import {CatalogState} from "../../../../redux/reducers/catalogs";
 import {ISelectableIndexModel} from "../../../../redux/types";
-import CategoryTreeUtils from "../../../../CategoryTreeUtils";
+import {actions, CategoriesTabState} from "../../../../redux/reducers/local/newProduct/categoryTabComponent";
 
 export default function CategoryTab() {
-    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState)
+    const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        let isCategoriesLoaded = local.categoriesState.categoriesWeb.length != 0 && local.categoriesState.categoriesPrinted.length != 0;
-        if(local.productGroup.wasCreate && isCategoriesLoaded) {
-            dispatch(getProductGroupCategoriesThunk({productGroupId: local.productGroup.id, catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
-            dispatch(getProductGroupCategoriesThunk({productGroupId: local.productGroup.id, catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
+        let isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
+        if(productGroupState.productGroup.wasCreate && isCategoriesLoaded) {
+            dispatch(getProductGroupCategoriesThunk({productGroupId: productGroupState.productGroup.id, catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
+            dispatch(getProductGroupCategoriesThunk({productGroupId: productGroupState.productGroup.id, catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
         }
-    },[languageState.selected.id, local.categoriesState.categoriesPrinted, local.categoriesState.categoriesWeb])
+    },[languageState.selected.id, local.categoriesPrinted, local.categoriesWeb])
 
     const setPrintedRowPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
 
     const getCategoryIdByPath = (catalogGroup: CatalogGroup): number | null => {
         let lastLevelCategoryIds: number[];
         if(catalogGroup === CatalogGroup.Printed)
-            lastLevelCategoryIds = local.categoriesState.printedCategoryToAlterPath
+            lastLevelCategoryIds = local.printedCategoryToAlterPath
                 .filter(x => x.children.length === 0)
                 .map(x => x.id)
         else
-            lastLevelCategoryIds = local.categoriesState.webCategoryToAlterPath
+            lastLevelCategoryIds = local.webCategoryToAlterPath
                 .filter(x => x.children.length === 0)
                 .map(x => x.id)
         if(lastLevelCategoryIds.length > 1) {
@@ -59,9 +60,9 @@ export default function CategoryTab() {
     const isCategoryAdded = (categoryId: number, catalogGroup: CatalogGroup): boolean => {
         let existingCategories: ICategory[]
         if(catalogGroup === CatalogGroup.Printed) {
-            existingCategories = local.categoriesState.currentPrintedCategories.flatMap(x => x.model)
+            existingCategories = local.currentPrintedCategories.flatMap(x => x.model)
         } else {
-            existingCategories = local.categoriesState.currentWebCategories.flatMap(x => x.model)
+            existingCategories = local.currentWebCategories.flatMap(x => x.model)
         }
         const category = existingCategories.find(x => x.id == categoryId);
         return category !== undefined;
@@ -78,7 +79,7 @@ export default function CategoryTab() {
             return;
         }
         dispatch(addProductGroupToCatsThunk({
-            productGroupIds: Array.of(local.productGroup.id),
+            productGroupIds: Array.of(productGroupState.productGroup.id),
             categoriesIds: Array.of(categoryId),
             catalogGroup: catalogGroup,
             catalogId: catalogState.selected.id
@@ -88,10 +89,10 @@ export default function CategoryTab() {
     const removeCategory = (catalogGroup: CatalogGroup) => {
         let categoryToRemove: number | null;
         if(catalogGroup === CatalogGroup.Printed) {
-            categoryToRemove = local.categoriesState.selectedPrintedCategory?.id ?? null
+            categoryToRemove = local.selectedPrintedCategory?.id ?? null
         }
         else {
-            categoryToRemove = local.categoriesState.selectedWebCategory?.id ?? null
+            categoryToRemove = local.selectedWebCategory?.id ?? null
         }
         if(categoryToRemove === null)
         {
@@ -100,7 +101,7 @@ export default function CategoryTab() {
         }
 
         dispatch(removeProductGroupFromCatsThunk({
-            productGroupIds: Array.of(local.productGroup.id),
+            productGroupIds: Array.of(productGroupState.productGroup.id),
             categoryId: categoryToRemove,
             catalogGroup: catalogGroup,
             catalogId: catalogState.selected.id,
@@ -119,9 +120,9 @@ export default function CategoryTab() {
         }
 
         if(catalogGroup === CatalogGroup.Printed)
-            currentCatId = local.categoriesState.selectedPrintedCategory?.id ?? null;
+            currentCatId = local.selectedPrintedCategory?.id ?? null;
         else
-            currentCatId = local.categoriesState.selectedWebCategory?.id ?? null;
+            currentCatId = local.selectedWebCategory?.id ?? null;
 
         if(currentCatId === null)
         {
@@ -130,7 +131,7 @@ export default function CategoryTab() {
         }
 
         dispatch(changeProductGroupCategoryThunk({
-            productGroupId: local.productGroup.id,
+            productGroupId: productGroupState.productGroup.id,
             categoryId: currentCatId,
             catalogGroup: catalogGroup,
             catalogId: catalogState.selected.id,
@@ -157,16 +158,16 @@ export default function CategoryTab() {
                 </button>
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow
-                    shouldReset={local.categoriesState.shouldResetPrinted}
+                    shouldReset={local.shouldResetPrinted}
                     onReset={() => onRowReset(CatalogGroup.Printed)}
-                    categories={local.categoriesState.categoriesPrinted}
+                    categories={local.categoriesPrinted}
                     onChange={(cat) => {setPrintedRowPath(cat, CatalogGroup.Printed)}}/>
             </div>
             <SimpleDynamicTable
                 onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Printed)}
                 nameAccessorFn={category => category.name}
                 keyAccessorFn={category => category.id}
-                rows={local.categoriesState.currentPrintedCategories}/>
+                rows={local.currentPrintedCategories}/>
         </div>
         <div className="item col-md-12">
             <div>
@@ -184,7 +185,7 @@ export default function CategoryTab() {
                 <button type="button" className="btn btn-dark">
                     Сделать главной
                 </button>
-                {/*<CategorySelectRow categories={local.categoriesState.categoriesWeb} onChange={c => {setWebRowPath(c)}}/>*/}
+                {/*<CategorySelectRow categories={local.categoriesWeb} onChange={c => {setWebRowPath(c)}}/>*/}
             </div>
             Вот тут какая-то нерабочая таблица
         </div>

@@ -25,6 +25,8 @@ import {
 import CategoryTreeUtils from "../../../../CategoryTreeUtils";
 import {ISelectableIndexModel} from "../../../types";
 import _ from "lodash";
+import {combineReducers} from "redux";
+import {reducer as catTabReducer} from "./categoryTabComponent";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -37,7 +39,6 @@ export type NewProductState = {
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
     loadingState: INewProductLoadingState
-    categoriesState: ICategoriesState
 }
 
 
@@ -47,25 +48,6 @@ interface INewProductLoadingState {
     isPageLoading: boolean
 }
 
-interface ICategoriesState {
-    //текущие категории, которые есть у группы продуктов
-    currentPrintedCategories: ISelectableIndexModel<ICategory>[],
-    currentWebCategories: ISelectableIndexModel<ICategory>[],
-
-    //все категории
-    categoriesWeb: ICategory[],
-    categoriesPrinted: ICategory[],
-
-    //выбранная категория в ряду
-    webCategoryToAlterPath: ICategory[]
-    printedCategoryToAlterPath: ICategory[]
-    shouldResetPrinted: boolean,
-    shouldResetWeb: boolean
-
-    //выбранная категория в таблице
-    selectedPrintedCategory: ICategory | null,
-    selectedWebCategory: ICategory | null
-}
 
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
 const INITIAL_SIGNS: ISign[] = [{id: 0, name: 'loading', imageUrl: ''}]
@@ -98,18 +80,6 @@ const INITIAL_STATE: NewProductState = {
     selectedAttribute: INITIAL_ATTRIBUTES[0],
     priceGroups: INITIAL_PRICEGROUPS,
     selectedPriceGroup: INITIAL_PRICEGROUPS[0],
-    categoriesState: {
-        webCategoryToAlterPath: [],
-        categoriesPrinted: [],
-        categoriesWeb: [],
-        printedCategoryToAlterPath: [],
-        currentPrintedCategories: [],
-        currentWebCategories: [],
-        selectedWebCategory: null,
-        selectedPrintedCategory: null,
-        shouldResetPrinted: false,
-        shouldResetWeb: false
-    },
     loadingState: {
         isRejectLoading: false,
         isSaveLoading: false,
@@ -121,63 +91,7 @@ const slice = createSlice({
     name: 'new-product',
     initialState: INITIAL_STATE,
     reducers: {
-        setSelectedCategory(state: NewProductState, action: PayloadAction<{rowIndex: number, catalogGroup: CatalogGroup}>) {
-            let categoryFound = false;
-            if(action.payload.catalogGroup === CatalogGroup.Printed) {
-                for (const row of state.categoriesState.currentPrintedCategories) {
-                    if(row.index == action.payload.rowIndex)
-                    {
-                        row.selected = true
-                        categoryFound = true;
-                        //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
-                        state.categoriesState.selectedPrintedCategory = row.model[row.model.length - 1];
-                    }
-                    else
-                        row.selected = false
-                }
-                if(!categoryFound)
-                    state.categoriesState.selectedPrintedCategory = null
-            }
-            else {
-                for (const row of state.categoriesState.currentWebCategories) {
-                    if(row.index == action.payload.rowIndex)
-                    {
-                        row.selected = true
-                        categoryFound = true;
-                        //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
-                        state.categoriesState.selectedWebCategory = row.model[row.model.length - 1];
-                    }
-                    else
-                        row.selected = false
-                }
-                if(!categoryFound)
-                    state.categoriesState.selectedPrintedCategory = null
-            }
-        },
-        setShouldReset(state: NewProductState, action: PayloadAction<CatalogGroup>) {
-            if(action.payload === CatalogGroup.Printed)
-                state.categoriesState.shouldResetPrinted = !state.categoriesState.shouldResetPrinted
-            else
-                state.categoriesState.shouldResetWeb = !state.categoriesState.shouldResetWeb
-        },
-        setRowPath(state: NewProductState, action: PayloadAction<{category: ICategory | null, catalogGroup: CatalogGroup}>) {
-            if(action.payload.category === null) {
-                return;
-            }
-            if (action.payload.catalogGroup === CatalogGroup.Printed) {
-                if(action.payload.category.children.length === 0) {
-                    state.categoriesState.printedCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesState.categoriesPrinted);
-                }
-                else
-                    state.categoriesState.printedCategoryToAlterPath = []
-            } else {
-                if(action.payload.category.children.length === 0) {
-                    state.categoriesState.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesState.categoriesPrinted);
-                }
-                else
-                    state.categoriesState.webCategoryToAlterPath = []
-            }
-        },
+
         setId(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.id = action.payload
         },
@@ -255,48 +169,6 @@ const slice = createSlice({
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
-            if(action.meta.arg.catalogGroup == CatalogGroup.Printed)
-                state.categoriesState.categoriesPrinted = action.payload
-            else
-                state.categoriesState.categoriesWeb = action.payload
-        })
-        builder.addCase(getCategoriesThunk.rejected, (state, action) => {
-            console.log(`Can't load categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
-        builder.addCase(getProductGroupCategoriesThunk.fulfilled, (state, action) => {
-            switch (action.meta.arg.catalogGroup) {
-                case CatalogGroup.Web:
-                    state.categoriesState.currentWebCategories = action.payload.map((x, i) => {
-                        return {
-                            selected: false,
-                            index: i,
-                            model: x.categoryPath.map(y => CategoryTreeUtils
-                                .findCategory(y, state.categoriesState.categoriesWeb))
-                                .filter(x => x != null)
-                                .map(x => x!)
-                                .reverse()
-                        }
-                    })
-                    break;
-                case CatalogGroup.Printed:
-                    state.categoriesState.currentPrintedCategories = action.payload.map((x, i) => {
-                        return {
-                            index: i,
-                            selected: false,
-                            model: x.categoryPath.map(y => CategoryTreeUtils
-                                .findCategory(y, state.categoriesState.categoriesPrinted))
-                                .filter(x => x != null)
-                                .map(x => x!)
-                                .reverse()
-                        }
-                    });
-                    break;
-            }
-        })
-        builder.addCase(getProductGroupCategoriesThunk.rejected, (state, action) => {
-            console.log(`Can't load product group categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
 
         builder.addCase(getOrReserveThunk.pending, (state) => {
             state.loadingState.isPageLoading = true
@@ -310,106 +182,7 @@ const slice = createSlice({
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(changeProductGroupCategoryThunk.fulfilled, (state, action) => {
-            if(action.meta.arg.catalogGroup == CatalogGroup.Printed) {
-                const indexToChange: number = state.categoriesState.currentPrintedCategories.findIndex(x => {
-                    for(let category of x.model) {
-                        if(category.id === action.meta.arg.categoryId)
-                            return true;
-                    }
-                    return false;
-                })
-                const newCategoryId = state.categoriesState.selectedPrintedCategory!.id;
-                const allCategories = state.categoriesState.categoriesPrinted;
-                // noinspection UnnecessaryLocalVariableJS
-                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(newCategoryId, allCategories)
-                console.log(current(state.categoriesState.currentPrintedCategories))
-                console.log(newCategoryRow)
-                /*state.categoriesState.currentPrintedCategories.splice(indexToChange, 1)
 
-                state.categoriesState.currentPrintedCategories.splice()*/
-                const currentCats = {...state.categoriesState.currentPrintedCategories};
-                return {
-                    ...state,
-                    categoriesState: {...state.categoriesState, currentPrintedCategories: _.cloneDeep(
-                            state.categoriesState.currentPrintedCategories.map((x) => {
-                                if(x.index != indexToChange)
-                                    return x;
-                                return {
-                                    index: indexToChange,
-                                    model: newCategoryRow.map(x => {
-                                        return {
-                                            id: x.id,
-                                            name: x.name,
-                                            parentId: x.parentId,
-                                            children: x.children
-                                        }
-                                    }),
-                                    selected: false
-                                }
-
-                            })
-                        )
-                    }
-                }
-            } else {
-                const indexToChange: number = state.categoriesState.currentPrintedCategories.findIndex(x => {
-                    for(let category of x.model) {
-                        if(category.id === action.meta.arg.categoryId)
-                            return true;
-                    }
-                    return false;
-                })
-                const newCategoryId = state.categoriesState.selectedWebCategory!.id;
-                const allCategories = state.categoriesState.categoriesWeb;
-                // noinspection UnnecessaryLocalVariableJS
-                const newCategoryRow = CategoryTreeUtils.getCategoriesByParent(newCategoryId, allCategories)
-                state.categoriesState.currentWebCategories[indexToChange].model = newCategoryRow;
-            }
-        })
-
-        builder.addCase(addProductGroupToCatsThunk.fulfilled, (state, action) => {
-            if(action.meta.arg.catalogGroup == CatalogGroup.Printed) {
-                //чтобы не перерасчитывать индексы всех рядов - просто отправляем индекс в минус,
-                //он нужен только для внутренних вычислений, поэтому без разницы какой он
-                state.categoriesState.currentPrintedCategories.unshift({
-                    index: state.categoriesState.currentPrintedCategories.length !== 0
-                        ? state.categoriesState.currentPrintedCategories[0].index - 1
-                        : 0,
-                    model: state.categoriesState.printedCategoryToAlterPath,
-                    selected: false
-                })
-                state.categoriesState.shouldResetPrinted = true
-                state.categoriesState.printedCategoryToAlterPath = []
-            } else {
-                state.categoriesState.currentWebCategories.unshift({
-                    index: state.categoriesState.currentWebCategories.length !== 0
-                        ? state.categoriesState.currentWebCategories[0].index - 1
-                        : 0,
-                    model: state.categoriesState.webCategoryToAlterPath,
-                    selected: false
-                })
-                state.categoriesState.shouldResetWeb = true
-                state.categoriesState.webCategoryToAlterPath = []
-            }
-
-        })
-        builder.addCase(addProductGroupToCatsThunk.rejected, (state, action) => {
-            console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
-
-        builder.addCase(removeProductGroupFromCatsThunk.fulfilled, (state, action) => {
-            if(action.meta.arg.catalogGroup === CatalogGroup.Printed) {
-                state.categoriesState.currentPrintedCategories = state.categoriesState.currentPrintedCategories
-                    .filter(x => x.model[x.model.length - 1].id !== action.meta.arg.categoryId);
-            }
-            else
-                state.categoriesState.currentWebCategories = state.categoriesState.currentWebCategories
-                    .filter(x => x.model[x.model.length - 1].id !== action.meta.arg.categoryId);
-        })
-        builder.addCase(removeProductGroupFromCatsThunk.rejected, (state, action) => {
-            console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
 
         builder.addCase(createProductGroupThunk.pending, (state) => {
             state.loadingState.isSaveLoading = true
@@ -448,6 +221,9 @@ const slice = createSlice({
 })
 
 const actions = slice.actions;
-const reducer = slice.reducer;
+const reducer = combineReducers({
+    common: slice.reducer,
+    categoryState: catTabReducer
+});
 
 export {actions, reducer}

@@ -13,7 +13,7 @@ import {LanguageState} from "../../../redux/reducers/languages";
 import _ from "lodash";
 
 export default function NewProductToolbar() {
-    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState);
+    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState.common);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
     const dispatch = useDispatch();
     const navigate = useNavigate();

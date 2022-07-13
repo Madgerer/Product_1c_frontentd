@@ -5,10 +5,11 @@ import './categoryDynamicTable.scss'
 
 export default function CategoryDynamicTable<T>(props: ICategoryDynamicTableProps<T>) {
     const maxColumnLength = _.max(props.rows.map(x => x.model.length))
+    const row = _.orderBy(props.rows, value => value.index)
     return <Table>
         <tbody>
         {
-            props.rows.map(row => {
+            row.sort(x => x.index).map(row => {
                 return <tr key={row.index} className={row.selected ? "dynamic-table-row--selected" : ""} onClick={() => props.onRowClicked(row)}>
                     {
                         Array.from(Array(maxColumnLength).keys()).map((columnNumber, i) => {
