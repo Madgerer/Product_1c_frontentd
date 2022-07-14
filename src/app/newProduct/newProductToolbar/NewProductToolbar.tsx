@@ -50,8 +50,12 @@ export default function NewProductToolbar() {
         if(local.loadingState.isRejectLoading)
             return;
         if (local.productGroup.wasCreate) {
-            await dispatch(deleteProductGroupThunk({id: local.productGroup.id}))
-            navigate('/products');
+            const res = await dispatch(deleteProductGroupThunk({id: local.productGroup.id}))
+            // @ts-ignore
+            if(!res.meta.rejectedWithValue)
+                navigate('/products');
+            else
+                alert("Не удалось удалить группу продуктов")
         } else {
             await dispatch(discardReserveThunk({id: local.productGroup.id}))
             navigate('/products');
