@@ -108,6 +108,16 @@ export interface IProductIdentity {
     name: string
 }
 
+export interface IProductWithAttributes extends IProductIdentity{
+    sort: number | null
+    attributeValues: IAttributeValue[]
+}
+
+export interface IAttributeValue {
+    id: number
+    value: string
+}
+
 export interface IPriceGroup {
     id: number,
     name: string

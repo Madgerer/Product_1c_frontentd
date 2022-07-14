@@ -30,9 +30,6 @@ export default class ProductGroupApi extends BaseApi {
     changeProductGroupSort = async (data: {productGroupId: number, catalogId: number, targetSort: number, currentSort: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
         this.sendQuery<IProductGroupSort[]>('/api/product-group/change-sort', data, actionTypes.put, true);
 
-    addProductToGroup = async (data: {productGroupId: string, productIds: string[]}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/product-group/add-product-to-group', data, actionTypes.post, true);
-
     getOrReserve = async (data: {productGroupId: string | null, languageId: number}): Promise<IApplicationResponse<IProductGroup>> =>
         this.sendQuery<IProductGroup>('/api/product-group/get-or-reserve', data, actionTypes.get, true);
 
@@ -50,4 +47,13 @@ export default class ProductGroupApi extends BaseApi {
 
     discardReserve = async (data: {id: string}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product-group/discard-reserve', data, actionTypes.delete, true);
+
+    addAttribute = async (data: {productGroupId: string, attributeId: number}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/add-attribute', data, actionTypes.post, true);
+
+    removeAttribute = async (data: {productGroupId: string, attributeId: number}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/remove-attribute', data, actionTypes.post, true);
+
+    changeAttributeOrdering = async (data: {productGroupId: string, attributes: number[]}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/change-attribute-ordering', data, actionTypes.post, true);
 }

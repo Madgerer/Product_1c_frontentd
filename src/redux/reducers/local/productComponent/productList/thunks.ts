@@ -8,5 +8,5 @@ export const getProductIdentityThunk  = createApiThunk({
 
 export const addProductToGroupAsyncThunk = createApiThunk({
     typePrefix: 'product-page/add-products-to-group',
-    apiCall: Api.productGroups.addProductToGroup
+    apiCall: Api.product.addProductToGroup
 })

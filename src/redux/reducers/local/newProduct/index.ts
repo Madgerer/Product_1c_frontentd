@@ -29,7 +29,8 @@ export type NewProductState = {
     selectedAttribute: IAttribute | null,
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
-    loadingState: INewProductLoadingState
+    loadingState: INewProductLoadingState,
+    priceGroupWasChanged: boolean
 }
 
 
@@ -75,7 +76,8 @@ const INITIAL_STATE: NewProductState = {
         isRejectLoading: false,
         isSaveLoading: false,
         isPageLoading: true
-    }
+    },
+    priceGroupWasChanged: true
 }
 
 const slice = createSlice({
@@ -129,6 +131,7 @@ const slice = createSlice({
             }else {
                 state.selectedPriceGroup = series;
             }
+            state.priceGroupWasChanged = true
         },
     },
     extraReducers: builder => {
