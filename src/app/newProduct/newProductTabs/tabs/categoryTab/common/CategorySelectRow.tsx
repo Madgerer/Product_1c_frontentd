@@ -1,9 +1,9 @@
 import './categorySelectRow.scss'
-import NullableSelect from "../../common/NullableSelect";
-import { ICategory } from '../../../domain/types';
-import ToOptionProvider from "../../../utils/ToOptionProvider";
+import NullableSelect from "../../../../../common/NullableSelect";
+import { ICategory } from '../../../../../../domain/types';
+import ToOptionProvider from "../../../../../../utils/ToOptionProvider";
 import {useEffect, useState} from "react";
-import CategoryTreeUtils from "../../../CategoryTreeUtils";
+import CategoryTreeUtils from "../../../../../../CategoryTreeUtils";
 
 interface IRowElementProps {
     categories: ICategory[]

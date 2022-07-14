@@ -75,7 +75,7 @@ const slice = createSlice({
             let categoryFound = false;
             if(action.payload.catalogGroup === CatalogGroup.Printed) {
                 for (const row of state.currentPrintedCategories) {
-                    if(row.index == action.payload.rowIndex)
+                    if(row.index === action.payload.rowIndex)
                     {
                         row.selected = true
                         categoryFound = true;
@@ -100,7 +100,7 @@ const slice = createSlice({
             }
             else {
                 for (const row of state.currentWebCategories) {
-                    if(row.index == action.payload.rowIndex)
+                    if(row.index === action.payload.rowIndex)
                     {
                         row.selected = true
                         categoryFound = true;
@@ -148,6 +148,24 @@ const slice = createSlice({
                     state.webCategoryToAlterPath = []
             }
         },
+        setSelectedScope(state: CategoriesTabState, action: PayloadAction<number | null>) {
+            if(action.payload === null)
+                state.selectedScope = null
+
+            const scope = state.scopes.find(x => x.id === action.payload)
+            if(scope === undefined)
+                state.selectedScope = null
+            else
+                state.selectedScope = scope
+        },
+        setSelectedCurrentScope(state: CategoriesTabState, action: PayloadAction<number>) {
+            const index = state.currentScopes.findIndex(x => x.id === action.payload)
+            if(index > -1)
+            {
+                state.currentScopes[index].selected = true
+                state.selectedCurrentScope = state.currentScopes[index]
+            }
+        }
     },
     extraReducers: builder => {
         builder.addCase(getCategoriesThunk.rejected, (state, action) => {
@@ -205,7 +223,7 @@ const slice = createSlice({
             console.log(`Can't load product group categories. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getCategoriesThunk.fulfilled, (state, action) => {
-            if(action.meta.arg.catalogGroup == CatalogGroup.Printed)
+            if(action.meta.arg.catalogGroup === CatalogGroup.Printed)
                 state.categoriesPrinted = action.payload
             else
                 state.categoriesWeb = action.payload
@@ -213,7 +231,7 @@ const slice = createSlice({
 
         builder.addCase(changeProductGroupCategoryThunk.fulfilled, (state, action) => {
             //const originalState = original(state)!;
-            if(action.meta.arg.catalogGroup == CatalogGroup.Printed) {
+            if(action.meta.arg.catalogGroup === CatalogGroup.Printed) {
                 const indexToChange: number = state.currentPrintedCategories.findIndex(x => {
                     for(let category of x.model) {
                         if(category.id === action.meta.arg.categoryId)

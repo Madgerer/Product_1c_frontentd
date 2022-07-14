@@ -1,9 +1,9 @@
 import _ from "lodash";
 import {Table} from "react-bootstrap";
-import {ISelectableIndexModel} from "../../../redux/types";
+import {ISelectableIndexModel} from "../../../../../../redux/types";
 import './categoryDynamicTable.scss'
-import {ProductGroupCategory} from "../../../redux/reducers/local/newProduct/categoryTabComponent";
-import {CatalogGroup} from "../../../domain/types";
+import {ProductGroupCategory} from "../../../../../../redux/reducers/local/newProduct/categoryTabComponent";
+import {CatalogGroup} from "../../../../../../domain/types";
 
 export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) {
     const maxColumnLength = _.max(props.rows.map(x => x.model.length))

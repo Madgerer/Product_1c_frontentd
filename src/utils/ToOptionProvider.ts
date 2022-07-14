@@ -1,5 +1,14 @@
 import {IOptionType} from "../app/common/SimpleSelect";
-import {IAttribute, ICategory, ILanguage, IPriceGroup, ISeries, ISign, IWebsite} from "../domain/types";
+import {
+    IAttribute,
+    ICategory,
+    ILanguage,
+    IPriceGroup,
+    IScopeOfApplication,
+    ISeries,
+    ISign,
+    IWebsite
+} from "../domain/types";
 
 export default class ToOptionProvider {
     static languageToOption = (language: ILanguage): IOptionType => {return {value: language.id, label: language.name}}
@@ -15,4 +24,6 @@ export default class ToOptionProvider {
     static priceGroupToOption = (priceGroup: IPriceGroup): IOptionType => {return {value: priceGroup.id, label: priceGroup.name}}
 
     static categoryToOption = (category: ICategory): IOptionType => {return {value: category.id, label: category.name}}
+
+    static scopeToOption = (scope: IScopeOfApplication): IOptionType => {return {value: scope.id, label: scope.name}}
 }

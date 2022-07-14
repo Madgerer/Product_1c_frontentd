@@ -1,5 +1,5 @@
 import {Tab, Tabs} from "react-bootstrap";
-import CategoryTab from "./tabs/CategoryTab";
+import CategoryTab from "./tabs/categoryTab/CategoryTab";
 import TablePartTab from "./tabs/TablePartTab";
 import GraphicPartTab from "./tabs/GraphicPartTab";
 

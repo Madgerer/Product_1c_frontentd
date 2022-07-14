@@ -1,25 +1,28 @@
-import CatalogSelector, {CatalogFilter} from "../../../common/catalogSelector/CatalogSelector";
-import CategorySelectRow from "../CategorySelectRow";
+import './CatalogsBlock.scss'
+import {CatalogGroup, ICategory} from "../../../../../domain/types";
+import CatalogSelector, {CatalogFilter} from "../../../../common/catalogSelector/CatalogSelector";
+import CategorySelectRow from "./common/CategorySelectRow";
+import CategoryDynamicTable from "./common/CategoryDynamicTable";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../../../redux/reducers";
-import {NewProductState} from "../../../../redux/reducers/local/newProduct";
-import {CatalogGroup, ICategory} from "../../../../domain/types";
-import {useEffect} from "react";
-import {LanguageState} from "../../../../redux/reducers/languages";
-import {CatalogState} from "../../../../redux/reducers/catalogs";
-import {ISelectableIndexModel} from "../../../../redux/types";
+import {AppState} from "../../../../../redux/reducers";
 import {
     actions,
     CategoriesTabState,
     ProductGroupCategory
-} from "../../../../redux/reducers/local/newProduct/categoryTabComponent";
-import CategoryDynamicTable from "../CategoryDynamicTable";
+} from "../../../../../redux/reducers/local/newProduct/categoryTabComponent";
+import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
+import {LanguageState} from "../../../../../redux/reducers/languages";
+import {CatalogState} from "../../../../../redux/reducers/catalogs";
+import {useEffect} from "react";
 import {
-    addProductGroupToCatsThunk, changeProductGroupCategoryThunk, getCategoriesThunk,
+    addProductGroupToCatsThunk, changeProductGroupCategoryThunk,
+    getCategoriesThunk,
     getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk, setCategoryAsMainThunk
-} from "../../../../redux/reducers/local/newProduct/categoryTabComponent/thunks";
+} from "../../../../../redux/reducers/local/newProduct/categoryTabComponent/thunks";
+import {ISelectableIndexModel} from "../../../../../redux/types";
 
-export default function CategoryTab() {
+export default function CatalogsBlock() {
+
     const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
     const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
@@ -40,6 +43,10 @@ export default function CategoryTab() {
     },[languageState.selected.id, local.categoriesPrinted, local.categoriesWeb])
 
     const setCategoryPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
+    const onCategoryRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
+    const setSelectedCategory = (tableRow: ISelectableIndexModel<ProductGroupCategory>, catalogGroup: CatalogGroup) =>
+        dispatch(actions.setSelectedCategory({rowIndex: tableRow.index, catalogGroup: catalogGroup}))
+
 
     const getCategoryIdByPath = (catalogGroup: CatalogGroup): number | null => {
         let lastLevelCategoryIds: number[];
@@ -157,11 +164,7 @@ export default function CategoryTab() {
         dispatch(setCategoryAsMainThunk({categoryId: currentCatId, productGroupId: productGroupState.productGroup.id}))
     }
 
-    const onRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
-    const setSelectedCategory = (tableRow: ISelectableIndexModel<ProductGroupCategory>, catalogGroup: CatalogGroup) =>
-        dispatch(actions.setSelectedCategory({rowIndex: tableRow.index, catalogGroup: catalogGroup}))
-
-    return <div className="tab-pane row">
+    return <>
         <div className="item col-md-12">
             <div>
                 <h2>Категории в каталоге</h2>
@@ -177,7 +180,7 @@ export default function CategoryTab() {
                 <CatalogSelector filter={CatalogFilter.Printed}/>
                 <CategorySelectRow
                     shouldReset={local.shouldResetPrinted}
-                    onReset={() => onRowReset(CatalogGroup.Printed)}
+                    onReset={() => onCategoryRowReset(CatalogGroup.Printed)}
                     categories={local.categoriesPrinted}
                     onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Printed)}}/>
             </div>
@@ -203,7 +206,7 @@ export default function CategoryTab() {
                 </button>
                 <CategorySelectRow
                     shouldReset={local.shouldResetWeb}
-                    onReset={() => onRowReset(CatalogGroup.Web)}
+                    onReset={() => onCategoryRowReset(CatalogGroup.Web)}
                     categories={local.categoriesWeb}
                     onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Web)}}/>
             </div>
@@ -212,24 +215,5 @@ export default function CategoryTab() {
                 onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Web)}
                 rows={local.currentWebCategories}/>
         </div>
-        <div className="item col-md-12">
-            <div>
-                <h2>Категории на сайт</h2>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa  fa-plus" aria-hidden="true"></i>
-                </button>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                </button>
-                <button type="button" className="btn btn-dark">
-                    Сделать главной
-                </button>
-                <button type="button" className="btn btn-dark">
-                    <i className="fa fa fa-minus" aria-hidden="true"></i>
-                </button>
-                <div>Селектор scope of application</div>
-            </div>
-            Какая-то не рабочая таблица
-        </div>
-    </div>
+    </>
 }
