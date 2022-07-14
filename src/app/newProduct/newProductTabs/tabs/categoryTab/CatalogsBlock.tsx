@@ -51,11 +51,11 @@ export default function CatalogsBlock() {
     const getCategoryIdByPath = (catalogGroup: CatalogGroup): number | null => {
         let lastLevelCategoryIds: number[];
         if(catalogGroup === CatalogGroup.Printed)
-            lastLevelCategoryIds = local.printedCategoryToAlterPath
+            lastLevelCategoryIds = local.selectedPrintedCategories
                 .filter(x => x.children.length === 0)
                 .map(x => x.id)
         else
-            lastLevelCategoryIds = local.webCategoryToAlterPath
+            lastLevelCategoryIds = local.selectedWebCategories
                 .filter(x => x.children.length === 0)
                 .map(x => x.id)
         if(lastLevelCategoryIds.length > 1) {
@@ -103,10 +103,10 @@ export default function CatalogsBlock() {
     const removeCategory = (catalogGroup: CatalogGroup) => {
         let categoryToRemove: number | null;
         if(catalogGroup === CatalogGroup.Printed) {
-            categoryToRemove = local.selectedPrintedCategory?.id ?? null
+            categoryToRemove = local.selectedCurrentPrintedCategory?.id ?? null
         }
         else {
-            categoryToRemove = local.selectedWebCategory?.id ?? null
+            categoryToRemove = local.selectedCurrentWebCategory?.id ?? null
         }
         if(categoryToRemove === null)
         {
@@ -134,9 +134,9 @@ export default function CatalogsBlock() {
         }
 
         if(catalogGroup === CatalogGroup.Printed)
-            currentCatId = local.selectedPrintedCategory?.id ?? null;
+            currentCatId = local.selectedCurrentPrintedCategory?.id ?? null;
         else
-            currentCatId = local.selectedWebCategory?.id ?? null;
+            currentCatId = local.selectedCurrentWebCategory?.id ?? null;
 
         if(currentCatId === null)
         {
@@ -154,7 +154,7 @@ export default function CatalogsBlock() {
     }
 
     const setCategoryAsMain = () => {
-        const currentCatId = local.selectedWebCategory?.id ?? null;
+        const currentCatId = local.selectedCurrentWebCategory?.id ?? null;
         if(currentCatId === null)
         {
             alert("Выберите категорию для обновления")

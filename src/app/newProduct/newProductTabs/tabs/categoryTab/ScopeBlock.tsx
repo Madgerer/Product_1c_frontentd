@@ -25,10 +25,13 @@ export default function ScopeBlock() {
     }, [languageState.selected.id])
 
     useEffect(() => {
-        dispatch(getProductGroupsScopesThunk({productGroupId: productGroupState.productGroup.id}))
-    }, [])
+        if(local.isScopesWasInit)
+            dispatch(getProductGroupsScopesThunk({productGroupId: productGroupState.productGroup.id}))
+    }, [local.isScopesWasInit])
 
     const setSelectedScope = (id: number | null) => dispatch(actions.setSelectedScope(id))
+    const setSelectedCurrentScope = (id: number) => dispatch(actions.setSelectedCurrentScope(id))
+
     const addProductGroupToScope = () => {
         if(local.selectedScope === null) {
             alert('Выберите область применения для добавления')
@@ -51,14 +54,14 @@ export default function ScopeBlock() {
             return;
         }
 
-        if(local.currentScopes.find(x => x.id === local.selectedCurrentScope!.id) !== undefined){
+        if(local.currentScopes.find(x => x.id === local.selectedScope!.id) !== undefined){
             return;
         }
 
         dispatch(changeProductGroupsScopeThunk({
             productGroupId: productGroupState.productGroup.id,
             scopeId: local.selectedCurrentScope.id,
-            newScopeId: local.selectedCurrentScope.id
+            newScopeId: local.selectedScope.id
         }))
     }
 
@@ -74,9 +77,7 @@ export default function ScopeBlock() {
         }))
     }
 
-    const setSelectedCurrentScope = (id: number) => {
-        dispatch(actions.setSelectedCurrentScope(id))
-    }
+
 
     return <>
         <div className="item col-md-12">

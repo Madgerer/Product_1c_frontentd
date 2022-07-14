@@ -29,18 +29,19 @@ export type CategoriesTabState = {
     categoriesPrinted: ICategory[],
 
     //выбранная категория в ряду
-    webCategoryToAlterPath: ICategory[]
-    printedCategoryToAlterPath: ICategory[]
+    selectedWebCategories: ICategory[]
+    selectedPrintedCategories: ICategory[]
     shouldResetPrinted: boolean,
     shouldResetWeb: boolean
 
     //выбранная категория в таблице
-    selectedPrintedCategory: ProductGroupCategory | null,
-    selectedWebCategory: ProductGroupCategory | null
+    selectedCurrentPrintedCategory: ProductGroupCategory | null,
+    selectedCurrentWebCategory: ProductGroupCategory | null
 
 
     scopes: IScopeOfApplication[],
     selectedScope: IScopeOfApplication | null
+    isScopesWasInit: boolean
 
     //Таблица скоупов
     currentScopes: ScopeOfApplication[],
@@ -50,19 +51,20 @@ export type CategoriesTabState = {
 const INITIAL_SCOPES: ScopeOfApplication[] = [{id: -1, name: 'loading', selected: false, sort: null}]
 
 const INITIAL_STATE: CategoriesTabState = {
-    webCategoryToAlterPath: [],
+    selectedWebCategories: [],
     categoriesPrinted: [],
     categoriesWeb: [],
-    printedCategoryToAlterPath: [],
+    selectedPrintedCategories: [],
     currentPrintedCategories: [],
     currentWebCategories: [],
-    selectedWebCategory: null,
-    selectedPrintedCategory: null,
+    selectedCurrentWebCategory: null,
+    selectedCurrentPrintedCategory: null,
     shouldResetPrinted: false,
     shouldResetWeb: false,
 
     scopes: INITIAL_SCOPES,
     selectedScope: INITIAL_SCOPES[0],
+    isScopesWasInit: false,
     currentScopes: [],
     selectedCurrentScope: null
 }
@@ -81,7 +83,7 @@ const slice = createSlice({
                         categoryFound = true;
                         //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
                         const category = row.model[row.model.length - 1];
-                        state.selectedPrintedCategory = {
+                        state.selectedCurrentPrintedCategory = {
                             mainCategory: null,
                             children: category.children,
                             name: category.name,
@@ -93,10 +95,16 @@ const slice = createSlice({
                         row.selected = false
                 }
                 if(!categoryFound)
-                    state.selectedPrintedCategory = null
+                    state.selectedCurrentPrintedCategory = null
                 //отключаем выбранную веб категорию
-                state.currentWebCategories.forEach(x => x.selected = false)
-                state.selectedWebCategory = null;
+                if(state.selectedCurrentWebCategory != null) {
+                    state.currentWebCategories.forEach(x => x.selected = false)
+                    state.selectedCurrentWebCategory = null;
+                }
+                if(state.selectedCurrentScope != null) {
+                    state.currentScopes.forEach(x => x.selected = false)
+                    state.selectedCurrentScope = null;
+                }
             }
             else {
                 for (const row of state.currentWebCategories) {
@@ -106,7 +114,7 @@ const slice = createSlice({
                         categoryFound = true;
                         //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
                         const category = row.model[row.model.length - 1];
-                        state.selectedWebCategory = {
+                        state.selectedCurrentWebCategory = {
                             mainCategory: category.mainCategory,
                             children: category.children,
                             name: category.name,
@@ -118,10 +126,16 @@ const slice = createSlice({
                         row.selected = false
                 }
                 if(!categoryFound)
-                    state.selectedPrintedCategory = null
+                    state.selectedCurrentPrintedCategory = null
                 //отключаем выбранную категорию из каталога
-                state.currentPrintedCategories.forEach(x => x.selected = false)
-                state.selectedPrintedCategory = null;
+                if(state.selectedCurrentPrintedCategory != null) {
+                    state.currentPrintedCategories.forEach(x => x.selected = false)
+                    state.selectedCurrentPrintedCategory = null;
+                }
+                if(state.selectedCurrentScope != null) {
+                    state.currentScopes.forEach(x => x.selected = false)
+                    state.selectedCurrentScope = null;
+                }
             }
         },
         setShouldReset(state: CategoriesTabState, action: PayloadAction<CatalogGroup>) {
@@ -136,16 +150,16 @@ const slice = createSlice({
             }
             if (action.payload.catalogGroup === CatalogGroup.Printed) {
                 if(action.payload.category.children.length === 0) {
-                    state.printedCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesPrinted);
+                    state.selectedPrintedCategories = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesPrinted);
                 }
                 else
-                    state.printedCategoryToAlterPath = []
+                    state.selectedPrintedCategories = []
             } else {
                 if(action.payload.category.children.length === 0) {
-                    state.webCategoryToAlterPath = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesWeb);
+                    state.selectedWebCategories = CategoryTreeUtils.getCategoriesByParent(action.payload.category.id, state.categoriesWeb);
                 }
                 else
-                    state.webCategoryToAlterPath = []
+                    state.selectedWebCategories = []
             }
         },
         setSelectedScope(state: CategoriesTabState, action: PayloadAction<number | null>) {
@@ -159,11 +173,23 @@ const slice = createSlice({
                 state.selectedScope = scope
         },
         setSelectedCurrentScope(state: CategoriesTabState, action: PayloadAction<number>) {
-            const index = state.currentScopes.findIndex(x => x.id === action.payload)
-            if(index > -1)
-            {
-                state.currentScopes[index].selected = true
-                state.selectedCurrentScope = state.currentScopes[index]
+            for (const currentScope of state.currentScopes) {
+                if(currentScope.id === action.payload) {
+                    currentScope.selected = true;
+                    state.selectedCurrentScope = currentScope
+                }
+                else {
+                    currentScope.selected = false
+                }
+            }
+            //отключаем подстветку у таблиц категорий
+            if(state.selectedCurrentPrintedCategory != null) {
+                state.currentPrintedCategories.forEach(x => x.selected = false)
+                state.selectedCurrentPrintedCategory = null;
+            }
+            if(state.selectedCurrentWebCategory != null) {
+                state.currentWebCategories.forEach(x => x.selected = false)
+                state.selectedCurrentWebCategory = null;
             }
         }
     },
@@ -254,7 +280,7 @@ const slice = createSlice({
                     selected: true
                 };
                 state.currentPrintedCategories.splice(indexToChange, 1, newRow)
-                state.selectedPrintedCategory = newRow.model[newRow.model.length - 1]
+                state.selectedCurrentPrintedCategory = newRow.model[newRow.model.length - 1]
             } else {
                 const indexToChange: number = state.currentPrintedCategories.findIndex(x => {
                     for(let category of x.model) {
@@ -279,7 +305,7 @@ const slice = createSlice({
                     selected: true
                 };
                 state.currentWebCategories.splice(indexToChange, 1, newRow)
-                state.selectedWebCategory = newRow.model[newRow.model.length - 1]
+                state.selectedCurrentWebCategory = newRow.model[newRow.model.length - 1]
             }
         })
 
@@ -291,7 +317,7 @@ const slice = createSlice({
                     index: state.currentPrintedCategories.length !== 0
                         ? state.currentPrintedCategories[0].index - 1
                         : 0,
-                    model: state.printedCategoryToAlterPath.map(x => {
+                    model: state.selectedPrintedCategories.map(x => {
                         return {
                             id: x.id,
                             name: x.name,
@@ -303,13 +329,13 @@ const slice = createSlice({
                     selected: false
                 })
                 state.shouldResetPrinted = true
-                state.printedCategoryToAlterPath = []
+                state.selectedPrintedCategories = []
             } else {
                 state.currentWebCategories.unshift({
                     index: state.currentWebCategories.length !== 0
                         ? state.currentWebCategories[0].index - 1
                         : 0,
-                    model: state.webCategoryToAlterPath.map(x => {
+                    model: state.selectedWebCategories.map(x => {
                         return {
                             id: x.id,
                             name: x.name,
@@ -321,7 +347,7 @@ const slice = createSlice({
                     selected: false
                 })
                 state.shouldResetWeb = true
-                state.webCategoryToAlterPath = []
+                state.selectedWebCategories = []
             }
 
         })
@@ -357,6 +383,7 @@ const slice = createSlice({
 
         builder.addCase(getScopesOfApplicationThunk.fulfilled, (state, action) => {
             state.scopes = action.payload
+            state.isScopesWasInit = true
             state.selectedScope = null
         });
         builder.addCase(getScopesOfApplicationThunk.rejected, (state, action) => {
@@ -397,13 +424,13 @@ const slice = createSlice({
             })
             state.selectedScope = null;
         });
-        builder.addCase(getProductGroupsScopesThunk.rejected, (state, action) => {
+        builder.addCase(addProductGroupsToScopeThunk.rejected, (state, action) => {
             console.log(`Can't add product group to scope. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(removeProductGroupsFromScopeThunk.fulfilled, (state, action) => {
             const scopeId = action.meta.arg.scopeId;
-            state.currentScopes = state.currentScopes.filter(x => x.id == scopeId);
+            state.currentScopes = state.currentScopes.filter(x => x.id != scopeId);
             state.selectedCurrentScope = null
         });
         builder.addCase(removeProductGroupsFromScopeThunk.rejected, (state, action) => {
