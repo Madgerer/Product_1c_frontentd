@@ -1,17 +1,23 @@
-import {ISelectableIndexModel} from "../../../../types";
-import {CatalogGroup, ICategory} from "../../../../../domain/types";
+import {ISelectable, ISelectableIndexModel} from "../../../../types";
+import {CatalogGroup, ICategory, IScopeOfApplication} from "../../../../../domain/types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import CategoryTreeUtils from "../../../../../CategoryTreeUtils";
 import {
+    addProductGroupsToScopeThunk,
     addProductGroupToCatsThunk,
-    changeProductGroupCategoryThunk,
+    changeProductGroupCategoryThunk, changeProductGroupsScopeThunk,
     getCategoriesThunk,
-    getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk, setCategoryAsMainThunk
+    getProductGroupCategoriesThunk,
+    getProductGroupsScopesThunk,
+    getScopesOfApplicationThunk,
+    removeProductGroupFromCatsThunk, removeProductGroupsFromScopeThunk,
+    setCategoryAsMainThunk
 } from "./thunks";
 import _ from "lodash";
 
 
 export type ProductGroupCategory = ICategory & { mainCategory: boolean | null}
+export type ScopeOfApplication = IScopeOfApplication & ISelectable
 
 export type CategoriesTabState = {
     //текущие категории, которые есть у группы продуктов
@@ -31,7 +37,17 @@ export type CategoriesTabState = {
     //выбранная категория в таблице
     selectedPrintedCategory: ProductGroupCategory | null,
     selectedWebCategory: ProductGroupCategory | null
+
+
+    scopes: IScopeOfApplication[],
+    selectedScope: IScopeOfApplication | null
+
+    //Таблица скоупов
+    currentScopes: ScopeOfApplication[],
+    selectedCurrentScope: ScopeOfApplication | null
 }
+
+const INITIAL_SCOPES: ScopeOfApplication[] = [{id: -1, name: 'loading', selected: false, sort: null}]
 
 const INITIAL_STATE: CategoriesTabState = {
     webCategoryToAlterPath: [],
@@ -43,7 +59,12 @@ const INITIAL_STATE: CategoriesTabState = {
     selectedWebCategory: null,
     selectedPrintedCategory: null,
     shouldResetPrinted: false,
-    shouldResetWeb: false
+    shouldResetWeb: false,
+
+    scopes: INITIAL_SCOPES,
+    selectedScope: INITIAL_SCOPES[0],
+    currentScopes: [],
+    selectedCurrentScope: null
 }
 
 const slice = createSlice({
@@ -314,6 +335,82 @@ const slice = createSlice({
         });
         builder.addCase(setCategoryAsMainThunk.rejected, (state, action) => {
             console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(getScopesOfApplicationThunk.fulfilled, (state, action) => {
+            state.scopes = action.payload
+            state.selectedScope = null
+        });
+        builder.addCase(getScopesOfApplicationThunk.rejected, (state, action) => {
+            console.log(`Can't load scopes of applications. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(getProductGroupsScopesThunk.fulfilled, (state, action) => {
+            state.currentScopes = action.payload.map(x => {
+                    const scope = state.scopes.find(scope => scope.id == x.scopeId)
+                    if(scope === undefined)
+                        return null
+                    return {
+                        id: x.scopeId,
+                        name: scope.name,
+                        selected: false,
+                        sort: scope.sort
+                    }
+                })
+                .filter(x => x !== null)
+                .map(x => x!)
+        });
+        builder.addCase(getProductGroupsScopesThunk.rejected, (state, action) => {
+            console.log(`Can't load product group scopes of applications. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(addProductGroupsToScopeThunk.fulfilled, (state, action) => {
+            const scopeId = action.meta.arg.scopeId;
+            const scope = state.scopes.find(scope => scope.id == scopeId)
+            if(scope === undefined)
+                return;
+            const maxSort: number = _.maxBy(state.scopes, s => s.sort)?.sort ?? 1;
+
+            state.currentScopes.push({
+                id: scopeId,
+                name: scope.name,
+                selected: false,
+                sort: maxSort
+            })
+            state.selectedScope = null;
+        });
+        builder.addCase(getProductGroupsScopesThunk.rejected, (state, action) => {
+            console.log(`Can't add product group to scope. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(removeProductGroupsFromScopeThunk.fulfilled, (state, action) => {
+            const scopeId = action.meta.arg.scopeId;
+            state.currentScopes = state.currentScopes.filter(x => x.id == scopeId);
+            state.selectedCurrentScope = null
+        });
+        builder.addCase(removeProductGroupsFromScopeThunk.rejected, (state, action) => {
+            console.log(`Can't remove product group from scope. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(changeProductGroupsScopeThunk.fulfilled, (state, action) => {
+            const scopeId = action.meta.arg.scopeId;
+            const newScopeId = action.meta.arg.newScopeId;
+            const newScope = state.scopes.find(scope => scope.id == newScopeId);
+            if(newScope === undefined)
+                return;
+
+            const index = state.currentScopes.findIndex(x => x.id == scopeId);
+            if(index > -1) {
+                state.currentScopes[index] = {
+                    id: newScope.id,
+                    name: newScope.name,
+                    selected: true,
+                    sort: newScope.sort
+                };
+            }
+        });
+        builder.addCase(changeProductGroupsScopeThunk.rejected, (state, action) => {
+            console.log(`Can't change product group scope. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

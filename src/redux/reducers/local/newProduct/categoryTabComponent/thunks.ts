@@ -35,3 +35,23 @@ export const getScopesOfApplicationThunk = createApiThunk({
     typePrefix: 'new-product/get-scopes',
     apiCall: Api.scopes.getScopes
 })
+
+export const getProductGroupsScopesThunk = createApiThunk({
+    typePrefix: 'new-product/get-product-scopes',
+    apiCall: Api.scopes.getProductGroupsScopes
+})
+
+export const addProductGroupsToScopeThunk = createApiThunk({
+    typePrefix: 'new-product/add-product-group-to-scope',
+    apiCall: Api.scopes.addProductGroupsToScope
+})
+
+export const removeProductGroupsFromScopeThunk = createApiThunk({
+    typePrefix: 'new-product/remove-product-group-from-scope',
+    apiCall: Api.scopes.removeProductGroupsFromScope
+})
+
+export const changeProductGroupsScopeThunk = createApiThunk({
+    typePrefix: 'new-product/change-product-group-scope',
+    apiCall: Api.scopes.changeProductGroupsScope
+})
