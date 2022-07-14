@@ -1,30 +1,21 @@
 import {
-    CatalogGroup,
     IAttribute,
-    ICategory,
     IPriceGroup,
     IProductGroup,
     ISeries,
     ISign
 } from "../../../../domain/types";
-import {createSlice, current, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
-    addProductGroupToCatsThunk, changeProductGroupCategoryThunk,
     createProductGroupThunk,
     deleteProductGroupThunk,
     discardReserveThunk,
     getAttributesThunk,
-    getCategoriesThunk,
     getOrReserveThunk,
     getPriceGroupsThunk,
-    getProductGroupCategoriesThunk,
     getSeriesThunk,
-    getSignsThunk,
-    removeProductGroupFromCatsThunk
+    getSignsThunk
 } from "./thunks";
-import CategoryTreeUtils from "../../../../CategoryTreeUtils";
-import {ISelectableIndexModel} from "../../../types";
-import _ from "lodash";
 import {combineReducers} from "redux";
 import {reducer as catTabReducer} from "./categoryTabComponent";
 

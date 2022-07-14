@@ -6,9 +6,10 @@ import {
     addProductGroupToCatsThunk,
     changeProductGroupCategoryThunk,
     getCategoriesThunk,
-    getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk
-} from "../thunks";
+    getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk, setCategoryAsMainThunk
+} from "./thunks";
 import _ from "lodash";
+
 
 export type ProductGroupCategory = ICategory & { mainCategory: boolean | null}
 
@@ -299,6 +300,19 @@ const slice = createSlice({
                     .filter(x => x.model[x.model.length - 1].id !== action.meta.arg.categoryId);
         })
         builder.addCase(removeProductGroupFromCatsThunk.rejected, (state, action) => {
+            console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(setCategoryAsMainThunk.fulfilled, (state, action) => {
+            state.currentWebCategories.forEach(x => {
+                const last = _.last(x.model);
+                if(last === undefined)
+                    return;
+
+                last.mainCategory = last.id === action.meta.arg.categoryId;
+            })
+        });
+        builder.addCase(setCategoryAsMainThunk.rejected, (state, action) => {
             console.log(`Can't discard reserve product. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

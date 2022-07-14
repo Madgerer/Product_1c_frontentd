@@ -5,12 +5,6 @@ import {AppState} from "../../../../redux/reducers";
 import {NewProductState} from "../../../../redux/reducers/local/newProduct";
 import {CatalogGroup, ICategory} from "../../../../domain/types";
 import {useEffect} from "react";
-import {
-    addProductGroupToCatsThunk,
-    changeProductGroupCategoryThunk,
-    getProductGroupCategoriesThunk,
-    removeProductGroupFromCatsThunk
-} from "../../../../redux/reducers/local/newProduct/thunks";
 import {LanguageState} from "../../../../redux/reducers/languages";
 import {CatalogState} from "../../../../redux/reducers/catalogs";
 import {ISelectableIndexModel} from "../../../../redux/types";
@@ -20,6 +14,10 @@ import {
     ProductGroupCategory
 } from "../../../../redux/reducers/local/newProduct/categoryTabComponent";
 import CategoryDynamicTable from "../CategoryDynamicTable";
+import {
+    addProductGroupToCatsThunk, changeProductGroupCategoryThunk, getCategoriesThunk,
+    getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk, setCategoryAsMainThunk
+} from "../../../../redux/reducers/local/newProduct/categoryTabComponent/thunks";
 
 export default function CategoryTab() {
     const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
@@ -27,6 +25,11 @@ export default function CategoryTab() {
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getCategoriesThunk({catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
+        dispatch(getCategoriesThunk({catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
+    }, [languageState.selected.id])
 
     useEffect(() => {
         let isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
@@ -143,6 +146,17 @@ export default function CategoryTab() {
         }))
     }
 
+    const setCategoryAsMain = () => {
+        const currentCatId = local.selectedWebCategory?.id ?? null;
+        if(currentCatId === null)
+        {
+            alert("Выберите категорию для обновления")
+            return;
+        }
+
+        dispatch(setCategoryAsMainThunk({categoryId: currentCatId, productGroupId: productGroupState.productGroup.id}))
+    }
+
     const onRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
     const setSelectedCategory = (tableRow: ISelectableIndexModel<ProductGroupCategory>, catalogGroup: CatalogGroup) =>
         dispatch(actions.setSelectedCategory({rowIndex: tableRow.index, catalogGroup: catalogGroup}))
@@ -184,7 +198,7 @@ export default function CategoryTab() {
                 <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Web)}>
                     <i className="fa fa fa-minus" aria-hidden="true"/>
                 </button>
-                <button type="button" className="btn btn-dark">
+                <button type="button" className="btn btn-dark" onClick={() => setCategoryAsMain()}>
                     Сделать главной
                 </button>
                 <CategorySelectRow

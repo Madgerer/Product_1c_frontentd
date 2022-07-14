@@ -25,3 +25,8 @@ export const changeProductGroupCategoryThunk = createApiThunk({
     typePrefix: 'new-product/change-product-group-cat',
     apiCall: Api.category.changeProductGroupCategory
 })
+
+export const setCategoryAsMainThunk = createApiThunk({
+    typePrefix: 'new-product/set-category-as-main',
+    apiCall: Api.category.setCategoryAsMain
+})
