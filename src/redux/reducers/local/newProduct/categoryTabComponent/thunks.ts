@@ -30,3 +30,8 @@ export const setCategoryAsMainThunk = createApiThunk({
     typePrefix: 'new-product/set-category-as-main',
     apiCall: Api.category.setCategoryAsMain
 })
+
+export const getScopesOfApplicationThunk = createApiThunk({
+    typePrefix: 'new-product/get-scopes',
+    apiCall: Api.scopes.getScopes
+})

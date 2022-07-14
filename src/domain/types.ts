@@ -1,4 +1,5 @@
 import {IOptionType} from "../app/common/SimpleSelect";
+import exp from "constants";
 
 export interface ICatalog {
     id: number,
@@ -47,6 +48,12 @@ export interface ISign {
 export interface IAttribute {
     id: number,
     name: string
+}
+
+export interface IScopeOfApplication {
+    id: number,
+    name: string,
+    sort: number
 }
 
 export interface IProductGroupWithCategoryPath {

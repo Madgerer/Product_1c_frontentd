@@ -10,6 +10,7 @@ import WebsitesApi from "./websites/WebsitesApi";
 import AttributeApi from "./attribute/AttributeApi";
 import SeriesApi from "./series/SeriesApi";
 import SignApi from "./sign/SignApi";
+import ScopeOfApplicationApi from "./scopeOfApplicationApi/ScopeOfApplicationApi";
 
 interface IApplicationApi {
     auth: AuthApi,
@@ -23,7 +24,8 @@ interface IApplicationApi {
     websites: WebsitesApi,
     attributes: AttributeApi,
     series: SeriesApi,
-    sign: SignApi
+    sign: SignApi,
+    scopes: ScopeOfApplicationApi
 }
 
 /**
@@ -56,6 +58,7 @@ export class ApiGateway implements IApplicationApi {
     attributes: AttributeApi;
     series: SeriesApi;
     sign: SignApi;
+    scopes: ScopeOfApplicationApi;
 
     constructor() {
         this.auth = new AuthApi();
@@ -70,5 +73,6 @@ export class ApiGateway implements IApplicationApi {
         this.attributes = new AttributeApi();
         this.series = new SeriesApi();
         this.sign = new SignApi();
+        this.scopes = new ScopeOfApplicationApi()
     }
 }
