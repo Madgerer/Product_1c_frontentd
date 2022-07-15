@@ -158,7 +158,7 @@ const slice = createSlice({
         })
         builder.addCase(getPriceGroupsThunk.fulfilled, (state, action) => {
             state.priceGroups = action.payload
-            state.selectedPriceGroup = null
+            state.selectedPriceGroup = action.payload.find(x => x.id === 0)!
         })
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

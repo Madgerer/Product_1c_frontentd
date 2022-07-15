@@ -1,6 +1,6 @@
 import {ISelectable, ISelectableIndexModel} from "../../../../types";
 import {CatalogGroup, ICategory, IScopeOfApplication} from "../../../../../domain/types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, original, PayloadAction} from "@reduxjs/toolkit";
 import CategoryTreeUtils from "../../../../../CategoryTreeUtils";
 import {
     addProductGroupsToScopeThunk,
@@ -282,7 +282,7 @@ const slice = createSlice({
                 state.currentPrintedCategories.splice(indexToChange, 1, newRow)
                 state.selectedCurrentPrintedCategory = newRow.model[newRow.model.length - 1]
             } else {
-                const indexToChange: number = state.currentPrintedCategories.findIndex(x => {
+                const indexToChange: number = state.currentWebCategories.findIndex(x => {
                     for(let category of x.model) {
                         if(category.id === action.meta.arg.categoryId)
                             return true;
