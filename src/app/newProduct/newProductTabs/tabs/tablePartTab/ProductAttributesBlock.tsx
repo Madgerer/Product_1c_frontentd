@@ -19,6 +19,7 @@ import SimpleSelect from "../../../../common/SimpleSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import NullableSelect from "../../../../common/NullableSelect";
 import {Table} from "react-bootstrap";
+import Constants from "../../../../../domain/Constants";
 
 export default function ProductAttributesBlock() {
     const local = useSelector<AppState, TableTabState>(x => x.local.newProductState.tableTabState)
@@ -50,18 +51,18 @@ export default function ProductAttributesBlock() {
     }
 
     const removeProductFromGroup = () => {
-        if(local.selectedProductWithAttr === null) {
+        if(local.selectedGroupProduct === null) {
             alert('Выберите продукт для удаления')
             return
         }
         dispatch(removeProductFromGroupThunk({
             productGroupId: productGroupState.productGroup.id,
-            productId: local.selectedProductWithAttr.id
+            productId: local.selectedGroupProduct.id
         }))
     }
 
     const replaceProductInGroup = () => {
-        if(local.selectedProductWithAttr === null) {
+        if(local.selectedGroupProduct === null) {
             alert('Выберите продукт для замены')
             return
         }
@@ -72,19 +73,19 @@ export default function ProductAttributesBlock() {
 
         dispatch(replaceProductInGroupThunk({
             productGroupId: productGroupState.productGroup.id,
-            productId: local.selectedProductWithAttr.id,
+            productId: local.selectedGroupProduct.id,
             newProductId: local.selectedProduct!.id
         }))
     }
 
     const swapProductSort = (addition: number) => {
-        if(local.selectedProductWithAttr === null) {
+        if(local.selectedGroupProduct === null) {
             alert('Выберите продукт для перемещения')
             return
         }
 
-        const targetSort = local.selectedProductWithAttr.sort! + addition;
-        if(targetSort > local.productsWithAttr.length){
+        const targetSort = local.selectedGroupProduct.sort! + addition;
+        if(targetSort > local.groupProducts.length){
             alert('Порядковый номер минимальный')
             return;
         }
@@ -93,10 +94,10 @@ export default function ProductAttributesBlock() {
             return;
         }
 
-        const targetProductToSwap = local.productsWithAttr.find(x => x.sort === targetSort);
+        const targetProductToSwap = local.groupProducts.find(x => x.sort === targetSort);
 
         dispatch(swapProductSortThunk({
-            firstProductId: local.selectedProductWithAttr.id!,
+            firstProductId: local.selectedGroupProduct.id!,
             secondProductId: targetProductToSwap!.id
         }))
     }
@@ -118,6 +119,7 @@ export default function ProductAttributesBlock() {
     const removeAttribute = () => {
         if(local.selectedAttributeColumn === null) {
             alert("Выберите колонку для удаления")
+            return
         }
         dispatch(removeAttributeThunk({
             productGroupId: productGroupState.productGroup.id,
@@ -126,7 +128,7 @@ export default function ProductAttributesBlock() {
     }
 
     const changeAttributeOrder = (addition: number) => {
-        const attributesOrder = local.attributesOrder;
+        const attributesOrder = [...local.attributesOrder];
         const selectedAttribute = local.selectedAttributeColumn
         if(selectedAttribute === null) {
             alert('Выберите колонку для изменения')
@@ -134,7 +136,7 @@ export default function ProductAttributesBlock() {
         }
         const index = attributesOrder.findIndex(x => x === selectedAttribute)
         const targetIndex = index + addition;
-        if(targetIndex > attributesOrder.length)
+        if(targetIndex >= attributesOrder.length)
             return;
         if(targetIndex < 0)
             return;
@@ -174,7 +176,7 @@ export default function ProductAttributesBlock() {
         if (event.key === 'Enter') {
             const trimmedArticle = local.article.trim()
             const productToAdd = local.products.find(x => x.id === trimmedArticle)
-            const isAlreadyAdded = local.productsWithAttr.findIndex(x => x.id === trimmedArticle) !== -1;
+            const isAlreadyAdded = local.groupProducts.findIndex(x => x.id === trimmedArticle) !== -1;
             if(isAlreadyAdded)
             {
                 alert('Данный товар уже добавлен в карточку')
@@ -201,6 +203,7 @@ export default function ProductAttributesBlock() {
         attributeId: attrId
     }))
     const setRowSelected = (id: string) => dispatch(actions.setProductRowSelected(id))
+    const setColumnSelected = (id: number) => dispatch(actions.setSelectedColumn(id))
 
     return <>
         {
@@ -280,14 +283,15 @@ export default function ProductAttributesBlock() {
                                             const attr = local.attributes.find(a => a.id == x)
                                             if(attr === null)
                                                 return null
-                                            return <th>{attr!.name}</th>
+                                            return <th onClick={() => setColumnSelected(attr!.id)}
+                                                       className={local.selectedAttributeColumn == attr!.id ? "bg-orange" : ""}>{attr!.name}</th>
                                         }).filter(x => x !== null)
                                     }
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    local.productsWithAttr.map(x => {
+                                    local.groupProducts.map(x => {
                                         return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
                                             <td>{x.sort}</td>
                                             <td>{x.id}</td>
@@ -295,10 +299,12 @@ export default function ProductAttributesBlock() {
                                             {
                                                 local.attributesOrder.map(a => {
                                                     const attrValue = x.attributeValues.find(x => x.id == a);
-                                                    if(attrValue === null)
+                                                    if(attrValue === undefined)
                                                         return null
                                                     return <td>
-                                                        <input type="text" value={attrValue?.value ?? ""}
+                                                        <input type="text"
+                                                               disabled={a === Constants.SortAttributeId}
+                                                               value={attrValue?.value ?? ""}
                                                                onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
                                                     </td>
                                                 }).filter(x => x !== null)

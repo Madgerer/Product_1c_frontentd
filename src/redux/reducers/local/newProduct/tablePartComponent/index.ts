@@ -3,7 +3,7 @@ import {ISelectable} from "../../../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addAttributeThunk,
-    addProductToProductGroupThunk, changeAttributeOrderThunk,
+    addProductToProductGroupThunk, changeAttributeOrderThunk, changeAttributesValuesThunk,
     getAttributesThunk,
     getProductsWithAttributes, getProductsWithoutGroupThunk, removeAttributeThunk, removeProductFromGroupThunk,
     replaceProductInGroupThunk, swapProductSortThunk
@@ -15,8 +15,8 @@ export type ProductWithAttributes = IProductWithAttributes & ISelectable
 
 export type TableTabState = {
 
-    productsWithAttr: ProductWithAttributes[],
-    selectedProductWithAttr: ProductWithAttributes | null
+    groupProducts: ProductWithAttributes[],
+    selectedGroupProduct: ProductWithAttributes | null
     selectedAttributeColumn: number | null
     accumulatedChanges: IProductWithAttributes[]
     attributesOrder: number[]
@@ -35,8 +35,8 @@ const INITIAL_ATTRIBUTES: IAttribute[] = [{id: -1, name: 'loading'}]
 const INITIAL_PRODUCTS: IProductIdentity[] = [{id: '1', name: 'loading'}]
 
 const INITIAL_STATE: TableTabState = {
-    productsWithAttr: [],
-    selectedProductWithAttr: null,
+    groupProducts: [],
+    selectedGroupProduct: null,
     selectedAttributeColumn: null,
     accumulatedChanges: [],
     attributesOrder: [],
@@ -53,6 +53,12 @@ const slice = createSlice({
     name: 'new-product-table-tab',
     initialState: INITIAL_STATE,
     reducers: {
+        setSelectedColumn(state: TableTabState, action: PayloadAction<number>) {
+            if(state.selectedAttributeColumn === action.payload)
+                state.selectedAttributeColumn = null
+            else
+                state.selectedAttributeColumn = action.payload
+        },
         setSelectedAttribute(state: TableTabState, action: PayloadAction<number>) {
             state.selectedAttribute = state.attributes.find(x => x.id == action.payload)!;
         },
@@ -65,30 +71,52 @@ const slice = createSlice({
             state.selectedProduct = state.products.find(x => x.id === action.payload)!
         },
         setAttributeValue(state: TableTabState, action: PayloadAction<{productId: string, attributeId: number, value: string}>) {
-            const product = state.productsWithAttr.find(x => x.id === action.payload.productId)
+            const product = state.groupProducts.find(x => x.id === action.payload.productId)
             if(product === undefined)
                 return;
             const attribute = product.attributeValues.find(x => x.id === action.payload.attributeId);
             if(attribute === undefined)
                 return;
             attribute.value = action.payload.value
+            const productChanges = state.accumulatedChanges.find(x => x.id === action.payload.productId);
+            if(productChanges !== undefined){
+                const attributeChanges = productChanges.attributeValues.find(x => x.id === action.payload.attributeId);
+                if(attributeChanges !== undefined)
+                    attributeChanges.value = action.payload.value
+                else
+                    productChanges.attributeValues.push({
+                        id: action.payload.attributeId,
+                        value: action.payload.value
+                    })
+            }
+            else {
+                state.accumulatedChanges.push({
+                    id: product.id,
+                    name: product.name,
+                    sort: product.sort,
+                    attributeValues: new Array({
+                        id: action.payload.attributeId,
+                        value: action.payload.value
+                    })
+                })
+            }
         },
         setArticle(state: TableTabState, action: PayloadAction<string>) {
             state.article = action.payload
         },
         setProductRowSelected(state: TableTabState, action: PayloadAction<string>) {
-            for (const product of state.productsWithAttr) {
+            for (const product of state.groupProducts) {
                 if(product.id === action.payload) {
                     product.selected = true;
-                    state.selectedProductWithAttr = product
+                    state.selectedGroupProduct = product
                 }
                 else {
                     product.selected = false
                 }
             }
 
-            if(state.selectedProductWithAttr?.id !== action.payload)
-                state.selectedProductWithAttr = null;
+            if(state.selectedGroupProduct?.id !== action.payload)
+                state.selectedGroupProduct = null;
         }
     },
     extraReducers: builder => {
@@ -101,7 +129,7 @@ const slice = createSlice({
         })
 
         builder.addCase(getProductsWithAttributes.fulfilled, (state, action) => {
-            state.productsWithAttr = action.payload.products.map(x => {return {
+            state.groupProducts = action.payload.products.map(x => {return {
                 id: x.id,
                 name: x.name,
                 attributeValues: x.attributeValues,
@@ -124,8 +152,8 @@ const slice = createSlice({
         })
 
         builder.addCase(swapProductSortThunk.fulfilled, (state, action) => {
-            const indexFirst = state.productsWithAttr.findIndex(x => x.id === action.meta.arg.firstProductId);
-            const indexSecond = state.productsWithAttr.findIndex(x => x.id === action.meta.arg.secondProductId);
+            const indexFirst = state.groupProducts.findIndex(x => x.id === action.meta.arg.firstProductId);
+            const indexSecond = state.groupProducts.findIndex(x => x.id === action.meta.arg.secondProductId);
 
             if(indexFirst === -1) {
                 console.error(`Cant find product with Id ${action.meta.arg.firstProductId}`)
@@ -136,30 +164,30 @@ const slice = createSlice({
                 return
             }
             //делаем swap sort
-            const temp = state.productsWithAttr[indexFirst].sort
-            state.productsWithAttr[indexFirst].sort = state.productsWithAttr[indexSecond].sort
-            state.productsWithAttr[indexSecond].sort = temp
+            const temp = state.groupProducts[indexFirst].sort
+            state.groupProducts[indexFirst].sort = state.groupProducts[indexSecond].sort
+            state.groupProducts[indexSecond].sort = temp
 
             //в случе если есть аттрибут Sort, тогда обновляем его
             const shouldUpdateSortAttribute = state.attributesOrder.find(x => x == Constants.SortAttributeId) !== undefined;
             if(shouldUpdateSortAttribute)
-                state.productsWithAttr.forEach(x => {
+                state.groupProducts.forEach(x => {
                     x.attributeValues.forEach(attr => {
                         if(attr.id === Constants.SortAttributeId)
                             attr.value = x.sort!.toString()
                     })
                 })
             //сортируем, чтобы не делать свап всех полей
-            state.productsWithAttr = _.orderBy(state.productsWithAttr, value => value.sort)
+            state.groupProducts = _.orderBy(state.groupProducts, value => value.sort)
             //выставляем выбранный продукт
-            state.selectedProductWithAttr = state.productsWithAttr[indexSecond]
+            state.selectedGroupProduct = state.groupProducts[indexSecond]
         })
         builder.addCase(swapProductSortThunk.rejected, (state, action) => {
             console.log(`Can't load product without groups. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(addProductToProductGroupThunk.fulfilled, (state, action) => {
-            const maxSort = _.maxBy(state.productsWithAttr, x => x.sort)?.sort ?? 0
+            const maxSort = _.maxBy(state.groupProducts, x => x.sort)?.sort ?? 0
             const productSort = maxSort + 1;
             const product = state.products.find(x => x.id === action.meta.arg.productIds[0])
             if(product === null)
@@ -174,7 +202,7 @@ const slice = createSlice({
                     value: x == Constants.SortAttributeId ? productSort.toString() : ""
                 }
             });
-            state.productsWithAttr.push({
+            state.groupProducts.push({
                 id: product!.id,
                 selected: false,
                 sort: productSort,
@@ -187,14 +215,14 @@ const slice = createSlice({
         })
 
         builder.addCase(replaceProductInGroupThunk.fulfilled, (state, action) => {
-            const index = state.productsWithAttr.findIndex(x => x.id === action.meta.arg.productId)
+            const index = state.groupProducts.findIndex(x => x.id === action.meta.arg.productId)
             if(index === -1) {
                 console.error("Cant find product to change")
                 return
             }
             const productIdentity: IProductIdentity = {
-                id: state.productsWithAttr[index]!.id,
-                name: state.productsWithAttr[index]!.name
+                id: state.groupProducts[index]!.id,
+                name: state.groupProducts[index]!.name
             }
 
             const newProductId = action.meta.arg.newProductId;
@@ -205,23 +233,23 @@ const slice = createSlice({
             state.products = state.products.filter(x => x.id !== newProductId)
 
             //изменяем запись в таблице
-            state.productsWithAttr[index].id = newProduct!.id
-            state.productsWithAttr[index].name = newProduct!.name
-            state.productsWithAttr[index].attributeValues.forEach(x => {
-                x.value = x.id == Constants.SortAttributeId ? state.productsWithAttr[index].sort!.toString() : ""
+            state.groupProducts[index].id = newProduct!.id
+            state.groupProducts[index].name = newProduct!.name
+            state.groupProducts[index].attributeValues.forEach(x => {
+                x.value = x.id == Constants.SortAttributeId ? state.groupProducts[index].sort!.toString() : ""
             })
             state.selectedProduct = null;
-            state.selectedProductWithAttr = state.productsWithAttr[index]
+            state.selectedGroupProduct = state.groupProducts[index]
         })
         builder.addCase(replaceProductInGroupThunk.rejected, (state, action) => {
             console.log(`Can't replace products in group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(removeProductFromGroupThunk.fulfilled, (state, action) => {
-            const productToRemove = state.productsWithAttr.find(x => x.id === action.meta.arg.productId)
+            const productToRemove = state.groupProducts.find(x => x.id === action.meta.arg.productId)
             //Уменьшаем у всех значение Sort без лишнего запроса к серверу за новыми данными
             const shouldUpdateSortAttribute = state.attributesOrder.find(x => x == Constants.SortAttributeId) !== undefined;
-            state.productsWithAttr.forEach(x => {
+            state.groupProducts.forEach(x => {
                 if(x.sort! > productToRemove!.sort!) {
                     x.sort = x.sort! - 1;
                     //в случае если в списке аттрибутов есть Sort, то обновляем его
@@ -234,9 +262,9 @@ const slice = createSlice({
                 }
             })
             //удаляем запись в таблице
-            state.productsWithAttr = state.productsWithAttr.filter(x => x.id !== action.meta.arg.productId)
+            state.groupProducts = state.groupProducts.filter(x => x.id !== action.meta.arg.productId)
             //зануляем выбранный ряд в таблице
-            state.selectedProductWithAttr = null
+            state.selectedGroupProduct = null
             state.products.push({id: productToRemove!.id, name: productToRemove!.name})
         })
         builder.addCase(removeProductFromGroupThunk.rejected, (state, action) => {
@@ -247,7 +275,7 @@ const slice = createSlice({
             const attributeId = action.meta.arg.attributeId;
             //добавляем аттрибут в список
             state.attributesOrder.push(attributeId)
-            state.productsWithAttr.forEach(x => {
+            state.groupProducts.forEach(x => {
                 x.attributeValues.push({
                     id: attributeId,
                     value: ""
@@ -262,18 +290,26 @@ const slice = createSlice({
             const attributeId = action.meta.arg.attributeId;
             //удаляем аттрибут из списка аттрибутов и у каждого продукта
             state.attributesOrder = state.attributesOrder.filter(x => x !== attributeId)
-            state.productsWithAttr.forEach(x => {
+            state.groupProducts.forEach(x => {
                 x.attributeValues = x.attributeValues.filter(x => x.id !== attributeId)
             })
         })
         builder.addCase(removeAttributeThunk.rejected, (state, action) => {
             console.log(`Can't remove attribute. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
+
         builder.addCase(changeAttributeOrderThunk.fulfilled, (state, action) => {
             state.attributesOrder = action.meta.arg.attributes
         })
         builder.addCase(changeAttributeOrderThunk.rejected, (state, action) => {
             console.log(`Can't change attribute order. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(changeAttributesValuesThunk.fulfilled, (state) => {
+            state.accumulatedChanges = []
+        })
+        builder.addCase(changeAttributesValuesThunk.rejected, (state, action) => {
+            console.log(`Can't change update attribute values. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })
