@@ -23,7 +23,7 @@ export default class ProductApi extends BaseApi {
         this.sendQuery<void>('/api/product/change-attribute-value', data, actionTypes.put, true);
 
     swapProductSort = async (data: {firstProductId: string, secondProductId: string}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/product/swap-product-sort', data, actionTypes.delete, true);
+        this.sendQuery<void>('/api/product/swap-product-sort', data, actionTypes.put, true);
 
     getProductsWithAttributes = async (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductWithAttributes[]>> =>
         this.sendQuery<IProductWithAttributes[]>('/api/product/products-with-attr/by-groups', data, actionTypes.get, true);

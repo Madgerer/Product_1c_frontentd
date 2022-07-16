@@ -17,6 +17,10 @@ export default function TablePartTab() {
                 <textarea className="form-control" style={{height: 130}} rows={3}></textarea>
             </div>
         </div>
-        <ProductAttributesBlock/>
+        {
+            productGroupState.isPriceGroupChanged
+                ? <>Сохраните изменения, прежде чем продолжить работу с данным блоком</>
+                : <ProductAttributesBlock/>
+        }
     </div>
 }

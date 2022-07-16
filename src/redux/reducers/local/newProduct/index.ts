@@ -31,6 +31,7 @@ export type NewProductState = {
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
     loadingState: INewProductLoadingState,
+    isPriceGroupChanged: boolean
 }
 
 
@@ -77,6 +78,7 @@ const INITIAL_STATE: NewProductState = {
         isSaveLoading: false,
         isPageLoading: true
     },
+    isPriceGroupChanged: false
 }
 
 const slice = createSlice({
@@ -124,11 +126,12 @@ const slice = createSlice({
             }
         },
         setSelectedPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
-            const series = state.priceGroups.find(x => x.id == action.payload);
-            if(series === undefined) {
+            const priceGroup = state.priceGroups.find(x => x.id == action.payload);
+            if(priceGroup === undefined) {
                 state.selectedPriceGroup = null;
             }else {
-                state.selectedPriceGroup = series;
+                state.selectedPriceGroup = priceGroup;
+                state.isPriceGroupChanged = priceGroup.id !== state.productGroup.priceGroupId;
             }
         },
     },
@@ -173,8 +176,6 @@ const slice = createSlice({
             state.loadingState.isPageLoading = false
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-
-
 
         builder.addCase(createProductGroupThunk.pending, (state) => {
             state.loadingState.isSaveLoading = true

@@ -18,7 +18,6 @@ import {actions, TableTabState} from "../../../../../redux/reducers/local/newPro
 import SimpleSelect from "../../../../common/SimpleSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import NullableSelect from "../../../../common/NullableSelect";
-import _ from "lodash";
 import {Table} from "react-bootstrap";
 
 export default function ProductAttributesBlock() {
@@ -171,10 +170,37 @@ export default function ProductAttributesBlock() {
         }))
     }
 
+    const onArticleEnter = (event) => {
+        if (event.key === 'Enter') {
+            const trimmedArticle = local.article.trim()
+            const productToAdd = local.products.find(x => x.id === trimmedArticle)
+            const isAlreadyAdded = local.productsWithAttr.findIndex(x => x.id === trimmedArticle) !== -1;
+            if(isAlreadyAdded)
+            {
+                alert('Данный товар уже добавлен в карточку')
+                return;
+            }
+            if(productToAdd === undefined) {
+                alert('Данный товар не существует')
+                return;
+            }
+
+            dispatch(addProductToProductGroupThunk({
+                productGroupId: productGroupState.productGroup.id,
+                productIds: [productToAdd.id]
+            }))
+        }
+    }
+
     const setSelectedProduct = (id: string | null) => dispatch(actions.setSelectedProduct(id))
     const setArticle = (value:string) => dispatch(actions.setArticle(value))
     const setSelectedAttribute = (id: number) => dispatch(actions.setSelectedAttribute(id))
-    const setAttributeValue = (productId: string, attrId: number, value: string) => dispatch(actions.setAttributeValue)
+    const setAttributeValue = (productId: string, attrId: number, value: string) => dispatch(actions.setAttributeValue({
+        productId: productId,
+        value: value,
+        attributeId: attrId
+    }))
+    const setRowSelected = (id: string) => dispatch(actions.setProductRowSelected(id))
 
     return <>
         {
@@ -197,7 +223,9 @@ export default function ProductAttributesBlock() {
                                    placeholder="Артикул"
                                    value={local.article}
                                    onChange={e => setArticle(e.currentTarget.value)}
-                                   style={{width: 90, textAlign: "center", marginLeft: 10}} />
+                                   style={{width: 90, textAlign: "center", marginLeft: 10}}
+                                   onKeyDown={(e) => onArticleEnter(e)}
+                            />
 
 
                             <NullableSelect value={local.selectedProduct}
@@ -207,10 +235,10 @@ export default function ProductAttributesBlock() {
                                               toOption={ToOptionProvider.productIdentityToOption}
                                               className={"selector"}/>
 
-                            <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(1)}}>
+                            <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(-1)}}>
                                 <i className="fa  fa-arrow-up" aria-hidden="true"/>
                             </button>
-                            <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(-1)}}>
+                            <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(1)}}>
                                 <i className="fa  fa-arrow-down" aria-hidden="true"/>
                             </button>
                             <button type="button" className="btn btn-dark" onClick={() => addAttribute()}>
@@ -243,22 +271,24 @@ export default function ProductAttributesBlock() {
                     <>
                         <Table>
                             <thead>
-                                <th>Порядок</th>
-                                <th>Код</th>
-                                <th>Наименование</th>
-                                {
-                                    local.attributesOrder.map(x => {
-                                        const attr = local.attributes.find(a => a.id == x)
-                                        if(attr === null)
-                                            return null
-                                        return <th>{attr!.name}</th>
-                                    }).filter(x => x !== null)
-                                }
+                                <tr>
+                                    <th>Порядок</th>
+                                    <th>Код</th>
+                                    <th>Наименование</th>
+                                    {
+                                        local.attributesOrder.map(x => {
+                                            const attr = local.attributes.find(a => a.id == x)
+                                            if(attr === null)
+                                                return null
+                                            return <th>{attr!.name}</th>
+                                        }).filter(x => x !== null)
+                                    }
+                                </tr>
                             </thead>
                             <tbody>
                                 {
                                     local.productsWithAttr.map(x => {
-                                        return <tr>
+                                        return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
                                             <td>{x.sort}</td>
                                             <td>{x.id}</td>
                                             <td>{x.name}</td>

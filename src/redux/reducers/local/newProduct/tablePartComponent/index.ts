@@ -9,6 +9,7 @@ import {
     replaceProductInGroupThunk, swapProductSortThunk
 } from "./thunk";
 import _ from "lodash";
+import Constants from "../../../../../domain/Constants";
 
 export type ProductWithAttributes = IProductWithAttributes & ISelectable
 
@@ -74,6 +75,20 @@ const slice = createSlice({
         },
         setArticle(state: TableTabState, action: PayloadAction<string>) {
             state.article = action.payload
+        },
+        setProductRowSelected(state: TableTabState, action: PayloadAction<string>) {
+            for (const product of state.productsWithAttr) {
+                if(product.id === action.payload) {
+                    product.selected = true;
+                    state.selectedProductWithAttr = product
+                }
+                else {
+                    product.selected = false
+                }
+            }
+
+            if(state.selectedProductWithAttr?.id !== action.payload)
+                state.selectedProductWithAttr = null;
         }
     },
     extraReducers: builder => {
@@ -124,13 +139,28 @@ const slice = createSlice({
             const temp = state.productsWithAttr[indexFirst].sort
             state.productsWithAttr[indexFirst].sort = state.productsWithAttr[indexSecond].sort
             state.productsWithAttr[indexSecond].sort = temp
+
+            //в случе если есть аттрибут Sort, тогда обновляем его
+            const shouldUpdateSortAttribute = state.attributesOrder.find(x => x == Constants.SortAttributeId) !== undefined;
+            if(shouldUpdateSortAttribute)
+                state.productsWithAttr.forEach(x => {
+                    x.attributeValues.forEach(attr => {
+                        if(attr.id === Constants.SortAttributeId)
+                            attr.value = x.sort!.toString()
+                    })
+                })
+            //сортируем, чтобы не делать свап всех полей
+            state.productsWithAttr = _.orderBy(state.productsWithAttr, value => value.sort)
+            //выставляем выбранный продукт
+            state.selectedProductWithAttr = state.productsWithAttr[indexSecond]
         })
         builder.addCase(swapProductSortThunk.rejected, (state, action) => {
             console.log(`Can't load product without groups. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(addProductToProductGroupThunk.fulfilled, (state, action) => {
-            const maxSort = _.maxBy(state.productsWithAttr, x => x.sort)?.sort ?? 1
+            const maxSort = _.maxBy(state.productsWithAttr, x => x.sort)?.sort ?? 0
+            const productSort = maxSort + 1;
             const product = state.products.find(x => x.id === action.meta.arg.productIds[0])
             if(product === null)
                 return
@@ -138,26 +168,23 @@ const slice = createSlice({
             state.products = state.products.filter(x => x.id !== product!.id);
             state.selectedProduct = null;
 
-
             const attributes: IAttributeValue[] = state.attributesOrder.map(x => {
                 return {
                     id: x,
-                    value: ""
+                    value: x == Constants.SortAttributeId ? productSort.toString() : ""
                 }
             });
             state.productsWithAttr.push({
                 id: product!.id,
                 selected: false,
-                sort: maxSort,
+                sort: productSort,
                 name: product!.name,
                 attributeValues: attributes
             })
         })
-
         builder.addCase(addProductToProductGroupThunk.rejected, (state, action) => {
             console.log(`Can't add product to group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-
 
         builder.addCase(replaceProductInGroupThunk.fulfilled, (state, action) => {
             const index = state.productsWithAttr.findIndex(x => x.id === action.meta.arg.productId)
@@ -180,17 +207,37 @@ const slice = createSlice({
             //изменяем запись в таблице
             state.productsWithAttr[index].id = newProduct!.id
             state.productsWithAttr[index].name = newProduct!.name
-            state.productsWithAttr[index].attributeValues.forEach(x => x.value = "")
+            state.productsWithAttr[index].attributeValues.forEach(x => {
+                x.value = x.id == Constants.SortAttributeId ? state.productsWithAttr[index].sort!.toString() : ""
+            })
+            state.selectedProduct = null;
+            state.selectedProductWithAttr = state.productsWithAttr[index]
         })
         builder.addCase(replaceProductInGroupThunk.rejected, (state, action) => {
             console.log(`Can't replace products in group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(removeProductFromGroupThunk.fulfilled, (state, action) => {
+            const productToRemove = state.productsWithAttr.find(x => x.id === action.meta.arg.productId)
+            //Уменьшаем у всех значение Sort без лишнего запроса к серверу за новыми данными
+            const shouldUpdateSortAttribute = state.attributesOrder.find(x => x == Constants.SortAttributeId) !== undefined;
+            state.productsWithAttr.forEach(x => {
+                if(x.sort! > productToRemove!.sort!) {
+                    x.sort = x.sort! - 1;
+                    //в случае если в списке аттрибутов есть Sort, то обновляем его
+                    if(shouldUpdateSortAttribute) {
+                        x.attributeValues.forEach(attr => {
+                            if(attr.id === Constants.SortAttributeId)
+                                attr.value = x.sort!.toString()
+                        })
+                    }
+                }
+            })
             //удаляем запись в таблице
             state.productsWithAttr = state.productsWithAttr.filter(x => x.id !== action.meta.arg.productId)
             //зануляем выбранный ряд в таблице
             state.selectedProductWithAttr = null
+            state.products.push({id: productToRemove!.id, name: productToRemove!.name})
         })
         builder.addCase(removeProductFromGroupThunk.rejected, (state, action) => {
             console.log(`Can't load attributes. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
