@@ -18,6 +18,7 @@ import {
 } from "./thunks";
 import {combineReducers} from "redux";
 import {reducer as catTabReducer} from "./categoryTabComponent";
+import {reducer as tableTabReducer} from "./tablePartComponent";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -217,7 +218,8 @@ const slice = createSlice({
 const actions = slice.actions;
 const reducer = combineReducers({
     common: slice.reducer,
-    categoryState: catTabReducer
+    categoryState: catTabReducer,
+    tableTabState: tableTabReducer
 });
 
 export {actions, reducer}

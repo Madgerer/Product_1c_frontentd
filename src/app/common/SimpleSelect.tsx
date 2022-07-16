@@ -1,11 +1,11 @@
 import Select from "react-select";
 
-export interface IOptionType { label: string; value: number }
+export interface IOptionType { label: string; value: number | string }
 
 interface ISimpleSelectorProps<T> {
     value: T
     options: T[],
-    onChange: (value: number) => void,
+    onChange: (value: number | string) => void,
     toOption: (value: T) => IOptionType
     className: string | null
 }

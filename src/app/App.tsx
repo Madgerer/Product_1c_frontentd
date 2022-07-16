@@ -4,12 +4,13 @@ import React from "react";
 import {AppState} from "../redux/reducers";
 import {ProtectedRoute} from "./ProtectedRoute";
 import Login from "./login/Login";
-import configureAppStore from "../redux/configureStore";
 import Layout from "./layout/Layout";
+import {store} from "../redux/store";
+
 
 export function App(){
     return (
-        <Provider store={configureAppStore({})}>
+        <Provider store={store}>
             <MainRouter></MainRouter>
         </Provider>
     );

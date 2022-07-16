@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IProductIdentity} from "../../domain/types";
+import {IProductIdentity, IProductWithAttributes} from "../../domain/types";
 
 export default class ProductApi extends BaseApi {
 
@@ -17,11 +17,14 @@ export default class ProductApi extends BaseApi {
         this.sendQuery<void>('/api/product/remove-product-from-group', data, actionTypes.delete, true);
 
     replaceProductsInGroup = async (data: {productGroupId: string, productId: string, newProductId: string}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/product/remove-product-from-group', data, actionTypes.put, true);
+        this.sendQuery<void>('/api/product/replace-products-in-group', data, actionTypes.put, true);
 
-    changeAttributeValue = async (data: {productId: string, attributeId: number, value: string}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/product/remove-product-from-group', data, actionTypes.put, true);
+    changeAttributesValues = async (data: {productGroupId: string, values: {attributeId: number, value: string, productId: number}[]}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product/change-attribute-value', data, actionTypes.put, true);
 
     swapProductSorting = async (data: {firstProductId: string, secondProductId: string}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/product/remove-product-from-group', data, actionTypes.delete, true);
+        this.sendQuery<void>('/api/product/swap-product-sorting', data, actionTypes.delete, true);
+
+    getProductsWithAttributes = async (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductWithAttributes[]>> =>
+        this.sendQuery<IProductWithAttributes[]>('/api/product/products-with-attr/by-groups', data, actionTypes.get, true);
 }
