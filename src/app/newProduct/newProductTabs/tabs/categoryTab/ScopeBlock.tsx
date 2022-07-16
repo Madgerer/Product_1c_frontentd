@@ -94,7 +94,7 @@ export default function ScopeBlock() {
                 </button>
                 <NullableSelect value={local.selectedScope}
                                 options={local.scopes}
-                                onChange={value => setSelectedScope(value)}
+                                onChange={value => setSelectedScope(value as number)}
                                 toOption={ToOptionProvider.scopeToOption} className={"selector"}
                                 placeholder={"Выберите область применения"}/>
             </div>

@@ -35,7 +35,7 @@ export default function CategorySelectRow(props: IRowElementProps) {
     return <>
         <NullableSelect value={selectedCategory}
                         options={props.categories}
-                        onChange={(e) => {onChange(e)}}
+                        onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector"}
                         placeholder={"Выберите кателогию"}/>
@@ -76,7 +76,7 @@ function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
     return <>
         <NullableSelect value={selectedCategory}
                         options={props.categories}
-                        onChange={(e) => {onChange(e)}}
+                        onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector"}
                         placeholder={"Выберите кателогию"}/>

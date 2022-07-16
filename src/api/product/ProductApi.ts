@@ -19,11 +19,11 @@ export default class ProductApi extends BaseApi {
     replaceProductsInGroup = async (data: {productGroupId: string, productId: string, newProductId: string}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product/replace-products-in-group', data, actionTypes.put, true);
 
-    changeAttributesValues = async (data: {productGroupId: string, values: {attributeId: number, value: string, productId: number}[]}): Promise<IApplicationResponse<void>> =>
+    changeAttributesValues = async (data: {productGroupId: string, values: {attributeId: number, value: string, productId: string}[]}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product/change-attribute-value', data, actionTypes.put, true);
 
-    swapProductSorting = async (data: {firstProductId: string, secondProductId: string}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/product/swap-product-sorting', data, actionTypes.delete, true);
+    swapProductSort = async (data: {firstProductId: string, secondProductId: string}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product/swap-product-sort', data, actionTypes.delete, true);
 
     getProductsWithAttributes = async (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductWithAttributes[]>> =>
         this.sendQuery<IProductWithAttributes[]>('/api/product/products-with-attr/by-groups', data, actionTypes.get, true);

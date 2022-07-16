@@ -1,15 +1,15 @@
-import {IOptionType} from "./SimpleSelect";
+import {IOptionType, IStringOptionType} from "./SimpleSelect";
 import Select from "react-select";
+import {isString} from "lodash";
 
 interface INullableSelectorProps<T> {
     value: T | null
     options: T[],
-    onChange: (value: number | null) => void,
-    toOption: (value: T ) => IOptionType
+    onChange: (value: number | string | null) => void,
+    toOption: (value: T ) => IOptionType | IStringOptionType
     className: string | null
     placeholder: string
 }
-
 
 export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
     const styles = {
@@ -32,8 +32,8 @@ export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
         })
     }
 
-    const options: IOptionType[] = props.options.map(x => props.toOption(x))
-    const selected: IOptionType | null = props.value !== null
+    const options = props.options.map(x => props.toOption(x))
+    const selected = props.value !== null
         ? props.toOption(props.value)
         : null;
 
@@ -42,7 +42,12 @@ export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
         className={props.className ?? ""}
         styles={styles}
         onChange={(newValue) => {
-            props.onChange(newValue?.value ?? null)
+            if(isString(newValue)) {
+                props.onChange(newValue?.value as string ?? null)
+            }
+            else {
+                props.onChange(newValue?.value as number ?? null)
+            }
         }}
         value={selected}
         placeholder={props.placeholder}

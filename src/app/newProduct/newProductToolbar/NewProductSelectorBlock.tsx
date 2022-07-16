@@ -36,29 +36,25 @@ export default function NewProductSelectorBlock() {
         <NullableSelect value={local.selectedSeries}
                         options={local.series}
                         placeholder={"Серия"}
-                        onChange={e => {
-                            console.log(e)
-                            setSeries(e)
-
-                        }}
+                        onChange={e => setSeries(e as number)}
                         toOption={ToOptionProvider.seriesToOption}
                         className={"selector"} />
         <NullableSelect value={local.selectedSign}
                         options={local.signs}
                         placeholder={"Значок"}
-                        onChange={e => {setSigns(e)}}
+                        onChange={e => setSigns(e as number)}
                         toOption={ToOptionProvider.signToOption}
                         className={"selector"} />
         <NullableSelect value={local.selectedAttribute}
                         options={local.attributes}
                         placeholder={"Главный аттрибут"}
-                        onChange={e => {setAttribute(e)}}
+                        onChange={e => setAttribute(e as number)}
                         toOption={ToOptionProvider.attributeToOption}
                         className={"selector"} />
         <NullableSelect value={local.selectedPriceGroup}
                         options={local.priceGroups}
                         placeholder={"Торговая марка"}
-                        onChange={e => {setPriceGroup(e)}}
+                        onChange={e => setPriceGroup(e as number)}
                         toOption={ToOptionProvider.priceGroupToOption}
                         className={"selector"} />
     </>

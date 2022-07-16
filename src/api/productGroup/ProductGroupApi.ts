@@ -54,6 +54,6 @@ export default class ProductGroupApi extends BaseApi {
     removeAttribute = async (data: {productGroupId: string, attributeId: number}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product-group/remove-attribute', data, actionTypes.post, true);
 
-    changeAttributeOrdering = async (data: {productGroupId: string, attributes: number[]}): Promise<IApplicationResponse<void>> =>
+    changeAttributeOrder = async (data: {productGroupId: string, attributes: number[]}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product-group/change-attribute-ordering', data, actionTypes.post, true);
 }
