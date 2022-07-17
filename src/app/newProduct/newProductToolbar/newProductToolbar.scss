@@ -1,0 +1,40 @@
+.new-product-toolbar__first-row-wrapper {
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  > * {
+    margin-bottom: 4px;
+  }
+
+  .input--id {
+    max-width: 80px;
+    margin-right: 20px;
+    flex-shrink: 0;
+  }
+
+  .input--name {
+    margin-right: 20px;
+    flex: 1 0.5 0;
+    min-width: 280px;
+  }
+
+  input[type=checkbox] {
+    margin: 4px;
+  }
+
+  .input-checkboxes-wrapper {
+    margin-right: 10px;
+  }
+
+  button {
+    margin: 0 3px;
+  }
+
+  .back-to-main > a {
+    color: white;
+    text-decoration: none;
+  }
+}

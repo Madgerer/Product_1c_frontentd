@@ -36,9 +36,9 @@ function Navbar() {
                         </li>
                         {
                             history.pathname == "/products"
-                                ? <button style={{cursor: "pointer", backgroundColor: "chocolate", borderRadius: 4, fontWeight: "bold", color: "white", border: "none"}}>
-                                    <Link to={"/new-product"} target="_blank">Новая карточка</Link>
-                                </button>
+                                ?
+                                    <Link to={"/new-product"} target="_blank" className="nav-button-new-card">Новая карточка</Link>
+
                                 : <></>
                         }
                     </ul>

@@ -1,0 +1,25 @@
+.new-product-selector-block {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+
+  .selector {
+    flex: 1 1 0;
+    margin-right: 16px;
+    font-size: 13px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+  }
+
+  @media screen and (max-width: 740px) {
+    flex-direction: column;
+
+    .selector {
+      margin-right: 0;
+      margin-bottom: 8px;
+    }
+  }
+}

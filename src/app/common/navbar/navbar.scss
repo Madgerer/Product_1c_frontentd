@@ -19,3 +19,21 @@
 .navbar-logout-button {
   margin-inline: 10px;
 }
+
+.nav-button-new-card {
+  cursor: pointer;
+  background-color: chocolate;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+}

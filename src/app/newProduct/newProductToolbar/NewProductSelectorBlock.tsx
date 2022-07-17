@@ -32,7 +32,7 @@ export default function NewProductSelectorBlock() {
     const setAttribute = (attributeId: number | null) => dispatch(actions.setSelectedAttribute(attributeId))
     const setPriceGroup = (priceGroupId: number | null) => dispatch(actions.setSelectedPriceGroup(priceGroupId))
 
-    return <>
+    return <div className="new-product-selector-block">
         <NullableSelect value={local.selectedSeries}
                         options={local.series}
                         placeholder={"Серия"}
@@ -61,5 +61,5 @@ export default function NewProductSelectorBlock() {
                         onChange={e => {setPriceGroup(e)}}
                         toOption={ToOptionProvider.priceGroupToOption}
                         className={"selector"} />
-    </>
+    </div>
 }
