@@ -11,8 +11,9 @@ import {
     getProductImagesThunk,
     removeImageThunk, removePictogramToGroupThunk,
     updateImageThunk,
-    uploadImageThunk
+    uploadImageThunk, uploadVideoThunk
 } from "./thunks";
+import Constants from "../../../../../domain/Constants";
 
 const INITIAL_IMAGE_TYPE: IImageType[] = [{id: -1, name: 'loading'}]
 const INITIAL_PICTOGRAMS: IPictogram[] = [{id: -1, name: 'loading', imageUrl: '', sort: -1, isSet: false}]
@@ -102,6 +103,18 @@ const slice = createSlice({
         })
         builder.addCase(uploadImageThunk.rejected, (state, action) => {
             console.log(`Can't upload image. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(uploadVideoThunk.fulfilled, (state, action) => {
+            state.groupImages.push({
+                imageUrl: action.meta.arg.videoUrl,
+                typeId: Constants.YoutubeImageType
+            })
+            state.selectedImageType = null
+            state.videoLink = ""
+        })
+        builder.addCase(uploadVideoThunk.rejected, (state, action) => {
+            console.log(`Can't upload video. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(removeImageThunk.fulfilled, (state, action) => {

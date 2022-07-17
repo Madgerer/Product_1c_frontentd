@@ -12,6 +12,8 @@ import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
 import VideoModal from "./VideoModal";
 import {useEffect} from "react";
 import {Table} from "react-bootstrap";
+import Constants from "../../../../../domain/Constants";
+import YoutubePlayer from "./YoutubePlayer";
 
 export default function GraphicPartTab(){
     const staticServer = process.env.REACT_APP_STATIC_SERVER_API
@@ -122,7 +124,11 @@ export default function GraphicPartTab(){
                     {
                         local.groupImages.map(x => {
                             return <td>
-                                <img src={`${staticServer}/${x.imageUrl}`} alt={x.typeId.toString()}/>
+                                {
+                                    x.typeId === Constants.YoutubeImageType
+                                        ? <YoutubePlayer url={x.imageUrl}/>
+                                        : <img src={`${staticServer}/${x.imageUrl}`} alt={x.typeId.toString()}/>
+                                }
                             </td>
                         })
                     }
