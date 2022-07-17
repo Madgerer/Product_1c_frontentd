@@ -1,0 +1,22 @@
+.tab-pane {
+
+  .tab-pane-row {
+    display: flex;
+  }
+
+  .tab-pane-column {
+    flex: 1 1 0;
+
+    margin-right: 10px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+
+  .tab-pane-textarea-header {
+    text-align: center;
+  }
+
+
+}

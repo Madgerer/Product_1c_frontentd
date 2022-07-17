@@ -11,6 +11,7 @@ import {
 import {Spinner} from "react-bootstrap";
 import {LanguageState} from "../../../redux/reducers/languages";
 import _ from "lodash";
+import "./newProductToolbar.scss"
 
 export default function NewProductToolbar() {
     const local = useSelector<AppState, NewProductState>(x => x.local.newProductState.common);
@@ -63,51 +64,52 @@ export default function NewProductToolbar() {
     }
 
     return <>
-        <div className="col-md-1 input-group-sm" style={{marginTop: 20}}>
-            <input className="form-control" disabled={local.productGroup.wasCreate} onChange={e => setId(e.target.value)} value={local.productGroup.id} placeholder="№"/>
-        </div>
-        <div className="col-md-4 input-group-sm" style={{marginTop: 20}}>
-            <input className="form-control" onChange={e => setName(e.target.value)} value={local.productGroup.name ?? ""} placeholder="Наименование новой карточки"/>
-        </div>
+        <div className="new-product-toolbar__first-row-wrapper">
+            <div className="input-group-sm input--id">
+                <input className="form-control" disabled={local.productGroup.wasCreate} onChange={e => setId(e.target.value)} value={local.productGroup.id} placeholder="№"/>
+            </div>
+            <div className="input-group-sm input--name" >
+                <input className="form-control" onChange={e => setName(e.target.value)} value={local.productGroup.name ?? ""} placeholder="Наименование новой карточки"/>
+            </div>
 
-        {
-            local.productGroup.wasCreate
-                ? <>
-                    <input id="isToolset" type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
-                    <label htmlFor="isToolset" className="form-check-label" style={{marginLeft:10}} onClick={() => {setIsToolset()}}>
-                        Набор
-                    </label>
-
-                    <input id="isDescrChecked" type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
-                    <label htmlFor="isDescrChecked" className="form-check-label" style={{marginLeft:10}} onClick={() => setIsDescriptionChecked()}>
-                        Описание
-                    </label>
-
-                    <input id="isImageChecked" type="checkbox" className="form-check-input" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
-                    <label htmlFor="isImageChecked" className="form-check-label" style={{marginLeft:10}}  onClick={() => setIsPhotoChecked()}>
-                        Фото
-                    </label>
-                </>
-                : <></>
-        }
-
-        <button title="Сохранить изменения" type="button" className="btn btn-dark btn-sm" onClick={() => createOrUpdate()}>
             {
-                local.loadingState.isSaveLoading
-                    ? <Spinner animation={'border'}/>
-                    : <i className="fa fa-floppy-o" aria-hidden="true"/>
-            }
-        </button>
-        <button title="Удалить карточку" type="button" className="btn btn-danger btn-sm" onClick={() => deleteOrDiscard()}>
-            {
-                local.loadingState.isRejectLoading
-                    ? <Spinner animation={'border'}/>
-                    :  <i className="fa fa-trash" aria-hidden="true"/>
-            }
-        </button>
-        <button type="button" className="btn btn-dark btn-sm" onClick={() => {window.close()}}><Link to={"/"} target="_blank">Вернуться на главную</Link></button>
-        <button type="button" className="btn btn-dark btn-sm">• в буффер обмена</button>
+                local.productGroup.wasCreate
+                    ? <div className="input-checkboxes-wrapper">
+                        <input id="isToolset" type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
+                        <label htmlFor="isToolset" className="form-check-label" onClick={() => {setIsToolset()}}>
+                            Набор
+                        </label>
 
+                        <input id="isDescrChecked" type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
+                        <label htmlFor="isDescrChecked" className="form-check-label" onClick={() => setIsDescriptionChecked()}>
+                            Описание
+                        </label>
+
+                        <input id="isImageChecked" type="checkbox" className="form-check-label" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
+                        <label htmlFor="isImageChecked" className="form-check-label" onClick={() => setIsPhotoChecked()}>
+                            Фото
+                        </label>
+                    </div>
+                    : <></>
+            }
+
+            <button title="Сохранить изменения" type="button" className="btn btn-dark btn-sm" onClick={() => createOrUpdate()}>
+                {
+                    local.loadingState.isSaveLoading
+                        ? <Spinner animation={'border'}/>
+                        : <i className="fa fa-floppy-o" aria-hidden="true"/>
+                }
+            </button>
+            <button title="Удалить карточку" type="button" className="btn btn-danger btn-sm" onClick={() => deleteOrDiscard()}>
+                {
+                    local.loadingState.isRejectLoading
+                        ? <Spinner animation={'border'}/>
+                        :  <i className="fa fa-trash" aria-hidden="true"/>
+                }
+            </button>
+            <button type="button" className="btn btn-dark btn-sm back-to-main" onClick={() => {window.close()}}><Link to={"/"} target="_blank">Вернуться на главную</Link></button>
+            <button type="button" className="btn btn-dark btn-sm">• в буффер обмена</button>
+        </div>
         <NewProductSelectorBlock/>
     </>
 }
