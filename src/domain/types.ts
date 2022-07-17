@@ -95,8 +95,16 @@ export interface IProductGroupIdentity {
 }
 
 export interface IImageType {
-    id: string,
+    id: number,
     name: string
+}
+
+export interface IPictogram {
+    id: number,
+    name: string,
+    imageUrl: string,
+    sort: number,
+    isSet: boolean
 }
 
 export interface IImage {
