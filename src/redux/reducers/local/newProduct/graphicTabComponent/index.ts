@@ -23,8 +23,7 @@ const INITIAL_STATE: GraphicTabState = {
     selectedImageType: INITIAL_IMAGE_TYPE[0],
 
     groupImages: [],
-    selectedGroupImage: null,
-    newImage: null,
+    selectedGroupType: null,
 
     pictograms: INITIAL_PICTOGRAMS,
     selectedPictogram: INITIAL_PICTOGRAMS[0],
@@ -41,8 +40,7 @@ export type GraphicTabState = {
     selectedImageType: IImageType | null,
 
     groupImages: IImage[],
-    selectedGroupImage: IImage | null
-    newImage: File | null
+    selectedGroupType: IImageType| null
 
     pictograms: IPictogram[],
     selectedPictogram: IPictogram | null
@@ -67,14 +65,18 @@ const slice = createSlice({
                 state.selectedImageType = state.imageTypes[index]
             }
         },
-        setFile(state: GraphicTabState, action: PayloadAction<File | null>) {
+        /*setFile(state: GraphicTabState, action: PayloadAction<File | null>) {
             state.newImage = action.payload
-        },
+        },*/
         setShouldOpenModal(state: GraphicTabState) {
             state.shouldOpenVideoModel = !state.shouldOpenVideoModel
         },
         setVideoLink(state: GraphicTabState, action: PayloadAction<string>) {
             state.videoLink = action.payload
+        },
+        setSelectedGroupImage(state: GraphicTabState, action: PayloadAction<IImage>) {
+            const imageType = state.imageTypes.find(x => x.id === action.payload.typeId)
+            state.selectedGroupType = imageType!;
         }
     },
     extraReducers: builder => {
@@ -88,7 +90,7 @@ const slice = createSlice({
 
         builder.addCase(getProductImagesThunk.fulfilled, (state, action) => {
             state.groupImages = action.payload
-            state.selectedGroupImage = null
+            state.selectedGroupType = null
         })
         builder.addCase(getProductImagesThunk.rejected, (state, action) => {
             console.log(`Can't load product images. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
@@ -119,7 +121,7 @@ const slice = createSlice({
 
         builder.addCase(removeImageThunk.fulfilled, (state, action) => {
             state.groupImages = state.groupImages.filter(x => x.typeId !== action.meta.arg.imageType)
-            state.selectedGroupImage = null
+            state.selectedGroupType = null
         })
         builder.addCase(removeImageThunk.rejected, (state, action) => {
             console.log(`Can't remove image. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

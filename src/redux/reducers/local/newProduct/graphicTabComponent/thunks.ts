@@ -12,7 +12,7 @@ export const getProductImagesThunk = createApiThunk({
 })
 
 export const uploadVideoThunk = createApiThunk({
-    typePrefix: 'new-product/upload-image',
+    typePrefix: 'new-product/upload-video',
     apiCall: Api.images.addVideo
 })
 
