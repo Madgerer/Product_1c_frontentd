@@ -19,6 +19,7 @@ import {
 import {combineReducers} from "redux";
 import {reducer as catTabReducer} from "./categoryTabComponent";
 import {reducer as tableTabReducer} from "./tablePartComponent";
+import {reducer as graphicTabReducer} from "./graphicTabComponent";
 
 export type NewProductState = {
     productGroup: IProductGroup,
@@ -217,7 +218,8 @@ const actions = slice.actions;
 const reducer = combineReducers({
     common: slice.reducer,
     categoryState: catTabReducer,
-    tableTabState: tableTabReducer
+    tableTabState: tableTabReducer,
+    graphicTabState: graphicTabReducer
 });
 
 export {actions, reducer}
