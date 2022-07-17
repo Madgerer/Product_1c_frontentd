@@ -1,7 +1,7 @@
 import {IOptionType, IStringOptionType} from "../app/common/SimpleSelect";
 import {
     IAttribute,
-    ICategory,
+    ICategory, IImageType,
     ILanguage,
     IPriceGroup, IProductIdentity,
     IScopeOfApplication,
@@ -28,4 +28,6 @@ export default class ToOptionProvider {
     static scopeToOption = (scope: IScopeOfApplication): IOptionType => {return {value: scope.id, label: scope.name}}
 
     static productIdentityToOption = (product: IProductIdentity): IStringOptionType => {return {value: product.id, label: product.name}}
+
+    static imageTypeToOption = (imageType: IImageType): IOptionType => {return {value: imageType.id, label: imageType.name}}
 }

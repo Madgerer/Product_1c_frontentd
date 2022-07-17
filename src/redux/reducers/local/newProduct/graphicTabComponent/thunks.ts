@@ -1,7 +1,7 @@
-import {createApiThunk} from "../../../../createApiThunk";
+import {createApiThunk, createNoArgsApiThunk} from "../../../../createApiThunk";
 import Api from "../../../../../api";
 
-export const getImageTypesThunk = createApiThunk({
+export const getImageTypesThunk = createNoArgsApiThunk({
     typePrefix: 'new-product/get-image-types',
     apiCall: Api.images.getImageTypes
 })

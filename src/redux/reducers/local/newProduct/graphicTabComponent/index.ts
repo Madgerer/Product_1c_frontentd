@@ -3,7 +3,7 @@ import {
     IImageType,
     IPictogram
 } from "../../../../../domain/types";
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addPictogramToGroupThunk, changeGroupPictogramThunk,
     getAllPictogramsThunk, getGroupPictogramsThunk,
@@ -13,9 +13,6 @@ import {
     updateImageThunk,
     uploadImageThunk
 } from "./thunks";
-
-//forceUpdate нужен чтобы вызывать принудительный перерендер элементов после обновления
-export type ForcedUpdatableImage = IImage & {forceUpdate: boolean}
 
 const INITIAL_IMAGE_TYPE: IImageType[] = [{id: -1, name: 'loading'}]
 const INITIAL_PICTOGRAMS: IPictogram[] = [{id: -1, name: 'loading', imageUrl: '', sort: -1, isSet: false}]
@@ -32,7 +29,10 @@ const INITIAL_STATE: GraphicTabState = {
     selectedPictogram: INITIAL_PICTOGRAMS[0],
 
     groupPictograms: [],
-    selectedGroupPictogram: null
+    selectedGroupPictogram: null,
+
+    shouldOpenVideoModel: false,
+    videoLink: ""
 }
 
 export type GraphicTabState = {
@@ -47,13 +47,35 @@ export type GraphicTabState = {
     selectedPictogram: IPictogram | null
 
     groupPictograms: IPictogram[],
-    selectedGroupPictogram: IPictogram | null
+    selectedGroupPictogram: IPictogram | null,
+
+    shouldOpenVideoModel: boolean,
+    videoLink: string
 }
 
 const slice = createSlice({
     name: 'new-product-graphic-tab',
     initialState: INITIAL_STATE,
-    reducers: {},
+    reducers: {
+        setSelectedImageType(state: GraphicTabState, action: PayloadAction<number | null>) {
+            if(action.payload === null)
+                state.selectedImageType = null
+            else
+            {
+                const index = state.imageTypes.findIndex(x => x.id === action.payload)
+                state.selectedImageType = state.imageTypes[index]
+            }
+        },
+        setFile(state: GraphicTabState, action: PayloadAction<File | null>) {
+            state.newImage = action.payload
+        },
+        setShouldOpenModal(state: GraphicTabState) {
+            state.shouldOpenVideoModel = !state.shouldOpenVideoModel
+        },
+        setVideoLink(state: GraphicTabState, action: PayloadAction<string>) {
+            state.videoLink = action.payload
+        }
+    },
     extraReducers: builder => {
         builder.addCase(getImageTypesThunk.fulfilled, (state, action) => {
             state.imageTypes = action.payload
@@ -76,7 +98,6 @@ const slice = createSlice({
                 imageUrl: action.payload,
                 typeId: action.meta.arg.imageType
             })
-            state.newImage = null
             state.selectedImageType = null
         })
         builder.addCase(uploadImageThunk.rejected, (state, action) => {
@@ -89,15 +110,6 @@ const slice = createSlice({
         })
         builder.addCase(removeImageThunk.rejected, (state, action) => {
             console.log(`Can't remove image. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
-        })
-
-        builder.addCase(updateImageThunk.fulfilled, (state, action) => {
-            const imageToChange = state.groupImages.find(x => x.typeId === action.meta.arg.imageType)
-            if(imageToChange === undefined)
-                return
-        })
-        builder.addCase(updateImageThunk.rejected, (state, action) => {
-            console.log(`Can't update image. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(updateImageThunk.fulfilled, (state, action) => {
