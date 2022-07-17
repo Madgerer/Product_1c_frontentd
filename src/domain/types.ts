@@ -94,6 +94,16 @@ export interface IProductGroupIdentity {
     sort: number | null
 }
 
+export interface IImageType {
+    id: string,
+    name: string
+}
+
+export interface IImage {
+    typeId: number,
+    imageUrl: string
+}
+
 export interface IProductGroupSort {
     id: string,
     sort: number

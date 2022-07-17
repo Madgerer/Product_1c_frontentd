@@ -1,10 +1,10 @@
 import {Tab, Tabs} from "react-bootstrap";
 import CategoryTab from "./tabs/categoryTab/CategoryTab";
 import TablePartTab from "./tabs/tablePartTab/TablePartTab";
-import GraphicPartTab from "./tabs/GraphicPartTab";
+import GraphicPartTab from "./tabs/graphicTab/GraphicPartTab";
 
 export default function NewProductTabs() {
-    return <Tabs defaultActiveKey="tablePart" id="newProductTabs" className="mb-3">
+    return <Tabs defaultActiveKey="graphicPart" id="newProductTabs" className="mb-3">
         <Tab eventKey="category" title="Категории">
             <CategoryTab/>
         </Tab>

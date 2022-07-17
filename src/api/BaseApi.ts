@@ -17,9 +17,10 @@ export default class BaseApi {
             [queryTypes.get]: async () => HttpActions.get<T>(url, data, authorized),
             [queryTypes.put]: async () => HttpActions.put<T>(url, data, authorized),
             [queryTypes.delete]: async () => HttpActions.delete<T>(url, data, authorized),
+            [queryTypes.postFile]: async () => HttpActions.postFile<T>(url, data, authorized),
+            [queryTypes.putFile]: async () => HttpActions.putFile<T>(url, data, authorized)
         };
 
-        const response = await responseMethods[method]();
-        return response;
+        return await responseMethods[method]();
     }
 }

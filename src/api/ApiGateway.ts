@@ -11,6 +11,7 @@ import AttributeApi from "./attribute/AttributeApi";
 import SeriesApi from "./series/SeriesApi";
 import SignApi from "./sign/SignApi";
 import ScopeOfApplicationApi from "./scopeOfApplicationApi/ScopeOfApplicationApi";
+import ImageApi from "./imageApi/ImageApi";
 
 interface IApplicationApi {
     auth: AuthApi,
@@ -25,7 +26,8 @@ interface IApplicationApi {
     attributes: AttributeApi,
     series: SeriesApi,
     sign: SignApi,
-    scopes: ScopeOfApplicationApi
+    scopes: ScopeOfApplicationApi,
+    images: ImageApi
 }
 
 /**
@@ -59,6 +61,7 @@ export class ApiGateway implements IApplicationApi {
     series: SeriesApi;
     sign: SignApi;
     scopes: ScopeOfApplicationApi;
+    images: ImageApi
 
     constructor() {
         this.auth = new AuthApi();
@@ -74,5 +77,6 @@ export class ApiGateway implements IApplicationApi {
         this.series = new SeriesApi();
         this.sign = new SignApi();
         this.scopes = new ScopeOfApplicationApi()
+        this.images = new ImageApi()
     }
 }
