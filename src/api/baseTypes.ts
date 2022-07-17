@@ -16,6 +16,8 @@ export interface IActionTypes {
     get: ActionType;
     delete: ActionType;
     put: ActionType;
+    postFile: ActionType
+    putFile: ActionType
 }
 
 const actionTypes: IActionTypes = {
@@ -23,6 +25,8 @@ const actionTypes: IActionTypes = {
     get: 'get',
     delete: 'delete',
     put: 'put',
+    postFile: 'post',
+    putFile: 'put'
 };
 
 export default actionTypes;

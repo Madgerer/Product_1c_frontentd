@@ -43,11 +43,43 @@ class HttpActions {
             .catch((e) => HttpActions.getErrorObject(e));
     }
 
+    /** Функция выполняет Post запрос с файлом/файлами на сервер **/
+    static postFile<T>(url: string, data: object | null, authorized: boolean): Promise<IApplicationResponse<T>> {
+        let form: FormData | null = null;
+        if(data === null)
+            console.error('File is empty')
+        else {
+            form = new FormData()
+            for(const key in data) {
+                form.set(key, data[key])
+            }
+        }
+        return axios.post(url, form, {headers: this.getFileHeaders(authorized)})
+            .then(x => this.processResponse(x))
+            .catch(e => HttpActions.getErrorObject(e))
+    }
+
     /** Функция выполняет Put запрос на сервер */
     static put<T>(url: string, data: object | null, authorized: boolean): Promise<IApplicationResponse<T>>  {
         return axios.put(url, data, {headers: this.getHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch((e) => HttpActions.getErrorObject(e));
+    }
+
+    /** Функция выполняет Put запрос с файлом/файлами на сервер **/
+    static putFile<T>(url: string, data: object | null, authorized: boolean): Promise<IApplicationResponse<T>> {
+        let form: FormData | null = null;
+        if(data === null)
+            console.error('File is empty')
+        else {
+            form = new FormData()
+            for(const key in data) {
+                form.set(key, data[key])
+            }
+        }
+        return axios.post(url, form, {headers: this.getFileHeaders(authorized)})
+            .then(x => this.processResponse(x))
+            .catch(e => HttpActions.getErrorObject(e))
     }
 
     /** Функция выполняет Remove запрос на сервер */
@@ -99,6 +131,12 @@ class HttpActions {
         }
         if(authorized)
             headers["authorization"] = `Bearer ${LocalStorageProvider.getToken()}`;
+        return headers;
+    }
+
+    static getFileHeaders(authorized: boolean): AxiosRequestHeaders {
+        let headers = this.getHeaders(authorized);
+        headers["content-type"] = "multipart/form-data"
         return headers;
     }
 }
