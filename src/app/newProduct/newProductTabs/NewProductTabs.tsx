@@ -2,6 +2,7 @@ import {Tab, Tabs} from "react-bootstrap";
 import CategoryTab from "./tabs/categoryTab/CategoryTab";
 import TablePartTab from "./tabs/tablePartTab/TablePartTab";
 import GraphicPartTab from "./tabs/graphicTab/GraphicPartTab";
+import AdditionalInfoTab from "./tabs/additionalInfoTab/AdditionalInfoTab";
 
 export default function NewProductTabs() {
     return <Tabs defaultActiveKey="graphicPart" id="newProductTabs" className="mb-3">
@@ -15,7 +16,7 @@ export default function NewProductTabs() {
             <GraphicPartTab/>
         </Tab>
         <Tab eventKey="additionInfo" title="Доп. информация">
-            Доп. информация
+            <AdditionalInfoTab/>
         </Tab>
     </Tabs>
 }
