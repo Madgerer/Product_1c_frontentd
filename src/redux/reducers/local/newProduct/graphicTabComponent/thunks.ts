@@ -46,7 +46,7 @@ export const addPictogramToGroupThunk = createApiThunk({
     apiCall: Api.pictograms.addPictogramToGroup
 })
 
-export const removePictogramToGroupThunk = createApiThunk({
+export const removePictogramFromGroupThunk = createApiThunk({
     typePrefix: 'new-product/remove-pictogram',
     apiCall: Api.pictograms.removePictogramToGroup
 })

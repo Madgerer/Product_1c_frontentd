@@ -77,7 +77,7 @@ class HttpActions {
                 form.set(key, data[key])
             }
         }
-        return axios.post(url, form, {headers: this.getFileHeaders(authorized)})
+        return axios.put(url, form, {headers: this.getFileHeaders(authorized)})
             .then(x => this.processResponse(x))
             .catch(e => HttpActions.getErrorObject(e))
     }

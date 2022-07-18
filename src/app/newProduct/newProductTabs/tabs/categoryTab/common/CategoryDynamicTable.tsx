@@ -32,7 +32,7 @@ export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) 
                                     props.catalogGroup == CatalogGroup.Web
                                         ? <td>
                                             {
-                                                Number(_.last(row.model)!.mainCategory!)
+                                                Number(_.last(row.model)?.mainCategory ?? false)
                                             }
                                         </td>
                                         : <></>

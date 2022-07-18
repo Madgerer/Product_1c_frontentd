@@ -30,7 +30,7 @@ export default function NewProduct() {
         if(languageState.selected.id == 0)
             return;
         dispatch(getOrReserveThunk({productGroupId: paramGroupId, languageId: languageState.selected.id}))
-    },[languageState.selected.id])
+    },[languageState.selected.id, local.productGroup.wasCreate])
 
     return <div>
         {

@@ -13,8 +13,8 @@ export default class ImageApi extends BaseApi {
     uploadImage = (args: {productGroupId: string, imageType: number, image: File}): Promise<IApplicationResponse<string>> =>
         this.sendQuery<string>('/api/images', args, actionTypes.postFile, true);
 
-    addVideo = (args: {productGroupId: string, videoUrl: string}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/images/video', args, actionTypes.post, true);
+    addVideo = (args: {productGroupId: string, videoUrl: string}): Promise<IApplicationResponse<string>> =>
+        this.sendQuery<string>('/api/images/video', args, actionTypes.post, true);
 
     removeImage = (args: {productGroupId: string, imageType: number}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/images', args, actionTypes.delete, true);

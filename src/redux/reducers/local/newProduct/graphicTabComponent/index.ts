@@ -9,11 +9,14 @@ import {
     getAllPictogramsThunk, getGroupPictogramsThunk,
     getImageTypesThunk,
     getProductImagesThunk,
-    removeImageThunk, removePictogramToGroupThunk,
+    removeImageThunk, removePictogramFromGroupThunk,
     updateImageThunk,
     uploadImageThunk, uploadVideoThunk
 } from "./thunks";
 import Constants from "../../../../../domain/Constants";
+import {Guid} from "guid-typescript";
+
+export type IGuidImage = IImage & {key: string}
 
 const INITIAL_IMAGE_TYPE: IImageType[] = [{id: -1, name: 'loading'}]
 const INITIAL_PICTOGRAMS: IPictogram[] = [{id: -1, name: 'loading', imageUrl: '', sort: -1, isSet: false}]
@@ -39,7 +42,7 @@ export type GraphicTabState = {
     imageTypes: IImageType[],
     selectedImageType: IImageType | null,
 
-    groupImages: IImage[],
+    groupImages: IGuidImage[],
     selectedGroupType: IImageType| null
 
     pictograms: IPictogram[],
@@ -77,6 +80,13 @@ const slice = createSlice({
         setSelectedGroupImage(state: GraphicTabState, action: PayloadAction<IImage>) {
             const imageType = state.imageTypes.find(x => x.id === action.payload.typeId)
             state.selectedGroupType = imageType!;
+        },
+        setSelectedPictogram(state: GraphicTabState, action: PayloadAction<number>) {
+            const pictogram = state.pictograms.find(x => x.id === action.payload)
+            state.selectedPictogram = pictogram!
+        },
+        setSelectedGroupPictogram(state: GraphicTabState, action: PayloadAction<number>) {
+            state.selectedGroupPictogram = state.groupPictograms.find(x => x.id === action.payload)!
         }
     },
     extraReducers: builder => {
@@ -89,7 +99,13 @@ const slice = createSlice({
         })
 
         builder.addCase(getProductImagesThunk.fulfilled, (state, action) => {
-            state.groupImages = action.payload
+            state.groupImages = action.payload.map(x => {
+                return {
+                    key: Guid.create().toString(),
+                    typeId: x.typeId,
+                    imageUrl: x.imageUrl
+                }
+            })
             state.selectedGroupType = null
         })
         builder.addCase(getProductImagesThunk.rejected, (state, action) => {
@@ -99,7 +115,8 @@ const slice = createSlice({
         builder.addCase(uploadImageThunk.fulfilled, (state, action) => {
             state.groupImages.push({
                 imageUrl: action.payload,
-                typeId: action.meta.arg.imageType
+                typeId: action.meta.arg.imageType,
+                key: Guid.create().toString()
             })
             state.selectedImageType = null
         })
@@ -108,12 +125,18 @@ const slice = createSlice({
         })
 
         builder.addCase(uploadVideoThunk.fulfilled, (state, action) => {
-            state.groupImages.push({
-                imageUrl: action.meta.arg.videoUrl,
-                typeId: Constants.YoutubeImageType
-            })
+            const index = state.groupImages.findIndex(x => x.typeId === Constants.YoutubeImageType)
+            if(index === -1)
+                state.groupImages.push({
+                    imageUrl: action.payload,
+                    typeId: Constants.YoutubeImageType,
+                    key: Guid.create().toString()
+                })
+            else
+                state.groupImages[index].imageUrl = action.payload
             state.selectedImageType = null
             state.videoLink = ""
+            state.shouldOpenVideoModel = !state.shouldOpenVideoModel
         })
         builder.addCase(uploadVideoThunk.rejected, (state, action) => {
             console.log(`Can't upload video. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
@@ -131,14 +154,15 @@ const slice = createSlice({
             const index = state.groupImages.findIndex(x => x.typeId === action.meta.arg.imageType)
             if(index === -1)
                 return
-            state.groupImages[index] = {...state.groupImages[index]}
+            //это нужно, что image обновился. React one love <3
+            state.groupImages[index].key = Guid.create().toString()
         })
         builder.addCase(updateImageThunk.rejected, (state, action) => {
             console.log(`Can't update image. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(getAllPictogramsThunk.fulfilled, (state, action) => {
-            state.pictograms = action.payload
+            state.pictograms = action.payload.filter(x => state.groupPictograms.find(y => y.id === x.id) === undefined)
             state.selectedPictogram = null
         })
         builder.addCase(getAllPictogramsThunk.rejected, (state, action) => {
@@ -146,6 +170,7 @@ const slice = createSlice({
         })
 
         builder.addCase(getGroupPictogramsThunk.fulfilled, (state, action) => {
+            state.pictograms = state.pictograms.filter(x => state.groupPictograms.find(y => y.id === x.id) === undefined)
             state.groupPictograms = action.payload
             state.selectedGroupPictogram = null
         })
@@ -164,14 +189,14 @@ const slice = createSlice({
             console.log(`Can't add pictogram. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(removePictogramToGroupThunk.fulfilled, (state, action) => {
+        builder.addCase(removePictogramFromGroupThunk.fulfilled, (state, action) => {
             const index = state.groupPictograms.findIndex(x => x.id === action.meta.arg.pictogramId)
             //добавляем пиктограмму в общий список
             state.pictograms.push(state.groupPictograms[index])
             state.groupPictograms.splice(index, 1);
             state.selectedGroupPictogram = null
         })
-        builder.addCase(removePictogramToGroupThunk.rejected, (state, action) => {
+        builder.addCase(removePictogramFromGroupThunk.rejected, (state, action) => {
             console.log(`Can't add pictogram. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
@@ -184,6 +209,9 @@ const slice = createSlice({
 
             state.pictograms.push(current!)
             state.groupPictograms.push(newPict!)
+
+            state.selectedGroupPictogram = newPict!
+            state.selectedPictogram = null
         })
         builder.addCase(changeGroupPictogramThunk.rejected, (state, action) => {
             console.log(`Can't change pictogram. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

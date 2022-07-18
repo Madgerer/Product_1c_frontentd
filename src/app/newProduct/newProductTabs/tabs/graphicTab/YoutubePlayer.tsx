@@ -5,8 +5,9 @@ export default function YoutubePlayer(props: IYoutubePlayerProps) {
         <iframe
             width="853"
             height="480"
-            src={`https://www.youtube.com/embed/${props.url}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            src={props.url}
+            frameBorder="0"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             title="Embedded youtube"
         />

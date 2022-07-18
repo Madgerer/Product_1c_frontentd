@@ -1,4 +1,4 @@
-export type ActionType = 'post' | 'get' | 'delete' | 'put';
+export type ActionType = 'post' | 'get' | 'delete' | 'put' | 'postFile' | 'putFile';
 
 export interface IApplicationResponse<T> {
     data: T | null;
@@ -25,8 +25,8 @@ const actionTypes: IActionTypes = {
     get: 'get',
     delete: 'delete',
     put: 'put',
-    postFile: 'post',
-    putFile: 'put'
+    postFile: 'postFile',
+    putFile: 'putFile'
 };
 
 export default actionTypes;

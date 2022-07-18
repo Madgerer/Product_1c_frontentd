@@ -36,11 +36,11 @@ export default function CatalogsBlock() {
 
     useEffect(() => {
         let isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
-        if(productGroupState.productGroup.wasCreate && isCategoriesLoaded) {
+        if(productGroupState.productGroup.wasCreate && !isCategoriesLoaded) {
             dispatch(getProductGroupCategoriesThunk({productGroupId: productGroupState.productGroup.id, catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
             dispatch(getProductGroupCategoriesThunk({productGroupId: productGroupState.productGroup.id, catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
         }
-    },[languageState.selected.id, local.categoriesPrinted, local.categoriesWeb])
+    },[languageState.selected.id, local.categoriesPrinted.length, local.categoriesWeb.length])
 
     const setCategoryPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
     const onCategoryRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))

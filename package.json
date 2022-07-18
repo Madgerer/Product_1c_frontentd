@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.5",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
+    "guid-typescript": "^1.0.9",
     "linq-collections": "^1.0.254",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
