@@ -1,5 +1,9 @@
-export default function AdditionalInfoTab() {
+import {useSelector} from "react-redux";
+import {AppState} from "../../../../../redux/reducers";
+import {AdditionalInfoState} from "../../../../../redux/reducers/local/newProduct/additionalInfoComponent";
 
+export default function AdditionalInfoTab() {
+    const localState = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)
 
     return <div className="tab-pane row">
         <div>
