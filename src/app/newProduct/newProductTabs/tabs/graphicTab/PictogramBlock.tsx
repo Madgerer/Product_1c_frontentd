@@ -107,13 +107,14 @@ export default function PictogramBlock() {
             <>
                 <Table>
                     <tbody>
-                    {
-                        _.orderBy(local.groupPictograms, x => x.sort).map(x =>  {
-                            return <td onClick={() => setSelectedGroupPictogram(x.id)}>
-                                <img src={`${staticServer}/${x.imageUrl}`} alt={x.name}/>
-                            </td>
-                        })
-                    }
+                        <tr>
+                            {_.orderBy(local.groupPictograms, x => x.sort).map(x =>  {
+                                return <td onClick={() => setSelectedGroupPictogram(x.id)}>
+                                    <img src={`${staticServer}/${x.imageUrl}`} alt={x.name}/>
+                                </td>
+                            })
+                            }
+                        </tr>
                     </tbody>
                 </Table>
 

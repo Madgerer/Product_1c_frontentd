@@ -1,22 +1,46 @@
 import {Tab, Tabs} from "react-bootstrap";
-import CategoryTab from "./tabs/categoryTab/CategoryTab";
 import TablePartTab from "./tabs/tablePartTab/TablePartTab";
 import GraphicPartTab from "./tabs/graphicTab/GraphicPartTab";
 import AdditionalInfoTab from "./tabs/additionalInfoTab/AdditionalInfoTab";
+import React, {useState} from "react";
+import CategoryTab from "./tabs/categoryTab/CategoryTab";
+
+enum TabKeys {
+    Category= 'category',
+    TablePart = 'table',
+    Graphic = 'graphic',
+    Additional = 'additional'
+}
 
 export default function NewProductTabs() {
-    return <Tabs defaultActiveKey="graphicPart" id="newProductTabs" className="mb-3">
-        <Tab eventKey="category" title="Категории">
-            <CategoryTab/>
+    const [key, setKey] = useState('category');
+    const [isCategoryLoaded, setCategoryLoaded] = useState(false)
+
+    return <Tabs activeKey={key}
+                 onSelect={(k) => setKey(k!)}
+                 className="mb-3">
+        <Tab eventKey={TabKeys.Category.toString()} title="Категории">
+            {
+                //избегаем unmount
+                key === TabKeys.Category.toString() || isCategoryLoaded
+                    ? <CategoryTab onMount={async () => setCategoryLoaded(true)}/>
+                    : <></>
+            }
         </Tab>
-        <Tab eventKey="tablePart" title="Табличная часть">
-            <TablePartTab/>
+        <Tab eventKey={TabKeys.TablePart.toString()} title="Табличная часть">
+            {
+                key === TabKeys.TablePart.toString() ?  <TablePartTab/> : <></>
+            }
         </Tab>
-        <Tab eventKey="graphicPart" title="Графическая часть">
-            <GraphicPartTab/>
+        <Tab eventKey={TabKeys.Graphic.toString()} title="Графическая часть">
+            {
+                key === TabKeys.Graphic.toString() ?  <GraphicPartTab/> : <></>
+            }
         </Tab>
-        <Tab eventKey="additionInfo" title="Доп. информация">
-            <AdditionalInfoTab/>
+        <Tab eventKey={TabKeys.Additional.toString()} title="Доп. информация">
+            {
+                key === TabKeys.Graphic.toString() ?  <AdditionalInfoTab/> : <></>
+            }
         </Tab>
     </Tabs>
 }

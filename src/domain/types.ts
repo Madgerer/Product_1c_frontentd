@@ -126,6 +126,12 @@ export interface IProductIdentity {
     name: string
 }
 
+export interface IProductBase {
+    id: string
+    name: string,
+    sort: number | null
+}
+
 export interface IProductWithAttributes extends IProductIdentity{
     sort: number | null
     attributeValues: IAttributeValue[]

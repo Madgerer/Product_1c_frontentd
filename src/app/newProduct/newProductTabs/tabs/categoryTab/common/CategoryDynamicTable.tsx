@@ -4,6 +4,7 @@ import {ISelectableIndexModel} from "../../../../../../redux/types";
 import './categoryDynamicTable.scss'
 import {ProductGroupCategory} from "../../../../../../redux/reducers/local/newProduct/categoryTabComponent";
 import {CatalogGroup} from "../../../../../../domain/types";
+import {Guid} from "guid-typescript";
 
 export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) {
     const maxColumnLength = _.max(props.rows.map(x => x.model.length))
@@ -20,9 +21,9 @@ export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) 
                                     Array.from(Array(maxColumnLength).keys()).map((columnNumber, i) => {
                                         const column = row.model[columnNumber]
                                         if(column === undefined) {
-                                            return <td key={i * row.index}></td>
+                                            return <td key={Guid.create().toString()}></td>
                                         }
-                                        return <td key={i * row.index * column.id}>{column.name}</td>
+                                        return <td key={(i + 1) * row.index + column.id}>{column.name}</td>
                                     })
                                 }
                             </>
