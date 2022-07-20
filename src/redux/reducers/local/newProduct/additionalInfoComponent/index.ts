@@ -120,6 +120,7 @@ const slice = createSlice({
             let temp = first.sort
             first.sort = second.sort
             second.sort = temp
+            state.selectedGroupRecommendation = first
         })
         builder.addCase(swapRecommendationSortThunk.rejected, (state, action) => {
             console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

@@ -14,6 +14,7 @@ import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
 import _ from "lodash";
 import {Table} from "react-bootstrap";
 import FastNullableSelector from "../../../../common/FastNullableSelector";
+import TextButton from "../../../../common/buttons/TextButton";
 
 export default function AdditionalInfoTab() {
     const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)
@@ -102,7 +103,7 @@ export default function AdditionalInfoTab() {
                                       onChange={(id) => {setSelectedRec(id as string)}}
                                       toOption={ToOptionProvider.productIdentityToOption}
                                       className={"selector"}
-                                      placeholder={"Нименование товара"}
+                                      placeholder={"Наименование товара"}
                                       noOptionsMessage={'Нет подходящих товаров'}/>
                 <FaButton onClick={() => swapSort(-1)} faType={"fa-arrow-up"}/>
                 <FaButton onClick={() => swapSort(1)} faType={"fa-arrow-down"}/>
@@ -116,13 +117,8 @@ export default function AdditionalInfoTab() {
                                      onChange={(id) => setSelectedRec(id as string)}
                                      placeholder={"Выберите наименование"}/>*/}
 
-
-                <button type="button" className="btn btn-dark">
-                    Добавить
-                </button>
-                <button type="button" className="btn btn-dark">
-                    Обновить
-                </button>
+                <TextButton text={"Добавить"}/>
+                <TextButton text={"Обновить"}/>
             </div>
             <Table>
                 <thead>
