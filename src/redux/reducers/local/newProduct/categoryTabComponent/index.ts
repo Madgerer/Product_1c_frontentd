@@ -1,6 +1,6 @@
 import {ISelectable, ISelectableIndexModel} from "../../../../types";
 import {CatalogGroup, ICategory, IScopeOfApplication} from "../../../../../domain/types";
-import {createSlice, original, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import CategoryTreeUtils from "../../../../../CategoryTreeUtils";
 import {
     addProductGroupsToScopeThunk,
@@ -219,7 +219,6 @@ const slice = createSlice({
                                 .reverse()
                         }
                     })
-                    console.log(state.currentWebCategories)
                     break;
                 case CatalogGroup.Printed:
                     state.currentPrintedCategories = action.payload.map((x, i) => {

@@ -13,7 +13,7 @@ enum TabKeys {
 }
 
 export default function NewProductTabs() {
-    const [key, setKey] = useState('category');
+    const [key, setKey] = useState('additional');
     const [isCategoryLoaded, setCategoryLoaded] = useState(false)
 
     return <Tabs activeKey={key}
@@ -39,7 +39,7 @@ export default function NewProductTabs() {
         </Tab>
         <Tab eventKey={TabKeys.Additional.toString()} title="Доп. информация">
             {
-                key === TabKeys.Graphic.toString() ?  <AdditionalInfoTab/> : <></>
+                key === TabKeys.Additional.toString() ?  <AdditionalInfoTab/> : <></>
             }
         </Tab>
     </Tabs>

@@ -1,6 +1,6 @@
 import {IProductBase, IProductIdentity} from "../../../../../domain/types";
 import {ISelectable} from "../../../../types";
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addRecommendationThunk,
     getAllRecommendationThunk,
@@ -14,6 +14,7 @@ export type GroupRecommendation = IProductBase & ISelectable
 export type AdditionalInfoState = {
     allRecommendations: IProductIdentity[],
     selectedRecommendation: IProductIdentity | null,
+    isRecommendationsLoading: boolean,
 
     groupRecommendations: GroupRecommendation [],
     selectedGroupRecommendation: GroupRecommendation | null,
@@ -23,6 +24,7 @@ const ALL_RECOMMENDATIONS_STATE: IProductIdentity[] = [{id: '-1', name: 'loading
 const INITIAL_STATE: AdditionalInfoState = {
     allRecommendations: ALL_RECOMMENDATIONS_STATE,
     selectedRecommendation: ALL_RECOMMENDATIONS_STATE[0],
+    isRecommendationsLoading: false,
 
     groupRecommendations: [],
     selectedGroupRecommendation: null
@@ -31,13 +33,34 @@ const INITIAL_STATE: AdditionalInfoState = {
 const slice = createSlice({
     name: 'new-product-add-tab',
     initialState: INITIAL_STATE,
-    reducers: {},
+    reducers: {
+        setSelectedRec(state: AdditionalInfoState, action: PayloadAction<string>) {
+            state.selectedRecommendation = state.allRecommendations.find(x => x.id === action.payload) ?? null
+        },
+        setSelectedGroupRec(state: AdditionalInfoState, action: PayloadAction<string>) {
+            state.groupRecommendations.forEach(x => {
+                if(x.id === action.payload) {
+                    x.selected = true
+                    state.selectedGroupRecommendation = x
+                }
+                else
+                    x.selected = false
+            })
+            if(state.selectedGroupRecommendation?.id !== action.payload)
+                state.selectedGroupRecommendation = null
+        }
+    },
     extraReducers: builder => {
+        builder.addCase(getAllRecommendationThunk.pending, (state) => {
+            state.isRecommendationsLoading = true
+        })
         builder.addCase(getAllRecommendationThunk.fulfilled, (state, action) => {
             state.allRecommendations = action.payload
             state.selectedRecommendation = null
+            state.isRecommendationsLoading = false
         })
         builder.addCase(getAllRecommendationThunk.rejected, (state, action) => {
+            state.isRecommendationsLoading = false
             console.log(`Can't load recommendations. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
@@ -73,12 +96,18 @@ const slice = createSlice({
         })
 
         builder.addCase(removeRecommendationThunk.fulfilled, (state, action) => {
-            const rec = state.groupRecommendations.find(x => x.id === action.meta.arg.productId)!
-            state.groupRecommendations = state.groupRecommendations.filter(x => x.id !== rec.id)
-            state.allRecommendations.push({
-                id: rec.id,
-                name: rec.name
+            const index = state.groupRecommendations.findIndex(x => x.id === action.meta.arg.productId)
+            const sort = state.groupRecommendations[index].sort!;
+            state.groupRecommendations.forEach(x => {
+                if(x.sort! > sort)
+                    x.sort! -= 1;
             })
+            if(state.allRecommendations.findIndex(x => x.id === state.groupRecommendations[index].id) === -1)
+                state.allRecommendations.push({
+                    id: state.groupRecommendations[index].id,
+                    name: state.groupRecommendations[index].name
+                })
+            state.groupRecommendations.splice(index, 1)
             state.selectedGroupRecommendation = null
         })
         builder.addCase(removeRecommendationThunk.rejected, (state, action) => {

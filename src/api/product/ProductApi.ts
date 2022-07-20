@@ -28,7 +28,7 @@ export default class ProductApi extends BaseApi {
     getProductsWithAttributes = async (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductWithAttributes[]>> =>
         this.sendQuery<IProductWithAttributes[]>('/api/product/products-with-attr/by-groups', data, actionTypes.get, true);
 
-    getAllRecommendations = async (data: {priceGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductIdentity[]>> =>
+    getAllRecommendations = async (data: {priceGroupId: number, search: string, languageId: number}): Promise<IApplicationResponse<IProductIdentity[]>> =>
         this.sendQuery<IProductIdentity[]>('/api/product/recommendations/all', data, actionTypes.get, true);
 
     getGroupRecommendations = async (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductBase[]>> =>
