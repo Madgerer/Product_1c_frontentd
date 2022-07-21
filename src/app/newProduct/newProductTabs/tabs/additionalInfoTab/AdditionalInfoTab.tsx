@@ -15,12 +15,17 @@ import _ from "lodash";
 import {Table} from "react-bootstrap";
 import FastNullableSelector from "../../../../common/basic/selectors/FastNullableSelector";
 import TextButton from "../../../../common/basic/buttons/TextButton";
+import {IMountableProps} from "../../../../../redux/types";
 
-export default function AdditionalInfoTab() {
+export default function AdditionalInfoTab(props: IMountableProps) {
     const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const groupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        props.onMount()
+    }, [])
 
     useEffect(() => {
         dispatch(getAllRecommendationThunk({

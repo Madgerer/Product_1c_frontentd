@@ -7,6 +7,10 @@ export interface ILoadingModel {
     isLoading: boolean
 }
 
+export interface IMountableProps {
+    onMount: () => {}
+}
+
 export interface ISelectable {
     selected: boolean
 }

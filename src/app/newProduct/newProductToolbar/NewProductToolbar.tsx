@@ -61,7 +61,8 @@ export default function NewProductToolbar() {
                 siteId: local.productGroup.siteId,
                 isDescriptionChecked: local.productGroup.isDescriptionChecked,
                 isToolset: local.productGroup.isToolset,
-                isImageChecked: local.productGroup.isImageChecked
+                isImageChecked: local.productGroup.isImageChecked,
+                languageId: languageState.selected.id
             }))
         }
     }

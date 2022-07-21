@@ -16,8 +16,9 @@ export default class ProductGroupApi extends BaseApi {
                                     isToolset: boolean,
                                     isImageChecked: boolean,
                                     isDescriptionChecked: boolean,
-                                    siteId: number | null}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('api/product-group/update', data, actionTypes.put, true)
+                                    siteId: number | null,
+                                    languageId: number}): Promise<IApplicationResponse<void>> =>
+        this.sendQuery<void>('/api/product-group/update', data, actionTypes.put, true)
 
     getProductsGroupsIdentity = async (data: {priceGroupId: number, languageId: number, searchString: string, pgValidationType: number}): Promise<IApplicationResponse<IProductGroupIdentity[]>> =>
          this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity', data, actionTypes.get, true);

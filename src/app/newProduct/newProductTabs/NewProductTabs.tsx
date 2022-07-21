@@ -15,6 +15,9 @@ enum TabKeys {
 export default function NewProductTabs() {
     const [key, setKey] = useState('additional');
     const [isCategoryLoaded, setCategoryLoaded] = useState(false)
+    const [isTablePartLoaded, setTablePartLoaded] = useState(false)
+    const [isGraphicLoaded, setGraphicLoaded] = useState(false)
+    const [isAdditionalLoaded, setAdditionalLoaded] = useState(false)
 
     return <Tabs activeKey={key}
                  onSelect={(k) => setKey(k!)}
@@ -29,17 +32,23 @@ export default function NewProductTabs() {
         </Tab>
         <Tab eventKey={TabKeys.TablePart.toString()} title="Табличная часть">
             {
-                key === TabKeys.TablePart.toString() ?  <TablePartTab/> : <></>
+                key === TabKeys.TablePart.toString() || isTablePartLoaded
+                    ?  <TablePartTab onMount={async () => setTablePartLoaded(true)}/>
+                    : <></>
             }
         </Tab>
         <Tab eventKey={TabKeys.Graphic.toString()} title="Графическая часть">
             {
-                key === TabKeys.Graphic.toString() ?  <GraphicPartTab/> : <></>
+                key === TabKeys.Graphic.toString() || isGraphicLoaded
+                    ?  <GraphicPartTab onMount={async () => setGraphicLoaded(true)}/>
+                    : <></>
             }
         </Tab>
         <Tab eventKey={TabKeys.Additional.toString()} title="Доп. информация">
             {
-                key === TabKeys.Additional.toString() ?  <AdditionalInfoTab/> : <></>
+                key === TabKeys.Additional.toString() || isAdditionalLoaded
+                    ?  <AdditionalInfoTab onMount={async () => setAdditionalLoaded(true)}/>
+                    : <></>
             }
         </Tab>
     </Tabs>

@@ -123,7 +123,7 @@ export default function ImageBlock() {
             <tr>
                 {_.orderBy(local.groupImages, x => x.typeId).map(x => {
                     const type = local.imageTypes.find(it => it.id === x.typeId)
-                    return <th>{type!.name}</th>
+                    return <th onClick={() => setSelectedGroupType(x)}>{type!.name}</th>
                 })}
             </tr>
             </thead>

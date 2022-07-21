@@ -13,6 +13,7 @@ import {
     getProductGroupsScopesThunk,
     getScopesOfApplicationThunk, removeProductGroupsFromScopeThunk
 } from "../../../../../redux/reducers/local/newProduct/categoryTabComponent/thunks";
+import _ from "lodash";
 
 export default function ScopeBlock() {
     const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
@@ -108,7 +109,7 @@ export default function ScopeBlock() {
                         </thead>
                         <tbody>
                         {
-                            local.currentScopes.map(x => {
+                            _.orderBy(local.currentScopes, x => x.id).map(x => {
                                 return <tr className={x.selected ? "--selected" : ""} onClick={() => setSelectedCurrentScope(x.id)}>
                                     <td>{x.id}</td>
                                     <td>{x.name}</td>

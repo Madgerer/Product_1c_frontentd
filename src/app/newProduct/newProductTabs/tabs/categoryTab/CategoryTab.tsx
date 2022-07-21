@@ -1,8 +1,9 @@
 import CatalogsBlock from "./CatalogsBlock";
 import ScopeBlock from "./ScopeBlock";
 import {useEffect} from "react";
+import {IMountableProps} from "../../../../../redux/types";
 
-export default function CategoryTab(props: ICategoryProps) {
+export default function CategoryTab(props: IMountableProps) {
     useEffect(() => {
         props.onMount()
     }, [])
@@ -19,6 +20,3 @@ export default function CategoryTab(props: ICategoryProps) {
     </div>
 }
 
-interface ICategoryProps {
-    onMount: () => {}
-}

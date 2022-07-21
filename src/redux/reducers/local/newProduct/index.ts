@@ -138,6 +138,7 @@ const slice = createSlice({
             } else {
                 state.selectedPriceGroup = priceGroup;
             }
+            state.productGroup.priceGroupId = state.selectedPriceGroup?.id ?? 0
             state.isPriceGroupChanged = state.productGroup.priceGroupId != state.initialPriceGroupId;
 
         },
