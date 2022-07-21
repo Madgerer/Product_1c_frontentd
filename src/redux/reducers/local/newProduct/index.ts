@@ -141,6 +141,12 @@ const slice = createSlice({
             state.isPriceGroupChanged = state.productGroup.priceGroupId != state.initialPriceGroupId;
 
         },
+        setDescription(state: NewProductState, action: PayloadAction<string>) {
+            state.productGroup.description = action.payload
+        },
+        setWebDescription(state: NewProductState, action: PayloadAction<string>) {
+            state.productGroup.descriptionWeb = action.payload
+        }
     },
     extraReducers: builder => {
         builder.addCase(getSignsThunk.fulfilled, (state, action) => {
@@ -226,7 +232,7 @@ const slice = createSlice({
             state.loadingState.isSaveLoading = false;
         })
         builder.addCase(updateProductGroupThunk.rejected, (state, action) => {
-            state.loadingState.isRejectLoading = false;
+            state.loadingState.isSaveLoading = false;
             console.log(`Can't update product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
