@@ -1,4 +1,4 @@
-import SimpleSelect from "../../common/SimpleSelect";
+import SimpleSelect from "../../common/basic/selectors/SimpleSelect";
 import {useDispatch, useSelector} from "react-redux";
 import {actions, TreeComponentState} from "../../../redux/reducers/local/treeComponent";
 import {AppState} from "../../../redux/reducers";

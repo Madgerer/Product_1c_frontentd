@@ -1,5 +1,5 @@
 import './ScopeBlock.scss'
-import NullableSelect from "../../../../common/NullableSelect";
+import NullableSelect from "../../../../common/basic/selectors/NullableSelect";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../../redux/reducers";
 import {actions, CategoriesTabState} from "../../../../../redux/reducers/local/newProduct/categoryTabComponent";

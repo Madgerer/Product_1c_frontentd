@@ -14,7 +14,7 @@ import {
     getOrReserveThunk,
     getPriceGroupsThunk,
     getSeriesThunk,
-    getSignsThunk
+    getSignsThunk, updateProductGroupThunk
 } from "./thunks";
 import {combineReducers} from "redux";
 import {reducer as catTabReducer} from "./categoryTabComponent";
@@ -33,9 +33,9 @@ export type NewProductState = {
     priceGroups: IPriceGroup[],
     selectedPriceGroup: IPriceGroup | null
     loadingState: INewProductLoadingState,
-    isPriceGroupChanged: boolean
+    isPriceGroupChanged: boolean,
+    initialPriceGroupId: number | null
 }
-
 
 interface INewProductLoadingState {
     isSaveLoading: boolean,
@@ -60,7 +60,7 @@ const INITIAL_STATE: NewProductState = {
         isImageChecked: false,
         isDescriptionChecked: false,
         mainAttributeId: null,
-        priceGroupId: null,
+        priceGroupId: 0,
         sellmarkId: null,
         seriesId: null,
         signId: null,
@@ -80,7 +80,8 @@ const INITIAL_STATE: NewProductState = {
         isSaveLoading: false,
         isPageLoading: true
     },
-    isPriceGroupChanged: false
+    isPriceGroupChanged: false,
+    initialPriceGroupId: null
 }
 
 const slice = createSlice({
@@ -94,14 +95,14 @@ const slice = createSlice({
         setName(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.name = action.payload
         },
-        setIsToolset(state: NewProductState) {
-            state.productGroup.isToolset = !state.productGroup.isToolset
+        setIsToolset(state: NewProductState, action: PayloadAction<boolean>) {
+            state.productGroup.isToolset = action.payload
         },
-        setIsImageChecked(state: NewProductState) {
-            state.productGroup.isImageChecked = !state.productGroup.isImageChecked
+        setIsImageChecked(state: NewProductState, action: PayloadAction<boolean>) {
+            state.productGroup.isImageChecked = action.payload
         },
-        setIsDescrChecked(state: NewProductState) {
-            state.productGroup.isDescriptionChecked = !state.productGroup.isDescriptionChecked
+        setIsDescrChecked(state: NewProductState, action: PayloadAction<boolean>) {
+            state.productGroup.isDescriptionChecked = action.payload
         },
         setSelectedSeries(state: NewProductState, action: PayloadAction<number | null>) {
             const series = state.series.find(x => x.id == action.payload);
@@ -110,6 +111,7 @@ const slice = createSlice({
             }else {
                 state.selectedSeries = series;
             }
+            state.productGroup.seriesId = state.selectedSeries?.id ?? null
         },
         setSelectedSign(state: NewProductState, action: PayloadAction<number | null>) {
             const series = state.signs.find(x => x.id == action.payload);
@@ -118,6 +120,7 @@ const slice = createSlice({
             }else {
                 state.selectedSign = series;
             }
+            state.productGroup.signId = state.selectedSign?.id ?? null
         },
         setSelectedAttribute(state: NewProductState, action: PayloadAction<number | null>) {
             const attribute = state.attributes.find(x => x.id == action.payload);
@@ -126,42 +129,44 @@ const slice = createSlice({
             }else {
                 state.selectedAttribute = attribute;
             }
+            state.productGroup.mainAttributeId = state.selectedAttribute?.id ?? null
         },
         setSelectedPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
             const priceGroup = state.priceGroups.find(x => x.id == action.payload);
             if(priceGroup === undefined) {
                 state.selectedPriceGroup = null;
-            }else {
+            } else {
                 state.selectedPriceGroup = priceGroup;
-                state.isPriceGroupChanged = priceGroup.id !== state.productGroup.priceGroupId;
             }
+            state.isPriceGroupChanged = state.productGroup.priceGroupId != state.initialPriceGroupId;
+
         },
     },
     extraReducers: builder => {
         builder.addCase(getSignsThunk.fulfilled, (state, action) => {
             state.signs = action.payload
-            state.selectedSign = null
+            state.selectedSign = action.payload.find(x => x.id === state.productGroup.signId) ?? null
         })
         builder.addCase(getSignsThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getSeriesThunk.fulfilled, (state, action) => {
             state.series = action.payload
-            state.selectedSeries = null
+            state.selectedSeries = action.payload.find(x => x.id === state.productGroup.seriesId) ?? null
         })
         builder.addCase(getSeriesThunk.rejected, (state, action) => {
             console.log(`Can't load series. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getAttributesThunk.fulfilled, (state, action) => {
             state.attributes = action.payload
-            state.selectedAttribute = null
+            state.selectedAttribute = action.payload.find(x => x.id === state.productGroup.mainAttributeId) ?? null
         })
         builder.addCase(getAttributesThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getPriceGroupsThunk.fulfilled, (state, action) => {
             state.priceGroups = action.payload
-            state.selectedPriceGroup = action.payload.find(x => x.id === 0)!
+            state.selectedPriceGroup = action.payload.find(x => x.id === state.productGroup.priceGroupId) ?? null
         })
         builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
@@ -172,6 +177,7 @@ const slice = createSlice({
         })
         builder.addCase(getOrReserveThunk.fulfilled, (state, action) => {
             state.productGroup = action.payload
+            state.initialPriceGroupId = action.payload.priceGroupId
             state.loadingState.isPageLoading = false
         })
         builder.addCase(getOrReserveThunk.rejected, (state, action) => {
@@ -211,6 +217,17 @@ const slice = createSlice({
         builder.addCase(deleteProductGroupThunk.rejected, (state, action) => {
             state.loadingState.isRejectLoading = false;
             console.log(`Can't delete product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(updateProductGroupThunk.pending, (state) => {
+            state.loadingState.isSaveLoading = true;
+        })
+        builder.addCase(updateProductGroupThunk.fulfilled, (state) => {
+            state.loadingState.isSaveLoading = false;
+        })
+        builder.addCase(updateProductGroupThunk.rejected, (state, action) => {
+            state.loadingState.isRejectLoading = false;
+            console.log(`Can't update product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
 })

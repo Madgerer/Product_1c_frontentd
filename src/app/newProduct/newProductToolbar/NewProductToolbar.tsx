@@ -6,12 +6,13 @@ import NewProductSelectorBlock from "./NewProductSelectorBlock";
 import {
     createProductGroupThunk,
     deleteProductGroupThunk,
-    discardReserveThunk
+    discardReserveThunk, updateProductGroupThunk
 } from "../../../redux/reducers/local/newProduct/thunks";
-import {Spinner} from "react-bootstrap";
 import {LanguageState} from "../../../redux/reducers/languages";
 import _ from "lodash";
 import "./newProductToolbar.scss"
+import TextCheckbox from "../../common/basic/checkboxes/TextCheckbox";
+import LoadingFaButton from "../../common/basic/buttons/LoadingFaButton";
 
 export default function NewProductToolbar() {
     const local = useSelector<AppState, NewProductState>(x => x.local.newProductState.common);
@@ -21,9 +22,9 @@ export default function NewProductToolbar() {
 
     const setId = (id: string) => dispatch(actions.setId(id))
     const setName = (name: string) => dispatch(actions.setName(name))
-    const setIsToolset = () => dispatch(actions.setIsToolset())
-    const setIsDescriptionChecked = () => dispatch(actions.setIsDescrChecked())
-    const setIsPhotoChecked = () => dispatch(actions.setIsImageChecked())
+    const setIsToolset = (isToolset: boolean) => dispatch(actions.setIsToolset(isToolset))
+    const setIsDescriptionChecked = (isDescrChecked: boolean) => dispatch(actions.setIsDescrChecked(isDescrChecked))
+    const setIsPhotoChecked = (isPhotoChecked: boolean) => dispatch(actions.setIsImageChecked(isPhotoChecked))
 
     const createOrUpdate = () => {
         if(_.isEmpty(local.productGroup.name))
@@ -43,6 +44,24 @@ export default function NewProductToolbar() {
                 priceGroupId: local.productGroup.priceGroupId,
                 sellmarkId: local.productGroup.sellmarkId,
                 languageId: languageState.selected.id
+            }))
+            return;
+        }
+        else {
+            dispatch(updateProductGroupThunk({
+                id: local.productGroup.id,
+                name: local.productGroup.name,
+                description: local.productGroup.description,
+                descriptionWeb: local.productGroup.descriptionWeb,
+                seriesId: local.productGroup.seriesId,
+                signId: local.productGroup.signId,
+                sellmarkId: local.productGroup.sellmarkId,
+                priceGroupId: local.productGroup.priceGroupId,
+                mainAttributeId: local.productGroup.mainAttributeId,
+                siteId: local.productGroup.siteId,
+                isDescriptionChecked: local.productGroup.isDescriptionChecked,
+                isToolset: local.productGroup.isToolset,
+                isImageChecked: local.productGroup.isImageChecked
             }))
         }
     }
@@ -75,38 +94,14 @@ export default function NewProductToolbar() {
             {
                 local.productGroup.wasCreate
                     ? <div className="input-checkboxes-wrapper">
-                        <input id="isToolset" type="checkbox" checked={local.productGroup.isToolset ?? false} readOnly={true}/>
-                        <label htmlFor="isToolset" className="form-check-label" onClick={() => {setIsToolset()}}>
-                            Набор
-                        </label>
-
-                        <input id="isDescrChecked" type="checkbox" checked={local.productGroup.isDescriptionChecked ?? false} readOnly={true}/>
-                        <label htmlFor="isDescrChecked" className="form-check-label" onClick={() => setIsDescriptionChecked()}>
-                            Описание
-                        </label>
-
-                        <input id="isImageChecked" type="checkbox" className="form-check-label" checked={local.productGroup.isImageChecked ?? false} readOnly={true}/>
-                        <label htmlFor="isImageChecked" className="form-check-label" onClick={() => setIsPhotoChecked()}>
-                            Фото
-                        </label>
+                        <TextCheckbox onChange={setIsToolset} text={"Набор"} isChecked={local.productGroup.isToolset}/>
+                        <TextCheckbox onChange={setIsDescriptionChecked} text={"Описание"} isChecked={local.productGroup.isDescriptionChecked}/>
+                        <TextCheckbox onChange={setIsPhotoChecked} text={"Описание"} isChecked={local.productGroup.isImageChecked}/>
                     </div>
                     : <></>
             }
-
-            <button title="Сохранить изменения" type="button" className="btn btn-dark btn-sm" onClick={() => createOrUpdate()}>
-                {
-                    local.loadingState.isSaveLoading
-                        ? <Spinner animation={'border'}/>
-                        : <i className="fa fa-floppy-o" aria-hidden="true"/>
-                }
-            </button>
-            <button title="Удалить карточку" type="button" className="btn btn-danger btn-sm" onClick={() => deleteOrDiscard()}>
-                {
-                    local.loadingState.isRejectLoading
-                        ? <Spinner animation={'border'}/>
-                        :  <i className="fa fa-trash" aria-hidden="true"/>
-                }
-            </button>
+            <LoadingFaButton isLoading={local.loadingState.isSaveLoading} onClick={createOrUpdate} faType={"fa-floppy-o"} title="Сохранить изменения"/>
+            <LoadingFaButton isLoading={local.loadingState.isRejectLoading} onClick={deleteOrDiscard} faType={"fa-trash"} title="далить карточку"/>
             <button type="button" className="btn btn-dark btn-sm back-to-main" onClick={() => {window.close()}}><Link to={"/"} target="_blank">Вернуться на главную</Link></button>
             <button type="button" className="btn btn-dark btn-sm">• в буффер обмена</button>
         </div>

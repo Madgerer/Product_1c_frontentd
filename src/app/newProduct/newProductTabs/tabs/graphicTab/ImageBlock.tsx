@@ -9,7 +9,7 @@ import {
     getProductImagesThunk, removeImageThunk, updateImageThunk, uploadImageThunk
 } from "../../../../../redux/reducers/local/newProduct/graphicTabComponent/thunks";
 import {IImage} from "../../../../../domain/types";
-import NullableSelect from "../../../../common/NullableSelect";
+import NullableSelect from "../../../../common/basic/selectors/NullableSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import {Table} from "react-bootstrap";
 import _ from "lodash";

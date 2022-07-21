@@ -4,7 +4,7 @@ import {AppState} from "../../../redux/reducers";
 import {actions, PriceGroupState} from "../../../redux/reducers/priceGroups";
 import {getPriceGroupsThunk} from "../../../redux/reducers/priceGroups/thunk";
 import {isUndefined} from "lodash";
-import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import SimpleSelect, {IOptionType} from "../basic/selectors/SimpleSelect";
 import {IPriceGroup} from "../../../domain/types";
 
 const toOption = (priceGroup: IPriceGroup): IOptionType =>  {

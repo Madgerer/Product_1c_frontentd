@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {useEffect} from "react";
 import {isUndefined} from "lodash";
-import SimpleSelect from "../SimpleSelect";
+import SimpleSelect from "../basic/selectors/SimpleSelect";
 import {actions, WebSitesState} from "../../../redux/reducers/webSites";
 import ToOptionProvider from "../../../utils/ToOptionProvider";
 import {getWebsitesThunk} from "../../../redux/reducers/webSites/thunks";

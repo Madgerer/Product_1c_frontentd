@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {isUndefined} from "lodash";
-import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import SimpleSelect, {IOptionType} from "../basic/selectors/SimpleSelect";
 import {ICatalogGroup} from "../../../domain/types";
 import {actions, CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 

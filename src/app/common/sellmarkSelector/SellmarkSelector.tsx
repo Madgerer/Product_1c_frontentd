@@ -1,4 +1,4 @@
-import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import SimpleSelect, {IOptionType} from "../basic/selectors/SimpleSelect";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {useEffect} from "react";

@@ -1,4 +1,4 @@
-import {IOptionType, IStringOptionType} from "../app/common/SimpleSelect";
+import {IOptionType, IStringOptionType} from "../app/common/basic/selectors/SimpleSelect";
 import {
     IAttribute,
     ICategory, IImageType,

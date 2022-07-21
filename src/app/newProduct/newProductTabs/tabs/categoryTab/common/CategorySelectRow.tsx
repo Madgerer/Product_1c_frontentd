@@ -1,5 +1,5 @@
 import './categorySelectRow.scss'
-import NullableSelect from "../../../../../common/NullableSelect";
+import NullableSelect from "../../../../../common/basic/selectors/NullableSelect";
 import { ICategory } from '../../../../../../domain/types';
 import ToOptionProvider from "../../../../../../utils/ToOptionProvider";
 import {useEffect, useState} from "react";

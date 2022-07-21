@@ -1,4 +1,4 @@
-import {IOptionType} from "../app/common/SimpleSelect";
+import {IOptionType} from "../app/common/basic/selectors/SimpleSelect";
 
 export interface ICatalog {
     id: number,
@@ -15,18 +15,18 @@ export interface ICategory {
 
 export interface IProductGroup {
     id: string,
-    name: string | null,
-    description: string | null,
-    descriptionWeb: string | null,
+    name: string,
+    description: string,
+    descriptionWeb: string,
     attributesColumnOrder: number[] | null,
     seriesId: number | null,
     signId: number | null,
     sellmarkId: number | null,
-    priceGroupId: number | null,
+    priceGroupId: number,
     mainAttributeId: number | null,
-    isDescriptionChecked: boolean | null,
-    isToolset: boolean | null,
-    isImageChecked: boolean | null,
+    isDescriptionChecked: boolean,
+    isToolset: boolean,
+    isImageChecked: boolean,
     siteId: number | null,
     wasCreate: boolean
 }

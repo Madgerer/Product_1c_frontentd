@@ -40,3 +40,8 @@ export const deleteProductGroupThunk = createApiThunk({
     typePrefix: 'new-product/delete-product-group',
     apiCall: Api.productGroups.deleteProductGroup
 })
+
+export const updateProductGroupThunk = createApiThunk({
+    typePrefix: 'new-product/update-product-group',
+    apiCall: Api.productGroups.updateProductGroup
+})

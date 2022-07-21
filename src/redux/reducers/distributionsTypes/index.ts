@@ -1,4 +1,4 @@
-import {IOptionType} from "../../../app/common/SimpleSelect";
+import {IOptionType} from "../../../app/common/basic/selectors/SimpleSelect";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 

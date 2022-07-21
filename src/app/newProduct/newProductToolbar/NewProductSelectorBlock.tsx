@@ -9,7 +9,7 @@ import {
     getSeriesThunk,
     getSignsThunk
 } from "../../../redux/reducers/local/newProduct/thunks";
-import NullableSelect from "../../common/NullableSelect";
+import NullableSelect from "../../common/basic/selectors/NullableSelect";
 import {LanguageState} from "../../../redux/reducers/languages";
 import ToOptionProvider from "../../../utils/ToOptionProvider";
 

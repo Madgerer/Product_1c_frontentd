@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../redux/reducers";
 import {isUndefined} from "lodash";
-import SimpleSelect from "../SimpleSelect";
+import SimpleSelect from "../basic/selectors/SimpleSelect";
 import {actions, DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
 
 function DistributionTypeSelector() {

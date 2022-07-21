@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../../../redux/reducers";
 import {actions, AdditionalInfoState} from "../../../../../redux/reducers/local/newProduct/additionalInfoComponent";
-import FaButton from "../../../../common/buttons/FaButton";
+import FaButton from "../../../../common/basic/buttons/FaButton";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import {useEffect} from "react";
 import {LanguageState} from "../../../../../redux/reducers/languages";
@@ -13,8 +13,8 @@ import {
 import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
 import _ from "lodash";
 import {Table} from "react-bootstrap";
-import FastNullableSelector from "../../../../common/FastNullableSelector";
-import TextButton from "../../../../common/buttons/TextButton";
+import FastNullableSelector from "../../../../common/basic/selectors/FastNullableSelector";
+import TextButton from "../../../../common/basic/buttons/TextButton";
 
 export default function AdditionalInfoTab() {
     const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)

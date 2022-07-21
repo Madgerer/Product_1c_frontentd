@@ -15,9 +15,9 @@ import {
     swapProductSortThunk
 } from "../../../../../redux/reducers/local/newProduct/tablePartComponent/thunk";
 import {actions, TableTabState} from "../../../../../redux/reducers/local/newProduct/tablePartComponent";
-import SimpleSelect from "../../../../common/SimpleSelect";
+import SimpleSelect from "../../../../common/basic/selectors/SimpleSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
-import NullableSelect from "../../../../common/NullableSelect";
+import NullableSelect from "../../../../common/basic/selectors/NullableSelect";
 import {Table} from "react-bootstrap";
 import Constants from "../../../../../domain/Constants";
 

@@ -4,7 +4,7 @@ import {actions, LanguageState} from "../../../redux/reducers/languages";
 import {useEffect} from "react";
 import {getLanguagesThunk} from "../../../redux/reducers/languages/thunk";
 import "./languageSelector.scss"
-import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import SimpleSelect, {IOptionType} from "../basic/selectors/SimpleSelect";
 import {ILanguage} from "../../../domain/types";
 
 const toOption = (lang: ILanguage): IOptionType =>  {

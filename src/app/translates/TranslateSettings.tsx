@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../redux/reducers";
 import {LanguageState} from "../../redux/reducers/languages";
 import {actions, TranslateComponentState} from "../../redux/reducers/local/translateComponent";
-import SimpleSelect from "../common/SimpleSelect";
+import SimpleSelect from "../common/basic/selectors/SimpleSelect";
 import ToOptionProvider from "../../utils/ToOptionProvider";
 import CatalogSelector, {CatalogFilter} from "../common/catalogSelector/CatalogSelector";
 import WebsiteSelector from "../common/websiteSelector/WebsiteSelector";

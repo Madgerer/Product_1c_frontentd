@@ -10,7 +10,7 @@ import {
     getAllPictogramsThunk,
     getGroupPictogramsThunk, removePictogramFromGroupThunk
 } from "../../../../../redux/reducers/local/newProduct/graphicTabComponent/thunks";
-import NullableSelect from "../../../../common/NullableSelect";
+import NullableSelect from "../../../../common/basic/selectors/NullableSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import _ from "lodash";
 import {Table} from "react-bootstrap";

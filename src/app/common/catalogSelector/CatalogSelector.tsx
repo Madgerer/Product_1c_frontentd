@@ -4,7 +4,7 @@ import {useEffect} from "react";
 import {isUndefined} from "lodash";
 import {actions, CatalogState} from "../../../redux/reducers/catalogs";
 import {getCatalogsThunk} from "../../../redux/reducers/catalogs/thunk";
-import SimpleSelect, {IOptionType} from "../SimpleSelect";
+import SimpleSelect, {IOptionType} from "../basic/selectors/SimpleSelect";
 import {ICatalog} from "../../../domain/types";
 
 const toOption = (catalog: ICatalog): IOptionType => {
