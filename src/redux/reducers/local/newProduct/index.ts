@@ -201,7 +201,10 @@ const slice = createSlice({
         })
         builder.addCase(createProductGroupThunk.rejected, (state, action) => {
             state.loadingState.isSaveLoading = false
-            console.log(`Can't create product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+            if(action.payload?.statusCode === 409)
+                alert("Группа продуктов с таким id уже создана")
+            else
+                console.log(`Can't create product group. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(discardReserveThunk.pending, (state) => {
@@ -231,6 +234,7 @@ const slice = createSlice({
         })
         builder.addCase(updateProductGroupThunk.fulfilled, (state) => {
             state.loadingState.isSaveLoading = false;
+            state.isPriceGroupChanged = false;
         })
         builder.addCase(updateProductGroupThunk.rejected, (state, action) => {
             state.loadingState.isSaveLoading = false;

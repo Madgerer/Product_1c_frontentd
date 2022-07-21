@@ -2,6 +2,7 @@ import {Table} from "react-bootstrap";
 import {useState} from "react";
 import InformationTableRow from "../../ErrorTableRow";
 import {IProductGroupIdentityModel} from "./types";
+import {Link} from "react-router-dom";
 
 export default function ExpandedProductGroupTable(props: IExpandedProductGroupTableProps) {
     const colSpan = props.showSortColumn ? 6 : 5;
@@ -92,7 +93,9 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
                 <input type="checkbox" checked={props.model.checked} readOnly={true}/>
             </td>
             <td className={`info`}>
-                <i className="fa fa-info-circle bg-blue"></i>
+                <Link to={`/new-product/?productGroupId=${props.model.id}`}>
+                    <i className="fa fa-info-circle bg-blue"/>
+                </Link>
             </td>
         </tr>
         <tr className={`detail-view ${isToggle ? "-open" : ""}`}>

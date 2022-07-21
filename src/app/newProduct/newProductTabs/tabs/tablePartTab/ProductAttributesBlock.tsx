@@ -281,7 +281,7 @@ export default function ProductAttributesBlock() {
                                     {
                                         local.attributesOrder.map(x => {
                                             const attr = local.attributes.find(a => a.id == x)
-                                            if(attr === null)
+                                            if(attr === undefined)
                                                 return null
                                             return <th onClick={() => setColumnSelected(attr!.id)}
                                                        className={local.selectedAttributeColumn == attr!.id ? "bg-orange" : ""}>{attr!.name}</th>

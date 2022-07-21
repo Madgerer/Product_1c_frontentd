@@ -115,7 +115,7 @@ const slice = createSlice({
                         //значения в ряду отфильтрованы, поэтому мы можем брать последний элемент
                         const category = row.model[row.model.length - 1];
                         state.selectedCurrentWebCategory = {
-                            mainCategory: category.mainCategory,
+                            mainCategory: category?.mainCategory ?? false,
                             children: category.children,
                             name: category.name,
                             parentId: category.parentId,

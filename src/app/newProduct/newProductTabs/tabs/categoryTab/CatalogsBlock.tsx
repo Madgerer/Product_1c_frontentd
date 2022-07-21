@@ -35,8 +35,8 @@ export default function CatalogsBlock() {
     }, [languageState.selected.id])
 
     useEffect(() => {
-        let isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
-        if(productGroupState.productGroup.wasCreate && !isCategoriesLoaded) {
+        const isCategoriesLoaded = local.categoriesWeb.length != 0 && local.categoriesPrinted.length != 0;
+        if(productGroupState.productGroup.wasCreate && isCategoriesLoaded) {
             dispatch(getProductGroupCategoriesThunk({productGroupId: productGroupState.productGroup.id, catalogGroup: CatalogGroup.Printed, languageId: languageState.selected.id}))
             dispatch(getProductGroupCategoriesThunk({productGroupId: productGroupState.productGroup.id, catalogGroup: CatalogGroup.Web, languageId: languageState.selected.id}))
         }

@@ -156,6 +156,7 @@ const slice = createSlice({
                 return
             //это нужно, что image обновился. React one love <3
             state.groupImages[index].key = Guid.create().toString()
+            state.groupImages[index].imageUrl = action.payload
         })
         builder.addCase(updateImageThunk.rejected, (state, action) => {
             console.log(`Can't update image. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
