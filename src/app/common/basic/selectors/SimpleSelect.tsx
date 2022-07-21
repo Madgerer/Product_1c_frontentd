@@ -1,5 +1,4 @@
 import Select from "react-select";
-import {isNumberObject} from "util/types";
 
 export interface IOptionType { label: string; value: number}
 export interface IStringOptionType { label: string, value: string}
