@@ -13,7 +13,7 @@ export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) 
         <tbody>
         {
             row.sort(x => x.index).map(row => {
-                return <tr key={row.index} className={row.selected ? "dynamic-table-row--selected" : ""} onClick={() => props.onRowClicked(row)}>
+                return <tr key={row.index} className={row.selected ? "--selected" : ""} onClick={() => props.onRowClicked(row)}>
                     {
                         <>
                             <>
@@ -21,7 +21,7 @@ export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) 
                                     Array.from(Array(maxColumnLength).keys()).map((columnNumber, i) => {
                                         const column = row.model[columnNumber]
                                         if(column === undefined) {
-                                            return <td key={Guid.create().toString()}></td>
+                                            return <td key={Guid.create().toString()}/>
                                         }
                                         return <td key={(i + 1) * row.index + column.id}>{column.name}</td>
                                     })

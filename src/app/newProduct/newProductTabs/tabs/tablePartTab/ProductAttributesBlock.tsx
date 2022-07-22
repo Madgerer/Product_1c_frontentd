@@ -210,8 +210,8 @@ export default function ProductAttributesBlock() {
             productGroupState.productGroup.priceGroupId === null
                 ? <div>Мы не можем продолжить без выбранной продуктовой группы</div>
                 : <>
-                    <div className="item col-md-12" style={{marginRight: 30, fontSize: 13}}>
-                        <div>
+                    <div className="product-attributes-block-buttons-header" >
+
                             <button type="button" className="btn btn-dark" onClick={() => addProductToProductGroup()}>
                                 <i className="fa  fa-plus" aria-hidden="true"/>
                             </button>
@@ -226,7 +226,7 @@ export default function ProductAttributesBlock() {
                                    placeholder="Артикул"
                                    value={local.article}
                                    onChange={e => setArticle(e.currentTarget.value)}
-                                   style={{width: 90, textAlign: "center", marginLeft: 10}}
+                                   style={{width: 90, textAlign: "center"}}
                                    onKeyDown={(e) => onArticleEnter(e)}
                             />
 
@@ -236,7 +236,7 @@ export default function ProductAttributesBlock() {
                                               options={local.products}
                                               onChange={(e) => setSelectedProduct(e as string)}
                                               toOption={ToOptionProvider.productIdentityToOption}
-                                              className={"selector"}/>
+                                              className={"selector selector--name"}/>
 
                             <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(-1)}}>
                                 <i className="fa  fa-arrow-up" aria-hidden="true"/>
@@ -256,9 +256,9 @@ export default function ProductAttributesBlock() {
                                           className={"selector"}
                                           toOption={ToOptionProvider.attributeToOption} />
                             <input className="form-control" type="text" id="columnName" disabled={true} placeholder="Атрибут"
-                                   style={{width: 180, textAlign: "center", marginLeft:10}}/>
-                        </div>
-                        <div>
+                                   style={{width: 180, textAlign: "center"}}/>
+
+
                             <button type="button" className="btn btn-dark" onClick={() => changeAttributeOrder(-1)}>
                                 <i className="fa fa-arrow-left" aria-hidden="true"/>
                             </button>
@@ -268,7 +268,7 @@ export default function ProductAttributesBlock() {
                             <button type="button" disabled={local.accumulatedChanges.length === 0} className="btn btn-dark" onClick={() => saveAttributeValues()}>
                                 Сохранить
                             </button>
-                        </div>
+
 
                     </div>
                     <>

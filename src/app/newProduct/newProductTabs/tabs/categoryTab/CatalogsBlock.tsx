@@ -165,33 +165,36 @@ export default function CatalogsBlock() {
     }
 
     return <>
-        <div className="item col-md-12">
+        <div className="">
             <div>
                 <h2>Категории в каталоге</h2>
-                <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Printed)}>
-                    <i className="fa  fa-plus" aria-hidden="true"/>
-                </button>
-                <button type="button" className="btn btn-dark" onClick={() => changeCategory(CatalogGroup.Printed)}>
-                    <i className="fa fa-pencil-square-o" aria-hidden="true"/>
-                </button>
-                <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Printed)}>
-                    <i className="fa fa fa-minus" aria-hidden="true"/>
-                </button>
-                <CatalogSelector filter={CatalogFilter.Printed}/>
-                <CategorySelectRow
-                    shouldReset={local.shouldResetPrinted}
-                    onReset={() => onCategoryRowReset(CatalogGroup.Printed)}
-                    categories={local.categoriesPrinted}
-                    onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Printed)}}/>
-            </div>
+                <div className="u-buttons-wrapper">
+                    <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Printed)}>
+                        <i className="fa  fa-plus" aria-hidden="true"/>
+                    </button>
+                    <button type="button" className="btn btn-dark" onClick={() => changeCategory(CatalogGroup.Printed)}>
+                        <i className="fa fa-pencil-square-o" aria-hidden="true"/>
+                    </button>
+                    <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Printed)}>
+                        <i className="fa fa fa-minus" aria-hidden="true"/>
+                    </button>
+                    <CatalogSelector filter={CatalogFilter.Printed}/>
+                    <CategorySelectRow
+                      shouldReset={local.shouldResetPrinted}
+                      onReset={() => onCategoryRowReset(CatalogGroup.Printed)}
+                      categories={local.categoriesPrinted}
+                      onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Printed)}}/>
+                </div>
+                </div>
             <CategoryDynamicTable
                 catalogGroup={CatalogGroup.Printed}
                 onRowClicked={(e) => setSelectedCategory(e, CatalogGroup.Printed)}
                 rows={local.currentPrintedCategories}/>
         </div>
-        <div className="item col-md-12">
+        <div className="">
             <div>
                 <h2>Категории на сайт</h2>
+                <div className="u-buttons-wrapper">
                 <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Web)}>
                     <i className="fa  fa-plus" aria-hidden="true"/>
                 </button>
@@ -209,6 +212,7 @@ export default function CatalogsBlock() {
                     onReset={() => onCategoryRowReset(CatalogGroup.Web)}
                     categories={local.categoriesWeb}
                     onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Web)}}/>
+            </div>
             </div>
             <CategoryDynamicTable
                 catalogGroup={CatalogGroup.Web}

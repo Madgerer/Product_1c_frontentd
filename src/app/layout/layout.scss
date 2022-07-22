@@ -6,5 +6,11 @@
 
 .layout-body {
   margin-inline: 10px;
-  height: 100%;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+
+  & > * {
+    flex: 1 1;
+  }
 }

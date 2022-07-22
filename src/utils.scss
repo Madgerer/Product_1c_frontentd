@@ -18,6 +18,19 @@
     flex: 1 1 0;
 }
 
+.u-buttons-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 9px;
+    margin-bottom: 9px;
+
+    & > * {
+          margin-bottom: 3px;
+          margin-top: 3px;
+          margin-right: 10px;
+      }
+}
+
 
 
 
@@ -92,4 +105,14 @@
 /* стили для чекбокса, находящегося в состоянии disabled */
 .my-custom-checkbox:disabled+label::before {
     background-color: #e9ecef;
+}
+
+
+// табличные дела
+
+tr {
+    &.--selected {
+        background-color: #007bff;
+        color: white;
+    }
 }

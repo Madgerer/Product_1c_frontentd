@@ -100,7 +100,7 @@ export default function AdditionalInfoTab(props: IMountableProps) {
 
     return <div className="tab-pane">
         <div>
-            <div>
+            <div className="u-buttons-wrapper">
                 <FaButton onClick={() => addRec()} faType="fa-plus"/>
                 <FaButton onClick={() => removeRec()} faType="fa-minus"/>
                 <FastNullableSelector value={local.selectedRecommendation}
@@ -140,7 +140,7 @@ export default function AdditionalInfoTab(props: IMountableProps) {
                                 <td colSpan={3}>No matching records found</td>
                             </tr>
                         : _.orderBy(local.groupRecommendations, x => x.sort)!.map(x => {
-                            return <tr id={x.id} onClick={() => setSelectedGroupRed(x.id)} className={x.selected ? "bg-blue" : ""}>
+                            return <tr id={x.id} onClick={() => setSelectedGroupRed(x.id)} className={x.selected ? "--selected" : ""}>
                                 <td>{x.id}</td>
                                 <td>{x.name}</td>
                                 <td>{x.sort}</td>

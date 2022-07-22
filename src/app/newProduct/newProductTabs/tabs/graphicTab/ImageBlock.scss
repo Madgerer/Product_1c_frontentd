@@ -1,0 +1,43 @@
+.image-block--first-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 9px;
+  margin-bottom: 9px;
+
+  & > * {
+    margin-bottom: 3px;
+    margin-top: 3px;
+    margin-right: 10px;
+  }
+
+
+  .form-type-delete {
+    max-width: 300px;
+  }
+
+  .selector-choose-type {
+    min-width: 160px;
+  }
+
+}
+
+.image-block--table {
+  flex: 1 1 0;
+  min-width: 33%;
+  max-width: 33%;
+
+  .image-block--image {
+    max-width: 100%;
+  }
+}
+
+.image-block--tables-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+}

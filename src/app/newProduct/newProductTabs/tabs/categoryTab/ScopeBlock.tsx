@@ -81,9 +81,10 @@ export default function ScopeBlock() {
 
 
     return <>
-        <div className="item col-md-12">
+        <div className="">
             <div>
                 <h2>Область применения</h2>
+                <div className="u-buttons-wrapper">
                 <button type="button" className="btn btn-dark" onClick={() => {addProductGroupToScope()}}>
                     <i className="fa fa-plus" aria-hidden="true"/>
                 </button>
@@ -98,6 +99,7 @@ export default function ScopeBlock() {
                                 onChange={value => setSelectedScope(value as number)}
                                 toOption={ToOptionProvider.scopeToOption} className={"selector"}
                                 placeholder={"Выберите область применения"}/>
+                </div>
             </div>
             {
                 local.currentScopes.length === 0

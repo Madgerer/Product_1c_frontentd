@@ -1,0 +1,29 @@
+.product-attributes-block-buttons-header {
+  display: flex;
+  font-size: 13px;
+  flex-wrap: wrap;
+  margin-top: 9px;
+  margin-bottom: 9px;
+
+  & > * {
+    margin-bottom: 3px;
+    margin-top: 3px;
+  }
+
+  .form-control {
+    font-size: 13px;
+    margin-right: 10px;
+  }
+
+  .btn {
+    margin-right: 10px;
+  }
+
+  .selector {
+    margin-right: 10px;
+  }
+
+  .selector--name {
+    min-width: 195px;
+  }
+}

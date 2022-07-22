@@ -4,6 +4,7 @@ import _, {isString} from "lodash";
 import {Component, useEffect, useState} from "react";
 import { components } from 'react-select';
 import PropTypes from "prop-types";
+//ts-ignore
 import { FixedSizeList as List } from 'react-window';
 
 

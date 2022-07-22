@@ -82,16 +82,16 @@ export default function PictogramBlock() {
     const setSelectedGroupPictogram = (id: number) => dispatch(actions.setSelectedGroupPictogram(id))
 
     return <div className="">
-        <div className="item col-md-12" style={{marginTop: 15}}>
-            <div>
+        <div className="pictogram-block" >
+            <div className="u-buttons-wrapper">
                 <button type="button" className="btn btn-dark" onClick={() => addPictogram()}>
-                    <i className="fa  fa-plus" aria-hidden="true"></i>
+                    <i className="fa  fa-plus" aria-hidden="true"/>
                 </button>
                 <button type="button" className="btn btn-dark" onClick={() => changePictogram()}>
-                    <i className="fa  fa-pencil-square-o" aria-hidden="true"></i>
+                    <i className="fa  fa-pencil-square-o" aria-hidden="true"/>
                 </button>
                 <button type="button" className="btn btn-dark" onClick={() => removePictogram()}>
-                    <i className="fa  fa-minus" aria-hidden="true"></i>
+                    <i className="fa  fa-minus" aria-hidden="true"/>
                 </button>
                 <NullableSelect value={local.selectedPictogram}
                                 className={"selector"}
@@ -110,7 +110,7 @@ export default function PictogramBlock() {
                         <tr>
                             {_.orderBy(local.groupPictograms, x => x.sort).map(x =>  {
                                 return <td onClick={() => setSelectedGroupPictogram(x.id)}>
-                                    <img src={`${staticServer}/${x.imageUrl}`} alt={x.name}/>
+                                    <img className="pictogram-image" src={`${staticServer}/${x.imageUrl}`} alt={x.name}/>
                                 </td>
                             })
                             }

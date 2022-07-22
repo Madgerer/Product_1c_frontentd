@@ -88,25 +88,25 @@ export default function ImageBlock() {
     }
 
     return <>
-        <div className="item col-md-12" style={{marginTop: 15}}>
+        <div className="image-block--first-row" >
             <button type="button" className="btn btn-dark" onClick={() => addImage()}>
-                <i className="fa  fa-plus" aria-hidden="true"></i>
+                <i className="fa  fa-plus" aria-hidden="true"/>
             </button>
             <button type="button" className="btn btn-dark" onClick={() => removeImage()}>
-                <i className="fa  fa-minus" aria-hidden="true"></i>
+                <i className="fa  fa-minus" aria-hidden="true"/>
             </button>
             <NullableSelect value={local.selectedImageType}
                             options={local.imageTypes}
                             onChange={id => setSelectedImageType(id as number)}
                             toOption={ToOptionProvider.imageTypeToOption}
-                            className={"selector"}
+                            className={"selector selector-choose-type"}
                             placeholder={"Выберите тип"}/>
-            <input className="form-control" type="text" placeholder="Тип для удаления" disabled value={local.selectedGroupType != null
+            <input className="form-control form-type-delete" type="text" placeholder="Тип для удаления" disabled value={local.selectedGroupType != null
                 ? local.imageTypes.find(x => x.id === local.selectedGroupType!.id)!.name
                 : ""
             }/>
             <button type="button" className="btn btn-dark" onClick={() => changeImage()}>
-                <i className="fa fa-file-image-o" aria-hidden="true"></i>
+                <i className="fa fa-file-image-o" aria-hidden="true"/>
             </button>
 
             <input type="file" onChange={e => setFileFromEvent(e)} />
@@ -118,31 +118,29 @@ export default function ImageBlock() {
                 Обновить на сайте
             </button>
         </div>
-        <Table>
-            <thead>
-            <tr>
-                {_.orderBy(local.groupImages, x => x.typeId).map(x => {
-                    const type = local.imageTypes.find(it => it.id === x.typeId)
-                    return <th onClick={() => setSelectedGroupType(x)}>{type!.name}</th>
-                })}
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                {
-                    _.orderBy(local.groupImages, x => x.typeId).map(x => {
-                        return <td onClick={() => setSelectedGroupType(x)} key={x.typeId}>
+        <div className="image-block--tables-wrapper">
+            {_.orderBy(local.groupImages, x => x.typeId).map(x => {
+                const type = local.imageTypes.find(it => it.id === x.typeId)
+                return <Table className="image-block--table">
+                    <thead>
+                    <tr>
+                        <th onClick={() => setSelectedGroupType(x)}>{type!.name}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td onClick={() => setSelectedGroupType(x)} key={x.typeId}>
                             {
                                 x.typeId === Constants.YoutubeImageType
-                                    ? <YoutubePlayer url={x.imageUrl}/>
-                                    : <img key={x.key} src={`${staticServer}/${x.imageUrl}`} alt={x.typeId.toString()}/>
+                                  ? <YoutubePlayer url={x.imageUrl}/>
+                                  : <img className="image-block--image" key={x.key} src={`${staticServer}/${x.imageUrl}`} alt={x.typeId.toString()}/>
                             }
                         </td>
-                    })
-                }
-            </tr>
-            </tbody>
-        </Table>
+                    </tr>
+                    </tbody>
+                </Table>
+            })}
+        </div>
         <VideoModal/>
     </>
 }
