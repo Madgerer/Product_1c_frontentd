@@ -8,7 +8,6 @@ import CategoryExpandedList from "./CategoryExpandedList";
 import {getCategoriesThunk} from "../../../redux/reducers/categories/thunk";
 import {actions, CategoriesState} from "../../../redux/reducers/categories";
 
-//todo переавать сюда подсвеченные элементы как props, чтобы не взаимодействовать с его стором снаружи
 export default function CategoryGroupTree(props: ICategoryGroupTreeProps) {
     const catalogGroupsState = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
