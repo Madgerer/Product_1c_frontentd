@@ -3,6 +3,7 @@ import {AppState} from "../../../redux/reducers";
 import {actions, ProductGroupListComponentState} from "../../../redux/reducers/local/productComponent/productGroupList";
 import SimpleSelect from "../../common/basic/selectors/SimpleSelect";
 import "./ProductGroupListToolbar.scss"
+import {useDebouncedCallback} from "use-debounce";
 
 function ProductGroupListToolbar() {
     const local = useSelector<AppState, ProductGroupListComponentState>(x => x.local.productGroupListComponent);
@@ -12,9 +13,7 @@ function ProductGroupListToolbar() {
         dispatch(actions.setSelectedCardType(id));
     }
 
-    const setFilter = (filter: string) => {
-        dispatch(actions.setFilter(filter));
-    }
+    const debouncedFilter = useDebouncedCallback(args => dispatch(actions.setFilter(args)), 500)
 
     return <div id="groupTableToolBar" className="product-right-column-toolbar">
         <form className="form-inline">
@@ -37,7 +36,7 @@ function ProductGroupListToolbar() {
                 <input type="text"
                        className="form-control"
                        placeholder="Search"
-                       onChange={e => setFilter(e.currentTarget.value)}
+                       onChange={e => debouncedFilter(e.currentTarget.value)}
                 />
             </div>
         </form>
