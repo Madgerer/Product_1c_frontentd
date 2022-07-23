@@ -17,7 +17,7 @@ export default function CategoryGroupTree(props: ICategoryGroupTreeProps) {
 
     useEffect(() => {
         dispatch(getCategoriesThunk({catalogGroup: catalogGroupsState.selected.id, languageId: languageState.selected.id}))
-    }, [catalogGroupsState.selected.id])
+    }, [catalogGroupsState.selected.id, languageState.selected.id])
 
     function setChecked(category: ICategoryIdentityModel) {
         dispatch(actions.setCategoryChecked({categoryId: category.id, checked: !category.checked}))
