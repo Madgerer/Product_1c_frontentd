@@ -5,8 +5,7 @@ import {actions, ProductListComponentState} from "../../../redux/reducers/local/
 import {AppState} from "../../../redux/reducers";
 import {ProductGroupListComponentState} from "../../../redux/reducers/local/productComponent/productGroupList";
 import {addProductToGroupAsyncThunk} from "../../../redux/reducers/local/productComponent/productList/thunks";
-import _ from "lodash";
-import {useDebounce, useDebouncedCallback} from "use-debounce";
+import {useDebouncedCallback} from "use-debounce";
 
 function ProductListToolbar() {
 
@@ -44,7 +43,10 @@ function ProductListToolbar() {
                 </button>
             </div>
             <div className="ml-auto product-left-column-search">
-                <input type="search" className="form-control" placeholder="Search" onChange={e => debouncedFilter(e.target.value)}/>
+                <input type="search"
+                       className="form-control"
+                       placeholder="Search"
+                       onChange={e => debouncedFilter(e.target.value)}/>
             </div>
         </form>
     </div>

@@ -20,6 +20,8 @@ function ProductGroupListTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if(local.isProductGroupsLoading)
+            return
         dispatch(getProductGroupsIdentityThunk({
             priceGroupId: priceGroupState.selected.id,
             languageId: languageState.selected.id,

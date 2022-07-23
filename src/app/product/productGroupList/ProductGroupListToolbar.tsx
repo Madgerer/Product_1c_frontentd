@@ -4,16 +4,34 @@ import {actions, ProductGroupListComponentState} from "../../../redux/reducers/l
 import SimpleSelect from "../../common/basic/selectors/SimpleSelect";
 import "./ProductGroupListToolbar.scss"
 import {useDebouncedCallback} from "use-debounce";
+import {getProductGroupsIdentityThunk} from "../../../redux/reducers/local/productComponent/productGroupList/thunk";
+import {PriceGroupState} from "../../../redux/reducers/priceGroups";
+import {LanguageState} from "../../../redux/reducers/languages";
 
 function ProductGroupListToolbar() {
     const local = useSelector<AppState, ProductGroupListComponentState>(x => x.local.productGroupListComponent);
+    const priceGroupState = useSelector<AppState, PriceGroupState>(x => x.priceGroupsState);
+    const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
     const dispatch = useDispatch();
 
     const changeSelected = (id: number) => {
         dispatch(actions.setSelectedCardType(id));
     }
 
-    const debouncedFilter = useDebouncedCallback(args => dispatch(actions.setFilter(args)), 500)
+    const onEnter = (event) => {
+        if(local.isProductGroupsLoading)
+            return
+        if(event.key === 'Enter') {
+            dispatch(getProductGroupsIdentityThunk({
+                priceGroupId: priceGroupState.selected.id,
+                languageId: languageState.selected.id,
+                searchString: local.filter,
+                pgValidationType: local.selectedCardType.value,
+            }))
+        }
+    }
+    const setFilter = (filter: string) => dispatch(actions.setFilter(filter))
+    const debouncedFilter = useDebouncedCallback(args => setFilter(args), 500)
 
     return <div id="groupTableToolBar" className="product-right-column-toolbar">
         <form className="form-inline">
@@ -36,6 +54,7 @@ function ProductGroupListToolbar() {
                 <input type="text"
                        className="form-control"
                        placeholder="Search"
+                       onKeyUp={e => onEnter(e)}
                        onChange={e => debouncedFilter(e.currentTarget.value)}
                 />
             </div>

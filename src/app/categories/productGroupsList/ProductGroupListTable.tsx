@@ -15,7 +15,6 @@ import {LanguageState} from "../../../redux/reducers/languages";
 import {DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
 import ExpandedProductGroupTable from "../../common/tables/productGroupTable/ExpandedProductGroupTable";
 import {IProductGroupIdentityModel} from "../../common/tables/productGroupTable/types";
-import _ from "lodash";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {DistributionType} from "../../../domain/types";
 
@@ -30,7 +29,7 @@ export default function ProductGroupListTable() {
     const catalogGroupState = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState);
 
     const dispatch = useDispatch();
-    const trottledDispatch = _.throttle(() => {
+    const loadGroups = () => {
         dispatch(getProductGroupsByCatalogsThunk({
             priceGroupId: priceGroup.selected.id,
             languageId: languageState.selected.id,
@@ -40,11 +39,11 @@ export default function ProductGroupListTable() {
             catalogGroup: catalogGroupState.selected.id,
             searchString: local.groupFilter
         }))
-    }, 50);
+    };
 
     useEffect(() => {
         if(catalogState.wasInit) {
-            trottledDispatch()
+            loadGroups()
         }
     }, [priceGroup.selected.id,
         languageState.selected.id,
@@ -54,7 +53,7 @@ export default function ProductGroupListTable() {
         distributedState.selected.value,
         local.groupFilter])
 
-    function onSelect(productGroup: IProductGroupIdentityModel, fromCheckBox: boolean) {
+    function onSelect(productGroup: IProductGroupIdentityModel) {
         dispatch(actions.setSelectedProductGroup(productGroup))
 
         if(distributedState.selected.value == DistributionType.Distributed) {
@@ -84,8 +83,8 @@ export default function ProductGroupListTable() {
             isProductGroupsLoading={local.isGroupsLoading}
             productGroups={local.productGroups}
             loadProducts={loadProducts}
-            onRowClick={x => onSelect(x, false)}
-            onCheckBoxClick={x => onSelect(x, true)}
+            onRowClick={x => onSelect(x)}
+            onCheckBoxClick={x => onSelect(x)}
         />
     </div>
 }

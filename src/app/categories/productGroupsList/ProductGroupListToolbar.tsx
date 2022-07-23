@@ -4,20 +4,50 @@ import {actions, CategoryComponentState} from "../../../redux/reducers/local/cat
 import "./productGroupListToolbar.scss";
 import {AppState} from "../../../redux/reducers";
 import {CategoriesState} from "../../../redux/reducers/categories";
-import {addProductGroupToCatsThunk} from "../../../redux/reducers/local/categoryComponent/thunk";
+import {
+    addProductGroupToCatsThunk,
+    getProductGroupsByCatalogsThunk
+} from "../../../redux/reducers/local/categoryComponent/thunk";
 import {CatalogGroupsState} from "../../../redux/reducers/catalogGroups";
 import {CatalogState} from "../../../redux/reducers/catalogs";
+import {PriceGroupState} from "../../../redux/reducers/priceGroups";
+import {SellmarkState} from "../../../redux/reducers/sellmarks";
+import {LanguageState} from "../../../redux/reducers/languages";
+import {DistributionTypeState} from "../../../redux/reducers/distributionsTypes";
+import {useDebouncedCallback} from "use-debounce";
 
 export default function ProductGroupListToolbar(){
     const local = useSelector<AppState, CategoryComponentState>(x => x.local.categoryComponent);
-    const categoriesState = useSelector<AppState, CategoriesState>(x => x.categoriesState);
+    const categoriesState = useSelector<AppState, CategoriesState>(x => x.categoriesState)
+    const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState);
+    const priceGroup = useSelector<AppState, PriceGroupState>(x => x.priceGroupsState);
+    const sellmarkState = useSelector<AppState, SellmarkState>(x => x.sellmarkState);
+    const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
+    const distributedState = useSelector<AppState, DistributionTypeState>(x => x.distributionTypesState);
     const catalogGroupState = useSelector<AppState, CatalogGroupsState>(x => x.catalogGroupState);
-    const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState)
 
     const dispatch = useDispatch();
 
+    const debouncedFilter = useDebouncedCallback((args) => setFilter(args), 500)
+
     function setFilter(filter: string) {
         dispatch(actions.setFilter(filter));
+    }
+
+    const onEnter = (event) => {
+        if(local.isGroupsLoading)
+            return
+        if(event.key === 'Enter') {
+            dispatch(getProductGroupsByCatalogsThunk({
+                priceGroupId: priceGroup.selected.id,
+                languageId: languageState.selected.id,
+                sellmarkId: sellmarkState.selected.id,
+                catalogId: catalogState.selected.id,
+                distributionType: distributedState.selected.value,
+                catalogGroup: catalogGroupState.selected.id,
+                searchString: local.groupFilter
+            }))
+        }
     }
 
     function addProductGroupsToCats() {
@@ -59,7 +89,11 @@ export default function ProductGroupListToolbar(){
                 <DistributionTypeSelector/>
             </div>
             <div className="ml-auto" style={{float: "right"}}>
-                <input type="text" className="form-control" placeholder="Search" onChange={e => setFilter(e.target.value)}/>
+                <input type="text"
+                       className="form-control"
+                       placeholder="Search"
+                       onKeyUp={e => onEnter(e)}
+                       onChange={e => debouncedFilter(e.target.value)}/>
             </div>
         </form>
     </div>
