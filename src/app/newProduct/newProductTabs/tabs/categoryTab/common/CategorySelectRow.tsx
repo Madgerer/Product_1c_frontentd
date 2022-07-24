@@ -7,7 +7,7 @@ import CategoryTreeUtils from "../../../../../../CategoryTreeUtils";
 
 interface IRowElementProps {
     categories: ICategory[]
-    onChange: (category: ICategory | null) => void;
+    onChange: (category: ICategory | null, level: number) => void;
     shouldReset: boolean;
     onReset: () => void;
 }
@@ -38,10 +38,10 @@ export default function CategorySelectRow(props: IRowElementProps) {
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector"}
-                        placeholder={"Выберите кателогию"}/>
+                        placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
-                ? <CategorySelectRowChild parent={selectedCategory} onChange={props.onChange} key={selectedCategory.id} categories={selectedCategory.children}/>
+                ? <CategorySelectRowChild level={1} parent={selectedCategory} onChange={props.onChange} key={selectedCategory.id} categories={selectedCategory.children}/>
                 : <></>
         }
     </>
@@ -50,7 +50,8 @@ export default function CategorySelectRow(props: IRowElementProps) {
 interface ICategorySelectRowChildProps {
     categories: ICategory[],
     parent: ICategory,
-    onChange: (category: ICategory | null) => void;
+    onChange: (category: ICategory | null, level: number) => void,
+    level: number
 }
 
 function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
@@ -59,7 +60,7 @@ function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
 
     useEffect(() => {
         if(selectedCategory === null || selectedCategory.children.length === 0) {
-            props.onChange(selectedCategory)
+            props.onChange(selectedCategory, props.level)
         }
     },[selectedCategory])
 
@@ -79,10 +80,14 @@ function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector"}
-                        placeholder={"Выберите кателогию"}/>
+                        placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
-                ? <CategorySelectRowChild parent={selectedCategory} onChange={props.onChange} key={selectedCategory.id} categories={selectedCategory.children}/>
+                ? <CategorySelectRowChild level={props.level + 1}
+                                          parent={selectedCategory}
+                                          onChange={props.onChange}
+                                          key={selectedCategory.id}
+                                          categories={selectedCategory.children}/>
                 : <></>
         }
     </>

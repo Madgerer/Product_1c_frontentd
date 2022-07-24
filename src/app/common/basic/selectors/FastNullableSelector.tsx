@@ -20,8 +20,6 @@ interface IFastNullableSelectorProps<T> {
 }
 
 export default function FastNullableSelector<T>(props: IFastNullableSelectorProps<T>) {
-    console.log(props.options.length)
-
     const [allItems, setAllOptions] = useState(props.options.map(x => props.toOption(x)))
     const [filteredItem, setFilteredItems] = useState(allItems)
 

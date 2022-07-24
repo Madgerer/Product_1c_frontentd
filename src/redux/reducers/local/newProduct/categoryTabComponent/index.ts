@@ -5,12 +5,14 @@ import CategoryTreeUtils from "../../../../../CategoryTreeUtils";
 import {
     addProductGroupsToScopeThunk,
     addProductGroupToCatsThunk,
-    changeProductGroupCategoryThunk, changeProductGroupsScopeThunk,
+    changeProductGroupCategoryThunk,
+    changeProductGroupsScopeThunk,
     getCategoriesThunk,
     getProductGroupCategoriesThunk,
     getProductGroupsScopesThunk,
     getScopesOfApplicationThunk,
-    removeProductGroupFromCatsThunk, removeProductGroupsFromScopeThunk,
+    removeProductGroupFromCatsThunk,
+    removeProductGroupsFromScopeThunk,
     setCategoryAsMainThunk
 } from "./thunks";
 import _ from "lodash";
@@ -144,8 +146,12 @@ const slice = createSlice({
             else
                 state.shouldResetWeb = !state.shouldResetWeb
         },
-        setRowPath(state: CategoriesTabState, action: PayloadAction<{category: ICategory | null, catalogGroup: CatalogGroup}>) {
+        setRowPath(state: CategoriesTabState, action: PayloadAction<{category: ICategory | null, catalogGroup: CatalogGroup, level: number}>) {
             if(action.payload.category === null) {
+                if(action.payload.catalogGroup === CatalogGroup.Printed)
+                    state.selectedPrintedCategories = []
+                else
+                    state.selectedWebCategories = []
                 return;
             }
             if (action.payload.catalogGroup === CatalogGroup.Printed) {

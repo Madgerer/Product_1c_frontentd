@@ -20,6 +20,7 @@ import {
     getProductGroupCategoriesThunk, removeProductGroupFromCatsThunk, setCategoryAsMainThunk
 } from "../../../../../redux/reducers/local/newProduct/categoryTabComponent/thunks";
 import {ISelectableIndexModel} from "../../../../../redux/types";
+import FaButton from "../../../../common/basic/buttons/FaButton";
 
 export default function CatalogsBlock() {
 
@@ -42,7 +43,9 @@ export default function CatalogsBlock() {
         }
     },[languageState.selected.id, local.categoriesPrinted.length, local.categoriesWeb.length])
 
-    const setCategoryPath = (category: ICategory | null, catalogGroup: CatalogGroup) => dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup}))
+    const setCategoryPath = (category: ICategory | null, catalogGroup: CatalogGroup, level: number) =>
+        dispatch(actions.setRowPath({category: category, catalogGroup: catalogGroup, level: level}))
+
     const onCategoryRowReset = (catalog: CatalogGroup) => dispatch(actions.setShouldReset(catalog))
     const setSelectedCategory = (tableRow: ISelectableIndexModel<ProductGroupCategory>, catalogGroup: CatalogGroup) =>
         dispatch(actions.setSelectedCategory({rowIndex: tableRow.index, catalogGroup: catalogGroup}))
@@ -169,21 +172,15 @@ export default function CatalogsBlock() {
             <div>
                 <h2>Категории в каталоге</h2>
                 <div className="u-buttons-wrapper">
-                    <button type="button" className="btn btn-dark" onClick={() => addCategory(CatalogGroup.Printed)}>
-                        <i className="fa  fa-plus" aria-hidden="true"/>
-                    </button>
-                    <button type="button" className="btn btn-dark" onClick={() => changeCategory(CatalogGroup.Printed)}>
-                        <i className="fa fa-pencil-square-o" aria-hidden="true"/>
-                    </button>
-                    <button type="button" className="btn btn-dark" onClick={() => removeCategory(CatalogGroup.Printed)}>
-                        <i className="fa fa fa-minus" aria-hidden="true"/>
-                    </button>
+                    <FaButton onClick={() => addCategory(CatalogGroup.Printed)} faType={"fa-plus"}/>
+                    <FaButton onClick={() => changeCategory(CatalogGroup.Printed)} faType={"fa-pencil-square-o"}/>
+                    <FaButton onClick={() => removeCategory(CatalogGroup.Printed)} faType={"fa-minus"}/>
                     <CatalogSelector filter={CatalogFilter.Printed}/>
                     <CategorySelectRow
                       shouldReset={local.shouldResetPrinted}
                       onReset={() => onCategoryRowReset(CatalogGroup.Printed)}
                       categories={local.categoriesPrinted}
-                      onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Printed)}}/>
+                      onChange={(cat, level) => {setCategoryPath(cat, CatalogGroup.Printed, level)}}/>
                 </div>
                 </div>
             <CategoryDynamicTable
@@ -211,7 +208,7 @@ export default function CatalogsBlock() {
                     shouldReset={local.shouldResetWeb}
                     onReset={() => onCategoryRowReset(CatalogGroup.Web)}
                     categories={local.categoriesWeb}
-                    onChange={(cat) => {setCategoryPath(cat, CatalogGroup.Web)}}/>
+                    onChange={(cat, level) => {setCategoryPath(cat, CatalogGroup.Web, level)}}/>
             </div>
             </div>
             <CategoryDynamicTable
