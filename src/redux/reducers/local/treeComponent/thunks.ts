@@ -13,12 +13,12 @@ export const getProductsByGroupThunk = createApiThunk({
 
 export const recountProductGroupSortThunk = createApiThunk({
     typePrefix: 'tree-page/recount-product-groups-sort',
-    apiCall: Api.productGroups.recountProductGroupSort
+    apiCall: Api.category.recountProductGroupSort
 })
 
 export const changeProductGroupSortThunk = createApiThunk({
     typePrefix: 'tree-page/change-product-groups-sort',
-    apiCall: Api.productGroups.changeProductGroupSort
+    apiCall: Api.category.changeProductGroupSort
 })
 
 export const removeProductGroupFromCatsThunk = createApiThunk({

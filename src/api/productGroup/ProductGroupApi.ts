@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IProductGroup, IProductGroupIdentity, IProductGroupSort} from "../../domain/types";
+import {IProductGroup, IProductGroupIdentity} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
 
@@ -37,14 +37,9 @@ export default class ProductGroupApi extends BaseApi {
                                       catalogGroup: number,
                                       validationType: number,
                                       catalogId: number | null,
-                                      categoryId: number}): Promise<IApplicationResponse<IProductGroupIdentity[]>> =>
-        this.sendQuery<IProductGroupIdentity[]>('/api/product-group/identity/by-category', data, actionTypes.get, true);
-
-    recountProductGroupSort = async (data: {catalogId: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
-        this.sendQuery<IProductGroupSort[]>('/api/product-group/recount-sort', data, actionTypes.post, true);
-
-    changeProductGroupSort = async (data: {productGroupId: number, catalogId: number, targetSort: number, currentSort: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
-        this.sendQuery<IProductGroupSort[]>('/api/product-group/change-sort', data, actionTypes.put, true);
+                                      categoryId: number}): Promise<IApplicationResponse<{ products: IProductGroupIdentity[], minSort: number, maxSort: number }>> =>
+        this.sendQuery<{ products: IProductGroupIdentity[], minSort: number, maxSort: number }>
+            ('/api/product-group/identity/by-category', data, actionTypes.get, true);
 
     getOrReserve = async (data: {productGroupId: string | null, languageId: number}): Promise<IApplicationResponse<IProductGroup>> =>
         this.sendQuery<IProductGroup>('/api/product-group/get-or-reserve', data, actionTypes.get, true);

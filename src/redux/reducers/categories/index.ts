@@ -111,7 +111,7 @@ const categorySlice = createSlice({
             if(action.meta.arg.parentId == null) {
                 const baseParent = action.meta.arg.catalogGroup == CatalogGroup.Printed ? 0 : 2000;
                 const parentId = action.meta.arg.parentId ?? baseParent;
-                state.categories.unshift(createCategory(parentId, action.payload, action.meta.arg.name))
+                state.categories.push(createCategory(parentId, action.payload, action.meta.arg.name))
             }
             else {
                 const category = findCategory(state.categories, action.meta.arg.parentId);
@@ -122,6 +122,8 @@ const categorySlice = createSlice({
             state.newCategoryName = ""
         })
         builder.addCase(createCategoryThunk.rejected, (state, action) => {
+            if(action.payload?.statusCode == 409)
+                alert("У категории есть прикрепленные группы. Невозможно создать новую субкатегорию.")
             console.log(`Can't create category. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(deleteCategoryThunk.fulfilled, (state, action) => {

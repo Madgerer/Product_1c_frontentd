@@ -11,6 +11,7 @@ import {
 } from "../../../redux/reducers/local/treeComponent/thunks";
 import "./TreeGroupToolbar.scss"
 import {CategoriesState} from "../../../redux/reducers/categories";
+import FaButton from "../../common/basic/buttons/FaButton";
 
 export default function TreeGroupToolbar() {
     const local = useSelector<AppState, TreeComponentState>(x => x.local.treeComponent);
@@ -43,11 +44,26 @@ export default function TreeGroupToolbar() {
             alert("Выберите продуктовую группу для изменения сортировки")
             return;
         }
-        // @ts-ignore
-        // компилятор тупит и не смотря на проверку выше - не билдит, поэтому игнорим ее
-        const target = selected!.sort + addition;
+        let target: number;
+        if(selected.sort == 0) {
+            if(addition < 0) {
+                alert("Новое значение сортировки выходит за границы доступного")
+                return;
+            }
+            target = selected.sort + local.minSort
+        }
+        else {
+            // @ts-ignore
+            // компилятор тупит и не смотря на проверку выше - не билдит, поэтому игнорим ее
+            target = selected!.sort + addition;
+        }
 
-        if(target < 1) {
+        if(target < 1 || target < local.minSort) {
+            alert("Новое значение сортировки выходит за границы доступного")
+            return;
+        }
+        if(target > local.maxSort)
+        {
             alert("Новое значение сортировки выходит за границы доступного")
             return;
         }
@@ -115,16 +131,17 @@ export default function TreeGroupToolbar() {
         {
             catalogGroupState.selected.id === CatalogGroup.Printed
                 ? <>
-                    <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber} className="form-control input-group-sm tree-group-toolbar__input"/>
-                    <button className="btn btn-dark" title="Изменить номер карточки на записанный в поле" onClick={() => setSpecificSort()}>
-                        <i className="fa fa-arrows-v" aria-hidden="true"/>
-                    </button>
-                    <button className="btn btn-dark" title="Номер +1" onClick={() => changeSort(1)}>
-                        <i className="fa fa-arrow-down" aria-hidden="true"/>
-                    </button>
-                    <button className="btn btn-dark" title="Номер -1" onClick={() => changeSort(-1)}>
-                        <i className="fa fa-arrow-up" aria-hidden="true"/>
-                    </button>
+                    {
+                        local.minSort == 0 && local.maxSort == 0
+                            ? <></>
+                            : <>
+                                <input onChange={e => setSortNumber(e.currentTarget.value)} value={local.sortNumber} className="form-control input-group-sm tree-group-toolbar__input"/>
+                                <FaButton onClick={() => setSpecificSort()} faType={"fa-arrows-v"}/>
+                            </>
+
+                    }
+                    <FaButton onClick={() => changeSort(1)} faType={"fa-arrow-down"}/>
+                    <FaButton onClick={() => changeSort(-1)} faType={"fa-arrow-up"}/>
                 </>
                 : <></>
         }

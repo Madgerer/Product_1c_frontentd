@@ -74,7 +74,7 @@ function ProductGroupTogglingRow(props: ITogglingRowProps): JSX.Element {
                     : <i className="fa fa-plus bg-blue"></i>}
             </td>
             <td onClick={() => props.onRowClick(props.model)}>
-               {props.model.name}
+               {`${props.model.name}__${props.model.id}`}
             </td>
             {
                 props.showSortColumn ?

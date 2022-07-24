@@ -45,7 +45,7 @@ function CategoryExpanded(props: ICategoryExpandedProps) {
                     <label htmlFor={String(props.category.id)}/>
                 </div>
                 <div className={"cat-category-group-list__name"} onClick={() => props.onRowClicked(props.category)}>
-                    {props.category.name}
+                    {`${props.category.name} __ ${props.category.id}` }
                 </div>
             </div>
         </li>

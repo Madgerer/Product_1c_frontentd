@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {CatalogGroup, ICategory, IProductGroupWithCategoryPath} from "../../domain/types";
+import {CatalogGroup, ICategory, IProductGroupSort, IProductGroupWithCategoryPath} from "../../domain/types";
 
 
 export default class CategoryApi extends BaseApi {
@@ -35,4 +35,10 @@ export default class CategoryApi extends BaseApi {
     setCategoryAsMain = (data: {productGroupId: string, categoryId: number})
         : Promise<IApplicationResponse<void>> =>
         this.sendQuery('/api/category/set-cat-as-main', data, actionTypes.put, true);
+
+    recountProductGroupSort = async (data: {catalogId: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
+        this.sendQuery<IProductGroupSort[]>('/api/category/recount-sort', data, actionTypes.post, true);
+
+    changeProductGroupSort = async (data: {productGroupId: number, catalogId: number, targetSort: number, currentSort: number}): Promise<IApplicationResponse<IProductGroupSort[]>> =>
+        this.sendQuery<IProductGroupSort[]>('/api/category/change-sort', data, actionTypes.put, true);
 }

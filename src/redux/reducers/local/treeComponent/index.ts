@@ -15,6 +15,8 @@ export type TreeComponentState = {
     productGroups: IProductGroupIdentityModel[],
     selectedGroups: IProductGroupIdentityModel[],
     lastSelected: IProductGroupIdentityModel | null,
+    minSort: number,
+    maxSort: number,
     filter: string,
     isProductGroupsLoading: boolean,
     sortNumber: string,
@@ -26,6 +28,8 @@ export type TreeComponentState = {
 const INITIAL_STATE: TreeComponentState = {
     selectedGroups: [],
     productGroups: [],
+    minSort: -1,
+    maxSort: -1,
     filter: "",
     isProductGroupsLoading: false,
     sortNumber: "",
@@ -111,7 +115,7 @@ const slice = createSlice({
         builder.addCase(getProductGroupsBasicThunk.fulfilled, (state, action) => {
             state.sortNumber = ""
             state.lastSelected = null
-            state.productGroups = action.payload.map(x => {
+            state.productGroups = action.payload.products.map(x => {
                 return{
                     id: x.id,
                     name: x.name,
@@ -124,11 +128,17 @@ const slice = createSlice({
                     isLastActive: false
                 }
             });
+            state.minSort = action.payload.minSort
+            state.maxSort = action.payload.maxSort
+
             state.isProductGroupsLoading = false;
             return state;
         })
         builder.addCase(getProductGroupsBasicThunk.rejected, (state, action) => {
             state.isProductGroupsLoading = false;
+            state.productGroups = []
+            state.minSort = 0;
+            state.maxSort = 0;
             console.log(`Can't get product groups identities. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(getProductsByGroupThunk.pending, (state, action) => {

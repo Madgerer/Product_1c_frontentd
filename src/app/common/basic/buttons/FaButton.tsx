@@ -1,7 +1,8 @@
 import './FaButton.scss'
 
 export default function FaButton(props: IFaButtonProps) {
-    return <button  className="btn btn-dark" onClick={() => props.onClick()}>
+    const cName = "btn btn-dark " + props.additionalClassName ?? ""
+    return <button  className={cName} onClick={() => props.onClick()}>
         <i className={`fa ${props.faType}`}></i>
     </button>
 }
@@ -9,4 +10,5 @@ export default function FaButton(props: IFaButtonProps) {
 interface IFaButtonProps {
     onClick: () => void,
     faType: string
+    additionalClassName?: string
 }
