@@ -16,9 +16,9 @@ export const getAttributesThunk = createApiThunk({
     apiCall: Api.attributes.getAttributes
 })
 
-export const getPriceGroupsThunk = createNoArgsApiThunk({
-    typePrefix: 'new-product/get-price-groups',
-    apiCall: Api.priceGroup.getPriceGroups
+export const getSellmarksThunk = createNoArgsApiThunk({
+    typePrefix: 'new-product/get-sellmarks',
+    apiCall: Api.sellmarks.getSellmarks
 })
 
 export const getOrReserveThunk = createApiThunk({

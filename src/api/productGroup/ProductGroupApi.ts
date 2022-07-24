@@ -45,11 +45,12 @@ export default class ProductGroupApi extends BaseApi {
         this.sendQuery<IProductGroup>('/api/product-group/get-or-reserve', data, actionTypes.get, true);
 
     createProductGroup = async (data: {id: string,
+                                isToolset: boolean,
                                 name: string,
                                 seriesId: number | null,
                                 signId: number | null,
                                 sellmarkId: number | null,
-                                priceGroupId: number | null,
+                                mainAttributeId: number | null
                                 languageId: number | null }): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/product-group/create', data, actionTypes.post, true);
 

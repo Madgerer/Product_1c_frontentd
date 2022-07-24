@@ -29,7 +29,7 @@ export default function ProductAttributesBlock() {
 
     useEffect(() => {
         dispatch(getProductsWithoutGroupThunk({
-            priceGroupId: productGroupState.selectedPriceGroup!.id!,
+            priceGroupId: productGroupState.productGroup.priceGroupId ?? null,
             languageId: languageState.selected.id
         }))
         dispatch(getProductsWithAttributes({
@@ -37,7 +37,7 @@ export default function ProductAttributesBlock() {
             languageId: languageState.selected.id
         }))
         dispatch(getAttributesThunk({languageId: languageState.selected.id}))
-    },[productGroupState.selectedPriceGroup?.id, languageState.selected.id])
+    },[productGroupState.productGroup.priceGroupId, languageState.selected.id])
 
     const addProductToProductGroup = () => {
         if(local.selectedProduct?.id === null) {

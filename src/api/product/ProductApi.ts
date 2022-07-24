@@ -4,7 +4,7 @@ import {IProductBase, IProductIdentity, IProductWithAttributes} from "../../doma
 
 export default class ProductApi extends BaseApi {
 
-    getProductsIdentityWithoutGroup = (args: {priceGroupId: number, languageId: number}): Promise<IApplicationResponse<IProductIdentity[]>> =>
+    getProductsIdentityWithoutGroup = (args: {priceGroupId: number | null, languageId: number}): Promise<IApplicationResponse<IProductIdentity[]>> =>
          this.sendQuery<IProductIdentity[]>('/api/product/identity/no-group', args, actionTypes.get, true);
 
     getProductsIdentityByGroup = (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IProductIdentity[]>> =>

@@ -28,10 +28,6 @@ export default function TablePartTab(props: IMountableProps) {
                 <textarea className="form-control" style={{height: 130}} rows={3} onChange={(e) => setWebDescr(e.target.value)}>{productGroupState.productGroup.descriptionWeb}</textarea>
             </div>
         </div>
-        {
-            productGroupState.isPriceGroupChanged
-                ? <>Сохраните изменения, прежде чем продолжить работу с данным блоком</>
-                : <ProductAttributesBlock/>
-        }
+        <ProductAttributesBlock/>
     </div>
 }

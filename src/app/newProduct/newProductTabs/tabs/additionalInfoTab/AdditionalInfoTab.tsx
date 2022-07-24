@@ -37,7 +37,7 @@ export default function AdditionalInfoTab(props: IMountableProps) {
             languageId: languageState.selected.id,
             productGroupId: groupState.productGroup.id
         }))
-    }, [languageState.selected.id, groupState.selectedPriceGroup?.id])
+    }, [languageState.selected.id])
 
     const setSelectedRec = (id: string) => dispatch(actions.setSelectedRec(id))
     const setSelectedGroupRed = (id: string) => dispatch(actions.setSelectedGroupRec(id))

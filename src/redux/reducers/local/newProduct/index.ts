@@ -1,7 +1,7 @@
 import {
     IAttribute,
-    IPriceGroup,
     IProductGroup,
+    ISellmark,
     ISeries,
     ISign
 } from "../../../../domain/types";
@@ -12,7 +12,7 @@ import {
     discardReserveThunk,
     getAttributesThunk,
     getOrReserveThunk,
-    getPriceGroupsThunk,
+    getSellmarksThunk,
     getSeriesThunk,
     getSignsThunk, updateProductGroupThunk
 } from "./thunks";
@@ -30,11 +30,9 @@ export type NewProductState = {
     selectedSign: ISign | null,
     attributes: IAttribute[],
     selectedAttribute: IAttribute | null,
-    priceGroups: IPriceGroup[],
-    selectedPriceGroup: IPriceGroup | null
+    sellmarks: ISellmark[],
+    selectedSellmark: ISellmark | null,
     loadingState: INewProductLoadingState,
-    isPriceGroupChanged: boolean,
-    initialPriceGroupId: number | null
 }
 
 interface INewProductLoadingState {
@@ -47,7 +45,7 @@ interface INewProductLoadingState {
 const INITIAL_SERIES: ISeries[] = [{id: 0, name: 'loading', imageUrl: '', titleEng: ''}]
 const INITIAL_SIGNS: ISign[] = [{id: 0, name: 'loading', imageUrl: ''}]
 const INITIAL_ATTRIBUTES: IAttribute[] = [{id: 0, name: 'loading'}]
-const INITIAL_PRICEGROUPS: IAttribute[] = [{id: 0, name: 'loading'}]
+const INITIAL_SELLMARKS: ISellmark[] = [{id: 0, name: 'loading'}]
 
 const INITIAL_STATE: NewProductState = {
     productGroup:  {
@@ -73,15 +71,13 @@ const INITIAL_STATE: NewProductState = {
     selectedSign: INITIAL_SIGNS[0],
     attributes: INITIAL_ATTRIBUTES,
     selectedAttribute: INITIAL_ATTRIBUTES[0],
-    priceGroups: INITIAL_PRICEGROUPS,
-    selectedPriceGroup: INITIAL_PRICEGROUPS[0],
+    sellmarks: INITIAL_SELLMARKS,
+    selectedSellmark: INITIAL_SELLMARKS[0],
     loadingState: {
         isRejectLoading: false,
         isSaveLoading: false,
         isPageLoading: true
     },
-    isPriceGroupChanged: false,
-    initialPriceGroupId: null
 }
 
 const slice = createSlice({
@@ -131,7 +127,17 @@ const slice = createSlice({
             }
             state.productGroup.mainAttributeId = state.selectedAttribute?.id ?? null
         },
-        setSelectedPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
+        setSelectedSellmark(state: NewProductState, action: PayloadAction<number | null>) {
+            const sellmark = state.sellmarks.find(x => x.id === action.payload)
+            if(sellmark === undefined)
+                state.selectedSellmark = null
+            else
+                state.selectedSellmark = sellmark
+
+            state.productGroup.sellmarkId = state.selectedSellmark?.id ?? 0
+
+        },
+        /*setSelectedPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
             const priceGroup = state.priceGroups.find(x => x.id == action.payload);
             if(priceGroup === undefined) {
                 state.selectedPriceGroup = null;
@@ -141,7 +147,7 @@ const slice = createSlice({
             state.productGroup.priceGroupId = state.selectedPriceGroup?.id ?? 0
             state.isPriceGroupChanged = state.productGroup.priceGroupId != state.initialPriceGroupId;
 
-        },
+        },*/
         setDescription(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.description = action.payload
         },
@@ -171,11 +177,11 @@ const slice = createSlice({
         builder.addCase(getAttributesThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
-        builder.addCase(getPriceGroupsThunk.fulfilled, (state, action) => {
-            state.priceGroups = action.payload
-            state.selectedPriceGroup = action.payload.find(x => x.id === state.productGroup.priceGroupId) ?? null
+        builder.addCase(getSellmarksThunk.fulfilled, (state, action) => {
+            state.sellmarks = action.payload
+            state.selectedSellmark = action.payload.find(x => x.id === state.productGroup.sellmarkId) ?? null
         })
-        builder.addCase(getPriceGroupsThunk.rejected, (state, action) => {
+        builder.addCase(getSellmarksThunk.rejected, (state, action) => {
             console.log(`Can't load signs. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
@@ -184,7 +190,6 @@ const slice = createSlice({
         })
         builder.addCase(getOrReserveThunk.fulfilled, (state, action) => {
             state.productGroup = action.payload
-            state.initialPriceGroupId = action.payload.priceGroupId
             state.loadingState.isPageLoading = false
         })
         builder.addCase(getOrReserveThunk.rejected, (state, action) => {
@@ -234,7 +239,6 @@ const slice = createSlice({
         })
         builder.addCase(updateProductGroupThunk.fulfilled, (state) => {
             state.loadingState.isSaveLoading = false;
-            state.isPriceGroupChanged = false;
         })
         builder.addCase(updateProductGroupThunk.rejected, (state, action) => {
             state.loadingState.isSaveLoading = false;

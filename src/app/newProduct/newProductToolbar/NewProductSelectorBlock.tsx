@@ -5,7 +5,7 @@ import {actions, NewProductState} from "../../../redux/reducers/local/newProduct
 import {useEffect} from "react";
 import {
     getAttributesThunk,
-    getPriceGroupsThunk,
+    getSellmarksThunk,
     getSeriesThunk,
     getSignsThunk
 } from "../../../redux/reducers/local/newProduct/thunks";
@@ -23,14 +23,14 @@ export default function NewProductSelectorBlock() {
             dispatch(getSignsThunk())
             dispatch(getSeriesThunk())
             dispatch(getAttributesThunk({languageId: languageState.selected.id}))
-            dispatch(getPriceGroupsThunk())
+            dispatch(getSellmarksThunk())
         }
     },[languageState.selected.id])
 
     const setSeries = (seriesId: number | null) => dispatch(actions.setSelectedSeries(seriesId))
     const setSigns = (signId: number | null) => dispatch(actions.setSelectedSign(signId))
     const setAttribute = (attributeId: number | null) => dispatch(actions.setSelectedAttribute(attributeId))
-    const setPriceGroup = (priceGroupId: number | null) => dispatch(actions.setSelectedPriceGroup(priceGroupId))
+    const setPriceGroup = (sellmarkId: number | null) => dispatch(actions.setSelectedSellmark(sellmarkId))
 
     return <div className="new-product-selector-block">
         <NullableSelect value={local.selectedSeries}
@@ -51,8 +51,8 @@ export default function NewProductSelectorBlock() {
                         onChange={e => setAttribute(e as number)}
                         toOption={ToOptionProvider.attributeToOption}
                         className={"selector"} />
-        <NullableSelect value={local.selectedPriceGroup}
-                        options={local.priceGroups}
+        <NullableSelect value={local.selectedSellmark}
+                        options={local.sellmarks}
                         placeholder={"Торговая марка"}
                         onChange={e => setPriceGroup(e as number)}
                         toOption={ToOptionProvider.priceGroupToOption}

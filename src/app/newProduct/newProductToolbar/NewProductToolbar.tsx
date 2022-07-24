@@ -41,9 +41,10 @@ export default function NewProductToolbar() {
                 name: local.productGroup.name!,
                 seriesId: local.productGroup.seriesId,
                 signId: local.productGroup.signId,
-                priceGroupId: local.productGroup.priceGroupId,
                 sellmarkId: local.productGroup.sellmarkId,
-                languageId: languageState.selected.id
+                languageId: languageState.selected.id,
+                isToolset: local.productGroup.isToolset,
+                mainAttributeId: local.productGroup.mainAttributeId
             }))
             return;
         }
@@ -92,10 +93,11 @@ export default function NewProductToolbar() {
                 <input className="form-control" onChange={e => setName(e.target.value)} value={local.productGroup.name ?? ""} placeholder="Наименование новой карточки"/>
             </div>
 
+            <TextCheckbox onChange={setIsToolset} text={"Набор"} isChecked={local.productGroup.isToolset} readonly={local.productGroup.wasCreate}/>
+
             {
                 local.productGroup.wasCreate
                     ? <div className="input-checkboxes-wrapper">
-                        <TextCheckbox onChange={setIsToolset} text={"Набор"} isChecked={local.productGroup.isToolset}/>
                         <TextCheckbox onChange={setIsDescriptionChecked} text={"Описание"} isChecked={local.productGroup.isDescriptionChecked}/>
                         <TextCheckbox onChange={setIsPhotoChecked} text={"Описание"} isChecked={local.productGroup.isImageChecked}/>
                     </div>
