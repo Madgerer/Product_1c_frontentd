@@ -17,9 +17,10 @@ import {
 import {actions, TableTabState} from "../../../../../redux/reducers/local/newProduct/tablePartComponent";
 import SimpleSelect from "../../../../common/basic/selectors/SimpleSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
-import NullableSelect from "../../../../common/basic/selectors/NullableSelect";
 import {Table} from "react-bootstrap";
 import Constants from "../../../../../domain/Constants";
+import FaButton from "../../../../common/basic/buttons/FaButton";
+import FastNullableSelector from "../../../../common/basic/selectors/FastNullableSelector";
 
 export default function ProductAttributesBlock() {
     const local = useSelector<AppState, TableTabState>(x => x.local.newProductState.tableTabState)
@@ -206,116 +207,94 @@ export default function ProductAttributesBlock() {
     const setColumnSelected = (id: number) => dispatch(actions.setSelectedColumn(id))
 
     return <>
-        {
-            productGroupState.productGroup.priceGroupId === null
-                ? <div>Мы не можем продолжить без выбранной продуктовой группы</div>
-                : <>
-                    <div className="product-attributes-block-buttons-header" >
+        <div className="product-attributes-block-buttons-header" >
 
-                            <button type="button" className="btn btn-dark" onClick={() => addProductToProductGroup()}>
-                                <i className="fa  fa-plus" aria-hidden="true"/>
-                            </button>
-                            <button type="button" className="btn btn-dark" onClick={() => replaceProductInGroup()}>
-                                <i className="fa  fa-pencil-square-o" aria-hidden="true"/>
-                            </button>
-                            <button type="button" className="btn btn-dark" onClick={() => removeProductFromGroup()}>
-                                <i className="fa  fa-minus" aria-hidden="true"/>
-                            </button>
-                            <input className="form-control"
-                                   type="text"
-                                   placeholder="Артикул"
-                                   value={local.article}
-                                   onChange={e => setArticle(e.currentTarget.value)}
-                                   style={{width: 90, textAlign: "center"}}
-                                   onKeyDown={(e) => onArticleEnter(e)}
-                            />
+            <FaButton onClick={() => addProductToProductGroup()} faType={"fa-plus"}/>
+            <FaButton onClick={() => replaceProductInGroup()} faType={"fa-pencil-square-o"}/>
+            <FaButton onClick={() => removeProductFromGroup()} faType={"fa-minus"}/>
+
+            <input className="form-control"
+                   type="text"
+                   placeholder="Артикул"
+                   value={local.article}
+                   onChange={e => setArticle(e.currentTarget.value)}
+                   style={{width: 90, textAlign: "center"}}
+                   onKeyDown={(e) => onArticleEnter(e)}
+            />
 
 
-                            <NullableSelect value={local.selectedProduct}
-                                              placeholder={"Наименование товара"}
-                                              options={local.products}
-                                              onChange={(e) => setSelectedProduct(e as string)}
-                                              toOption={ToOptionProvider.productIdentityToOption}
-                                              className={"selector selector--name"}/>
+            <FastNullableSelector value={local.selectedProduct}
+                            placeholder={"Наименование товара"}
+                            options={local.products}
+                            onChange={(e) => setSelectedProduct(e as string)}
+                            toOption={ToOptionProvider.productIdentityToOption}
+                            noOptionsMessage={"No options"}
+                            className={"selector selector--name"}/>
 
-                            <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(-1)}}>
-                                <i className="fa  fa-arrow-up" aria-hidden="true"/>
-                            </button>
-                            <button type="button" className="btn btn-dark" onClick={() => {swapProductSort(1)}}>
-                                <i className="fa  fa-arrow-down" aria-hidden="true"/>
-                            </button>
-                            <button type="button" className="btn btn-dark" onClick={() => addAttribute()}>
-                                <i className="fa  fa-plus" aria-hidden="true"/>
-                            </button>
-                            <button type="button" className="btn btn-dark" onClick={() => removeAttribute()}>
-                                <i className="fa  fa-minus" aria-hidden="true"/>
-                            </button>
-                            <SimpleSelect value={local.selectedAttribute}
-                                          options={local.attributes}
-                                          onChange={(e) => setSelectedAttribute(e)}
-                                          className={"selector"}
-                                          toOption={ToOptionProvider.attributeToOption} />
-                            <input className="form-control" type="text" id="columnName" disabled={true} placeholder="Атрибут"
-                                   style={{width: 180, textAlign: "center"}}/>
+            <FaButton onClick={() => swapProductSort(-1)} faType={"fa-arrow-up"}/>
+            <FaButton onClick={() => swapProductSort(1)} faType={"fa-arrow-down"}/>
+            <FaButton onClick={() => addAttribute()} faType={"fa-plus"}/>
+            <FaButton onClick={() => removeAttribute()} faType={"fa-minus"}/>
 
+            <SimpleSelect value={local.selectedAttribute}
+                          options={local.attributes}
+                          onChange={(e) => setSelectedAttribute(e)}
+                          className={"selector"}
+                          toOption={ToOptionProvider.attributeToOption} />
 
-                            <button type="button" className="btn btn-dark" onClick={() => changeAttributeOrder(-1)}>
-                                <i className="fa fa-arrow-left" aria-hidden="true"/>
-                            </button>
-                            <button type="button" className="btn btn-dark" onClick={() => changeAttributeOrder(1)}>
-                                <i className="fa  fa-arrow-right" aria-hidden="true"/>
-                            </button>
-                            <button type="button" disabled={local.accumulatedChanges.length === 0} className="btn btn-dark" onClick={() => saveAttributeValues()}>
-                                Сохранить
-                            </button>
+            <input className="form-control" type="text" id="columnName" disabled={true} placeholder="Атрибут"
+                   style={{width: 180, textAlign: "center"}}/>
 
+            <FaButton onClick={() => changeAttributeOrder(-1)} faType={"fa-arrow-left"}/>
+            <FaButton onClick={() => changeAttributeOrder(1)} faType={"fa-arrow-right"}/>
 
-                    </div>
-                    <>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th>Порядок</th>
-                                    <th>Код</th>
-                                    <th>Наименование</th>
-                                    {
-                                        local.attributesOrder.map(x => {
-                                            const attr = local.attributes.find(a => a.id == x)
-                                            if(attr === undefined)
-                                                return null
-                                            return <th onClick={() => setColumnSelected(attr!.id)}
-                                                       className={local.selectedAttributeColumn == attr!.id ? "bg-orange" : ""}>{attr!.name}</th>
-                                        }).filter(x => x !== null)
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    local.groupProducts.map(x => {
-                                        return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
-                                            <td>{x.sort}</td>
-                                            <td>{x.id}</td>
-                                            <td>{x.name}</td>
-                                            {
-                                                local.attributesOrder.map(a => {
-                                                    const attrValue = x.attributeValues.find(x => x.id == a);
-                                                    if(attrValue === undefined)
-                                                        return null
-                                                    return <td>
-                                                        <input type="text"
-                                                               disabled={a === Constants.SortAttributeId}
-                                                               value={attrValue?.value ?? ""}
-                                                               onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
-                                                    </td>
-                                                }).filter(x => x !== null)
-                                            }
-                                        </tr>
-                                    })
-                                }
-                            </tbody>
-                        </Table>
-                    </>
-                </>
-        }
+            <button type="button" disabled={local.accumulatedChanges.length === 0} className="btn btn-dark" onClick={() => saveAttributeValues()}>
+                Сохранить
+            </button>
+        </div>
+        <>
+            <Table>
+                <thead>
+                <tr>
+                    <th>Порядок</th>
+                    <th>Код</th>
+                    <th>Наименование</th>
+                    {
+                        local.attributesOrder.map(x => {
+                            const attr = local.attributes.find(a => a.id == x)
+                            if(attr === undefined)
+                                return null
+                            return <th onClick={() => setColumnSelected(attr!.id)}
+                                       className={local.selectedAttributeColumn == attr!.id ? "bg-orange" : ""}>{attr!.name}</th>
+                        }).filter(x => x !== null)
+                    }
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    local.groupProducts.map(x => {
+                        return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
+                            <td>{x.sort}</td>
+                            <td>{x.id}</td>
+                            <td>{x.name}</td>
+                            {
+                                local.attributesOrder.map(a => {
+                                    const attrValue = x.attributeValues.find(x => x.id == a);
+                                    if(attrValue === undefined)
+                                        return null
+                                    return <td>
+                                        <input type="text"
+                                               disabled={a === Constants.SortAttributeId}
+                                               value={attrValue?.value ?? ""}
+                                               onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
+                                    </td>
+                                }).filter(x => x !== null)
+                            }
+                        </tr>
+                    })
+                }
+                </tbody>
+            </Table>
+        </>
     </>
 }

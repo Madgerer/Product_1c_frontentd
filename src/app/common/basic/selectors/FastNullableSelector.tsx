@@ -80,7 +80,7 @@ export default function FastNullableSelector<T>(props: IFastNullableSelectorProp
     />
 }
 
-const height = 35;
+const height = 40;
 
 class MenuList extends Component {
     render() {
