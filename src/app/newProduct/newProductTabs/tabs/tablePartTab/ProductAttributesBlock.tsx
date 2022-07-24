@@ -15,6 +15,7 @@ import {
     swapProductSortThunk
 } from "../../../../../redux/reducers/local/newProduct/tablePartComponent/thunk";
 import {actions, TableTabState} from "../../../../../redux/reducers/local/newProduct/tablePartComponent";
+import {actions as productGroupActions} from "../../../../../redux/reducers/local/newProduct/index";
 import SimpleSelect from "../../../../common/basic/selectors/SimpleSelect";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import {Table} from "react-bootstrap";
@@ -33,12 +34,26 @@ export default function ProductAttributesBlock() {
             priceGroupId: productGroupState.productGroup.priceGroupId ?? null,
             languageId: languageState.selected.id
         }))
+
+    },[productGroupState.productGroup.priceGroupId, languageState.selected.id])
+
+    useEffect(() => {
         dispatch(getProductsWithAttributes({
             productGroupId: productGroupState.productGroup.id,
             languageId: languageState.selected.id
         }))
         dispatch(getAttributesThunk({languageId: languageState.selected.id}))
-    },[productGroupState.productGroup.priceGroupId, languageState.selected.id])
+    }, [languageState.selected.id])
+
+    //выставляем PriceGroup у продуктовой группы
+    useEffect(() => {
+        //в случае если у группы нет продуктов, то и PriceGroup не должно быть
+        if(local.groupProducts.length == 0)
+            dispatch(productGroupActions.setPriceGroup(null))
+        //при добавлении первого продукта мы присваиваем группе PriceGroup
+        if(local.groupProducts.length == 1)
+            dispatch(productGroupActions.setPriceGroup(local.groupProducts[0].priceGroupId))
+    }, [local.groupProducts.length])
 
     const addProductToProductGroup = () => {
         if(local.selectedProduct?.id === null) {

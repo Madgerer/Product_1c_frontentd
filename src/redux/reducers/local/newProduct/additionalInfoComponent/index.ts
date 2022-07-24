@@ -20,7 +20,7 @@ export type AdditionalInfoState = {
     selectedGroupRecommendation: GroupRecommendation | null,
 }
 
-const ALL_RECOMMENDATIONS_STATE: IProductIdentity[] = [{id: '-1', name: 'loading'}]
+const ALL_RECOMMENDATIONS_STATE: IProductIdentity[] = [{id: '-1', name: 'loading', priceGroupId: 0}]
 const INITIAL_STATE: AdditionalInfoState = {
     allRecommendations: ALL_RECOMMENDATIONS_STATE,
     selectedRecommendation: ALL_RECOMMENDATIONS_STATE[0],
@@ -70,7 +70,8 @@ const slice = createSlice({
                     id: x.id,
                     name: x.name,
                     sort: x.sort,
-                    selected: false
+                    selected: false,
+                    priceGroupId: x.priceGroupId
                 }
             })
             state.selectedGroupRecommendation = null
@@ -85,8 +86,9 @@ const slice = createSlice({
             state.groupRecommendations.push({
                 id: state.allRecommendations[index].id,
                 name: state.allRecommendations[index].name,
+                priceGroupId: state.allRecommendations[index].priceGroupId,
                 sort: maxId + 1,
-                selected: false
+                selected: false,
             })
             state.selectedRecommendation = null
             state.allRecommendations.splice(index, 1)
@@ -105,7 +107,8 @@ const slice = createSlice({
             if(state.allRecommendations.findIndex(x => x.id === state.groupRecommendations[index].id) === -1)
                 state.allRecommendations.push({
                     id: state.groupRecommendations[index].id,
-                    name: state.groupRecommendations[index].name
+                    name: state.groupRecommendations[index].name,
+                    priceGroupId: state.groupRecommendations[index].priceGroupId
                 })
             state.groupRecommendations.splice(index, 1)
             state.selectedGroupRecommendation = null

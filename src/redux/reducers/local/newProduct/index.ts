@@ -137,17 +137,9 @@ const slice = createSlice({
             state.productGroup.sellmarkId = state.selectedSellmark?.id ?? 0
 
         },
-        /*setSelectedPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
-            const priceGroup = state.priceGroups.find(x => x.id == action.payload);
-            if(priceGroup === undefined) {
-                state.selectedPriceGroup = null;
-            } else {
-                state.selectedPriceGroup = priceGroup;
-            }
-            state.productGroup.priceGroupId = state.selectedPriceGroup?.id ?? 0
-            state.isPriceGroupChanged = state.productGroup.priceGroupId != state.initialPriceGroupId;
-
-        },*/
+        setPriceGroup(state: NewProductState, action: PayloadAction<number | null>) {
+            state.productGroup.priceGroupId = action.payload
+        },
         setDescription(state: NewProductState, action: PayloadAction<string>) {
             state.productGroup.description = action.payload
         },

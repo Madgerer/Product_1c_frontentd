@@ -14,7 +14,6 @@ import Constants from "../../../../../domain/Constants";
 export type ProductWithAttributes = IProductWithAttributes & ISelectable
 
 export type TableTabState = {
-
     groupProducts: ProductWithAttributes[],
     selectedGroupProduct: ProductWithAttributes | null
     selectedAttributeColumn: number | null
@@ -32,7 +31,7 @@ export type TableTabState = {
 }
 
 const INITIAL_ATTRIBUTES: IAttribute[] = [{id: -1, name: 'loading'}]
-const INITIAL_PRODUCTS: IProductIdentity[] = [{id: '1', name: 'loading'}]
+const INITIAL_PRODUCTS: IProductIdentity[] = [{id: '1', name: 'loading', priceGroupId: 0}]
 
 const INITIAL_STATE: TableTabState = {
     groupProducts: [],
@@ -97,7 +96,8 @@ const slice = createSlice({
                     attributeValues: new Array({
                         id: action.payload.attributeId,
                         value: action.payload.value
-                    })
+                    }),
+                    priceGroupId: product.priceGroupId
                 })
             }
         },
@@ -134,7 +134,8 @@ const slice = createSlice({
                 name: x.name,
                 attributeValues: x.attributeValues,
                 sort: x.sort,
-                selected: false
+                selected: false,
+                priceGroupId: x.priceGroupId
             }})
             state.attributesOrder = action.payload.attributesOrder!
         })
@@ -193,7 +194,6 @@ const slice = createSlice({
             if(product === null)
                 return
 
-            state.products = state.products.filter(x => x.id !== product!.id);
             state.selectedProduct = null;
 
             const attributes: IAttributeValue[] = state.attributesOrder.map(x => {
@@ -207,7 +207,8 @@ const slice = createSlice({
                 selected: false,
                 sort: productSort,
                 name: product!.name,
-                attributeValues: attributes
+                attributeValues: attributes,
+                priceGroupId: product!.priceGroupId
             })
         })
         builder.addCase(addProductToProductGroupThunk.rejected, (state, action) => {
@@ -222,7 +223,8 @@ const slice = createSlice({
             }
             const productIdentity: IProductIdentity = {
                 id: state.groupProducts[index]!.id,
-                name: state.groupProducts[index]!.name
+                name: state.groupProducts[index]!.name,
+                priceGroupId: state.groupProducts[index]!.priceGroupId
             }
 
             const newProductId = action.meta.arg.newProductId;
@@ -265,7 +267,7 @@ const slice = createSlice({
             state.groupProducts = state.groupProducts.filter(x => x.id !== action.meta.arg.productId)
             //зануляем выбранный ряд в таблице
             state.selectedGroupProduct = null
-            state.products.push({id: productToRemove!.id, name: productToRemove!.name})
+            state.products.push({id: productToRemove!.id, name: productToRemove!.name, priceGroupId: productToRemove!.priceGroupId})
         })
         builder.addCase(removeProductFromGroupThunk.rejected, (state, action) => {
             console.log(`Can't load attributes. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

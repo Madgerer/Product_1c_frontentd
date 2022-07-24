@@ -11,7 +11,7 @@ export default class ProductGroupApi extends BaseApi {
                                     seriesId: number | null,
                                     signId: number | null,
                                     sellmarkId: number | null,
-                                    priceGroupId: number,
+                                    priceGroupId: number | null,
                                     mainAttributeId: number | null,
                                     isToolset: boolean,
                                     isImageChecked: boolean,

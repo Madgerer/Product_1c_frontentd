@@ -62,7 +62,8 @@ const productComponentSlice = createSlice({
                 return {
                     id: x.id,
                     name: x.name,
-                    checked: false
+                    checked: false,
+                    priceGroupId: x.priceGroupId
                 }
             });
             return state;

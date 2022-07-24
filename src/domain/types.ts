@@ -22,7 +22,7 @@ export interface IProductGroup {
     seriesId: number | null,
     signId: number | null,
     sellmarkId: number | null,
-    priceGroupId: number,
+    priceGroupId: number | null,
     mainAttributeId: number | null,
     isDescriptionChecked: boolean,
     isToolset: boolean,
@@ -124,11 +124,10 @@ export interface ICardDistributionType extends IOptionType {
 export interface IProductIdentity {
     id: string,
     name: string
+    priceGroupId: number
 }
 
-export interface IProductBase {
-    id: string
-    name: string,
+export interface IProductBase extends IProductIdentity{
     sort: number | null
 }
 
