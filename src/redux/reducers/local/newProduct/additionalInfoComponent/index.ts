@@ -4,7 +4,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addRecommendationThunk,
     getAllRecommendationThunk,
-    getGroupRecommendationThunk,
+    getGroupRecommendationThunk, getProductGroupCatalogsThunk,
     removeRecommendationThunk, swapRecommendationSortThunk
 } from "./thunks";
 import _ from "lodash";
@@ -130,6 +130,13 @@ const slice = createSlice({
             state.selectedGroupRecommendation = first
         })
         builder.addCase(swapRecommendationSortThunk.rejected, (state, action) => {
+            console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(getProductGroupCatalogsThunk.fulfilled, (state, action) => {
+            state.groupCatalogs = action.payload
+        })
+        builder.addCase(getProductGroupCatalogsThunk.rejected, (state, action) => {
             console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }
