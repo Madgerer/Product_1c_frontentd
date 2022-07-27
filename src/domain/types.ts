@@ -27,7 +27,7 @@ export interface IProductGroup {
     isDescriptionChecked: boolean,
     isToolset: boolean,
     isImageChecked: boolean,
-    siteId: number | null,
+    siteId: number,
     wasCreate: boolean
 }
 
@@ -92,6 +92,16 @@ export interface IProductGroupIdentity {
     isDescriptionChecked: boolean,
     isImageChecked: boolean,
     sort: number | null
+}
+
+export interface IProductGroupCatalog {
+    productGroupId: string,
+    catalogId: number,
+    catalogName: string,
+    catalogCategoryId: number | null,
+    catalogParentCategoryId: number | null,
+    webCategoryId: number | null,
+    showStatus: boolean
 }
 
 export interface IImageType {

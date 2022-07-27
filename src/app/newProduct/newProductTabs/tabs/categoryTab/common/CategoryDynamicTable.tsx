@@ -12,37 +12,47 @@ export default function CategoryDynamicTable(props: ICategoryDynamicTableProps) 
     return <Table>
         <tbody>
         {
-            row.sort(x => x.index).map(row => {
-                return <tr key={row.index} className={row.selected ? "--selected" : ""} onClick={() => props.onRowClicked(row)}>
+            row.length == 0
+                ? <>
+                    <tr>
+                        <td>No matching records found</td>
+                    </tr>
+                </>
+                : <>
                     {
-                        <>
-                            <>
+                        row.sort(x => x.index).map(row => {
+                            return <tr key={row.index} className={row.selected ? "--selected" : ""} onClick={() => props.onRowClicked(row)}>
                                 {
-                                    Array.from(Array(maxColumnLength).keys()).map((columnNumber, i) => {
-                                        const column = row.model[columnNumber]
-                                        if(column === undefined) {
-                                            return <td key={Guid.create().toString()}/>
-                                        }
-                                        return <td key={(i + 1) * row.index + column.id}>{column.name}</td>
-                                    })
-                                }
-                            </>
-                            <>
-                                {
-                                    //в случае если это веб категории, до добавляем отображение Main
-                                    props.catalogGroup == CatalogGroup.Web
-                                        ? <td>
+                                    <>
+                                        <>
                                             {
-                                                Number(_.last(row.model)?.mainCategory ?? false)
+                                                Array.from(Array(maxColumnLength).keys()).map((columnNumber, i) => {
+                                                    const column = row.model[columnNumber]
+                                                    if(column === undefined) {
+                                                        return <td key={Guid.create().toString()}/>
+                                                    }
+                                                    return <td key={(i + 1) * row.index + column.id}>{column.name}</td>
+                                                })
                                             }
-                                        </td>
-                                        : <></>
+                                        </>
+                                        <>
+                                            {
+                                                //в случае если это веб категории, до добавляем отображение Main
+                                                props.catalogGroup == CatalogGroup.Web
+                                                    ? <td>
+                                                        {
+                                                            Number(_.last(row.model)?.mainCategory ?? false)
+                                                        }
+                                                    </td>
+                                                    : <></>
+                                            }
+                                        </>
+                                    </>
                                 }
-                            </>
-                        </>
+                            </tr>
+                        })
                     }
-                </tr>
-            })
+                </>
         }
         </tbody>
     </Table>

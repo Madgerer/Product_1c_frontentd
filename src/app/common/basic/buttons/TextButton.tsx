@@ -1,6 +1,6 @@
 import './TextButton.scss'
 
-export default function TextButton(props: Partial<ITextButtonProps>) {
+export default function TextButton(props: ITextButtonProps) {
     return <button type="button" disabled={props.disabled ?? false} className="btn btn-dark">
         {props.text}
     </button>
@@ -8,6 +8,7 @@ export default function TextButton(props: Partial<ITextButtonProps>) {
 
 interface ITextButtonProps {
     text: string
-    disabled: boolean
+    disabled?: boolean
+    onClick: () => void
 }
 

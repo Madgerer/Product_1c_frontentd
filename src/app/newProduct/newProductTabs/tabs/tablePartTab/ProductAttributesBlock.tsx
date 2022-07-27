@@ -287,26 +287,36 @@ export default function ProductAttributesBlock() {
                 </thead>
                 <tbody>
                 {
-                    local.groupProducts.map(x => {
-                        return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
-                            <td>{x.sort}</td>
-                            <td>{x.id}</td>
-                            <td>{x.name}</td>
+                    local.groupProducts.length == 0
+                        ? <>
+                            <tr>
+                                <td colSpan={local.attributesOrder.length + 3}>No matching records found</td>
+                            </tr>
+                        </>
+                        : <>
                             {
-                                local.attributesOrder.map(a => {
-                                    const attrValue = x.attributeValues.find(x => x.id == a);
-                                    if(attrValue === undefined)
-                                        return null
-                                    return <td>
-                                        <input type="text"
-                                               disabled={a === Constants.SortAttributeId}
-                                               value={attrValue?.value ?? ""}
-                                               onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
-                                    </td>
-                                }).filter(x => x !== null)
+                                local.groupProducts.map(x => {
+                                    return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
+                                        <td>{x.sort}</td>
+                                        <td>{x.id}</td>
+                                        <td>{x.name}</td>
+                                        {
+                                            local.attributesOrder.map(a => {
+                                                const attrValue = x.attributeValues.find(x => x.id == a);
+                                                if(attrValue === undefined)
+                                                    return null
+                                                return <td>
+                                                    <input type="text"
+                                                           disabled={a === Constants.SortAttributeId}
+                                                           value={attrValue?.value ?? ""}
+                                                           onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
+                                                </td>
+                                            }).filter(x => x !== null)
+                                        }
+                                    </tr>
+                                })
                             }
-                        </tr>
-                    })
+                        </>
                 }
                 </tbody>
             </Table>

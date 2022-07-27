@@ -47,7 +47,7 @@ export default function NewProductTabs() {
         <Tab eventKey={TabKeys.Additional.toString()} title="Доп. информация">
             {
                 key === TabKeys.Additional.toString() || isAdditionalLoaded
-                    ?  <AdditionalInfoTab onMount={async () => setAdditionalLoaded(true)}/>
+                    ? <AdditionalInfoTab onMount={async () => setAdditionalLoaded(true)}/>
                     : <></>
             }
         </Tab>

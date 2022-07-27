@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IProductGroup, IProductGroupIdentity} from "../../domain/types";
+import {IProductGroup, IProductGroupCatalog, IProductGroupIdentity} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
 
@@ -40,6 +40,9 @@ export default class ProductGroupApi extends BaseApi {
                                       categoryId: number}): Promise<IApplicationResponse<{ products: IProductGroupIdentity[], minSort: number, maxSort: number }>> =>
         this.sendQuery<{ products: IProductGroupIdentity[], minSort: number, maxSort: number }>
             ('/api/product-group/identity/by-category', data, actionTypes.get, true);
+
+    getProductGroupCatalogs = async (data: {productGroupId: string}): Promise<IApplicationResponse<IProductGroupCatalog[]>> =>
+        this.sendQuery<IProductGroupCatalog[]>('/api/product-group/group-catalogs', data, actionTypes.get, true);
 
     getOrReserve = async (data: {productGroupId: string | null, languageId: number}): Promise<IApplicationResponse<IProductGroup>> =>
         this.sendQuery<IProductGroup>('/api/product-group/get-or-reserve', data, actionTypes.get, true);

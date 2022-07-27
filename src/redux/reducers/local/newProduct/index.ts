@@ -62,7 +62,7 @@ const INITIAL_STATE: NewProductState = {
         sellmarkId: null,
         seriesId: null,
         signId: null,
-        siteId: null,
+        siteId: 0,
         wasCreate: false
     },
     series: INITIAL_SERIES,

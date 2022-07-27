@@ -103,7 +103,11 @@ export default function ScopeBlock() {
             </div>
             {
                 local.currentScopes.length === 0
-                    ? <></>
+                    ? <>
+                        <tr>
+                            <td colSpan={2}>No matching records found</td>
+                        </tr>
+                    </>
                     : <Table>
                         <thead>
                             <th>Код</th>

@@ -16,15 +16,17 @@ export const addRecommendationThunk = createApiThunk({
     apiCall: Api.product.addRecommendation
 })
 
-
 export const removeRecommendationThunk = createApiThunk({
     typePrefix: 'new-product/remove-rec',
     apiCall: Api.product.removeRecommendation
 })
-
 
 export const swapRecommendationSortThunk = createApiThunk({
     typePrefix: 'new-product/change-sort-rec',
     apiCall: Api.product.swapRecommendationSort
 })
 
+export const getProductGroupCatalogsThunk = createApiThunk({
+    typePrefix: 'new-product/get-group-catalogs',
+    apiCall: Api.productGroups.getProductGroupCatalogs
+})
