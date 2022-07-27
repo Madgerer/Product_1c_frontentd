@@ -101,6 +101,7 @@ export interface IProductGroupCatalog {
     catalogCategoryId: number | null,
     catalogParentCategoryId: number | null,
     webCategoryId: number | null,
+    sort: number | null,
     showStatus: boolean
 }
 

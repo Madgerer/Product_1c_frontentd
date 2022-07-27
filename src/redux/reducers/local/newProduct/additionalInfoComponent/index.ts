@@ -1,15 +1,27 @@
 import {IProductBase, IProductGroupCatalog, IProductIdentity} from "../../../../../domain/types";
 import {ISelectable} from "../../../../types";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, original, PayloadAction} from "@reduxjs/toolkit";
 import {
-    addRecommendationThunk,
+    addGroupToSiteThunk,
+    addRecommendationThunk, changeShowStatusThunk,
     getAllRecommendationThunk,
-    getGroupRecommendationThunk, getProductGroupCatalogsThunk,
+    getGroupRecommendationThunk, getProductGroupCatalogsThunk, isProductOnSiteThunk, removeGroupFromSiteThunk,
     removeRecommendationThunk, swapRecommendationSortThunk
 } from "./thunks";
 import _ from "lodash";
 
 export type GroupRecommendation = IProductBase & ISelectable
+export type GroupCatalog = IProductGroupCatalog & ISelectable
+
+const areEqual = (f: GroupCatalog, s: GroupCatalog) => {
+    return f.catalogId === s.catalogId
+        && f.catalogCategoryId === s.catalogCategoryId
+        && f.showStatus === s.showStatus
+        && f.sort === s.sort
+        && f.catalogName === f.catalogName
+        && f.catalogParentCategoryId === s.catalogParentCategoryId
+        && f.webCategoryId === s.webCategoryId
+};
 
 export type AdditionalInfoState = {
     allRecommendations: IProductIdentity[],
@@ -19,7 +31,8 @@ export type AdditionalInfoState = {
     groupRecommendations: GroupRecommendation [],
     selectedGroupRecommendation: GroupRecommendation | null,
 
-    groupCatalogs: IProductGroupCatalog[]
+    groupCatalogs: GroupCatalog[] ,
+    isOnSite: boolean
 }
 
 const ALL_RECOMMENDATIONS_STATE: IProductIdentity[] = [{id: '-1', name: 'loading', priceGroupId: 0}]
@@ -31,7 +44,9 @@ const INITIAL_STATE: AdditionalInfoState = {
     groupRecommendations: [],
     selectedGroupRecommendation: null,
 
-    groupCatalogs: []
+    groupCatalogs: [],
+
+    isOnSite: false
 }
 
 const slice = createSlice({
@@ -52,6 +67,11 @@ const slice = createSlice({
             })
             if(state.selectedGroupRecommendation?.id !== action.payload)
                 state.selectedGroupRecommendation = null
+        },
+        setSelectedCatalog(state: AdditionalInfoState, action: PayloadAction<GroupCatalog>) {
+            const catalog = state.groupCatalogs.find(x => areEqual(x, action.payload))
+            if(catalog !== undefined)
+                catalog.selected = !catalog.selected
         }
     },
     extraReducers: builder => {
@@ -134,9 +154,59 @@ const slice = createSlice({
         })
 
         builder.addCase(getProductGroupCatalogsThunk.fulfilled, (state, action) => {
-            state.groupCatalogs = action.payload
+            state.groupCatalogs = action.payload.map(x => {
+                return {
+                    catalogName: x.catalogName,
+                    sort: x.sort,
+                    showStatus: x.showStatus,
+                    catalogId: x.catalogId,
+                    productGroupId: x.productGroupId,
+                    catalogCategoryId: x.catalogCategoryId,
+                    catalogParentCategoryId: x.catalogParentCategoryId,
+                    webCategoryId: x.webCategoryId,
+                    selected: false
+                }
+            })
         })
         builder.addCase(getProductGroupCatalogsThunk.rejected, (state, action) => {
+            console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(isProductOnSiteThunk.fulfilled, (state, action) => {
+            state.isOnSite = action.payload
+        })
+        builder.addCase(isProductOnSiteThunk.rejected, (state, action) => {
+            console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(addGroupToSiteThunk.fulfilled, (state, action) => {
+            state.isOnSite = !state.isOnSite
+            alert('Товар добавлен')
+        })
+        builder.addCase(addGroupToSiteThunk.rejected, (state, action) => {
+            console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(removeGroupFromSiteThunk.fulfilled, (state, action) => {
+            state.isOnSite = !state.isOnSite
+        })
+        builder.addCase(removeGroupFromSiteThunk.rejected, (state, action) => {
+            console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
+
+        builder.addCase(changeShowStatusThunk.fulfilled, (state, action) => {
+            action.meta.arg.forEach(x => {
+                const catalog = state.groupCatalogs.find(gc =>
+                    gc.catalogId === x.catalogId &&
+                    gc.catalogCategoryId === x.catalogCategoryId &&
+                    gc.webCategoryId === x.webCategoryId)
+                if(catalog !== undefined) {
+                    catalog.showStatus = x.showStatus
+                    catalog.selected = false
+                }
+            })
+        })
+        builder.addCase(changeShowStatusThunk.rejected, (state, action) => {
             console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
     }

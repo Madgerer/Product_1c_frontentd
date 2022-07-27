@@ -28,5 +28,25 @@ export const swapRecommendationSortThunk = createApiThunk({
 
 export const getProductGroupCatalogsThunk = createApiThunk({
     typePrefix: 'new-product/get-group-catalogs',
-    apiCall: Api.productGroups.getProductGroupCatalogs
+    apiCall: Api.catalogs.getProductGroupCatalogs
+})
+
+export const isProductOnSiteThunk = createApiThunk({
+    typePrefix: 'new-product/is-on-site',
+    apiCall: Api.websites.isOnSite
+})
+
+export const addGroupToSiteThunk = createApiThunk({
+    typePrefix: 'new-product/add-to-site',
+    apiCall: Api.websites.addGroupToSite
+})
+
+export const removeGroupFromSiteThunk = createApiThunk({
+    typePrefix: 'new-product/remove-from-site',
+    apiCall: Api.websites.removeFromSite
+})
+
+export const changeShowStatusThunk = createApiThunk({
+    typePrefix: 'new-product/change-show-status',
+    apiCall: Api.catalogs.changeShowStatus
 })

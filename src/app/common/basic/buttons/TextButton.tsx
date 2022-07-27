@@ -1,7 +1,7 @@
 import './TextButton.scss'
 
 export default function TextButton(props: ITextButtonProps) {
-    return <button type="button" disabled={props.disabled ?? false} className="btn btn-dark">
+    return <button type="button" disabled={props.disabled ?? false} onClick={() => props.onClick()} className="btn btn-dark">
         {props.text}
     </button>
 }
