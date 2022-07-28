@@ -1,6 +1,6 @@
 import BaseApi from "../BaseApi";
 import actionTypes, {IApplicationResponse} from "../baseTypes";
-import {IProductGroup, IProductGroupCatalog, IProductGroupIdentity} from "../../domain/types";
+import {IProductGroup, IProductGroupIdentity} from "../../domain/types";
 
 export default class ProductGroupApi extends BaseApi {
 

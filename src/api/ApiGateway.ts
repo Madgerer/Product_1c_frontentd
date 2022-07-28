@@ -13,6 +13,7 @@ import SignApi from "./sign/SignApi";
 import ScopeOfApplicationApi from "./scopeOfApplicationApi/ScopeOfApplicationApi";
 import ImageApi from "./imageApi/ImageApi";
 import PictogramApi from "./pictograms/PictogramApi";
+import RecommendationApi from "./recommendations/RecommendationApi";
 
 interface IApplicationApi {
     auth: AuthApi,
@@ -29,7 +30,8 @@ interface IApplicationApi {
     sign: SignApi,
     scopes: ScopeOfApplicationApi,
     images: ImageApi
-    pictograms: PictogramApi
+    pictograms: PictogramApi,
+    recommendations: RecommendationApi
 }
 
 /**
@@ -65,6 +67,7 @@ export class ApiGateway implements IApplicationApi {
     scopes: ScopeOfApplicationApi;
     images: ImageApi;
     pictograms: PictogramApi;
+    recommendations: RecommendationApi;
 
     constructor() {
         this.auth = new AuthApi();
@@ -82,5 +85,6 @@ export class ApiGateway implements IApplicationApi {
         this.scopes = new ScopeOfApplicationApi();
         this.images = new ImageApi();
         this.pictograms = new PictogramApi();
+        this.recommendations = new RecommendationApi();
     }
 }

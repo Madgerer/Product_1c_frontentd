@@ -2,7 +2,6 @@ import './RecommendationBlock.scss'
 import FaButton from "../../../../common/basic/buttons/FaButton";
 import FastNullableSelector from "../../../../common/basic/selectors/FastNullableSelector";
 import ToOptionProvider from "../../../../../utils/ToOptionProvider";
-import TextButton from "../../../../common/basic/buttons/TextButton";
 import {Table} from "react-bootstrap";
 import _ from "lodash";
 import {useEffect} from "react";
@@ -46,14 +45,14 @@ export default function RecommendationBlock() {
             return
         }
 
-        if(local.groupRecommendations.findIndex(x => x.id === local.selectedRecommendation!.id) !== -1) {
+        if(local.groupRecommendations.findIndex(x => x.productId === local.selectedRecommendation!.id) !== -1) {
             alert('Продукт уже добавлен в рекомендации')
             return;
         }
 
         dispatch(addRecommendationThunk({
             productGroupId: groupState.productGroup.id,
-            productId: local.selectedRecommendation.id!
+            productsIds: [local.selectedRecommendation.id!]
         }))
     }
 
@@ -63,14 +62,14 @@ export default function RecommendationBlock() {
             return
         }
 
-        const recToRemove = local.groupRecommendations.find(x => x.id === local.selectedGroupRecommendation!.id)
+        const recToRemove = local.groupRecommendations.find(x => x.productId === local.selectedGroupRecommendation!.productId)
         if(recToRemove === undefined) {
             alert('Ошибка состояния, перезагрузите страницу')
             return;
         }
 
         dispatch(removeRecommendationThunk({
-            productId: local.selectedGroupRecommendation.id,
+            productId: local.selectedGroupRecommendation.productId,
             productGroupId: groupState.productGroup.id
         }))
     }
@@ -91,8 +90,8 @@ export default function RecommendationBlock() {
 
         dispatch(swapRecommendationSortThunk({
             productGroupId: groupState.productGroup.id,
-            firstProductId: current.id,
-            secondProductId: target.id
+            firstProductId: current.productId,
+            secondProductId: target.productId
         }))
     }
 
@@ -127,8 +126,8 @@ export default function RecommendationBlock() {
                         <td colSpan={3}>No matching records found</td>
                     </tr>
                     : _.orderBy(local.groupRecommendations, x => x.sort)!.map(x => {
-                        return <tr id={x.id} onClick={() => setSelectedGroupRed(x.id)} className={x.selected ? "--selected" : ""}>
-                            <td>{x.id}</td>
+                        return <tr id={x.productId} onClick={() => setSelectedGroupRed(x.productId)} className={x.selected ? "--selected" : ""}>
+                            <td>{x.productId}</td>
                             <td>{x.name}</td>
                             <td>{x.sort}</td>
                         </tr>

@@ -59,7 +59,7 @@ const slice = createSlice({
                 state.selectedAttributeColumn = action.payload
         },
         setSelectedAttribute(state: TableTabState, action: PayloadAction<number>) {
-            state.selectedAttribute = state.attributes.find(x => x.id == action.payload)!;
+            state.selectedAttribute = state.attributes.find(x => x.id === action.payload)!;
         },
         setSelectedProduct(state: TableTabState, action: PayloadAction<string | null>) {
             if(action.payload === null)
@@ -170,7 +170,7 @@ const slice = createSlice({
             state.groupProducts[indexSecond].sort = temp
 
             //в случе если есть аттрибут Sort, тогда обновляем его
-            const shouldUpdateSortAttribute = state.attributesOrder.find(x => x == Constants.SortAttributeId) !== undefined;
+            const shouldUpdateSortAttribute = state.attributesOrder.find(x => x === Constants.SortAttributeId) !== undefined;
             if(shouldUpdateSortAttribute)
                 state.groupProducts.forEach(x => {
                     x.attributeValues.forEach(attr => {

@@ -1,4 +1,4 @@
-import {IProductBase, IProductGroupCatalog, IProductIdentity} from "../../../../../domain/types";
+import {IProductGroupCatalog, IProductIdentity, IRecommendation} from "../../../../../domain/types";
 import {ISelectable} from "../../../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
@@ -10,7 +10,7 @@ import {
 } from "./thunks";
 import _ from "lodash";
 
-export type GroupRecommendation = IProductBase & ISelectable
+export type GroupRecommendation = IRecommendation & ISelectable
 export type GroupCatalog = IProductGroupCatalog & ISelectable
 
 const areEqual = (f: GroupCatalog, s: GroupCatalog) => {
@@ -58,14 +58,14 @@ const slice = createSlice({
         },
         setSelectedGroupRec(state: AdditionalInfoState, action: PayloadAction<string>) {
             state.groupRecommendations.forEach(x => {
-                if(x.id === action.payload) {
+                if(x.productId === action.payload) {
                     x.selected = true
                     state.selectedGroupRecommendation = x
                 }
                 else
                     x.selected = false
             })
-            if(state.selectedGroupRecommendation?.id !== action.payload)
+            if(state.selectedGroupRecommendation?.productId !== action.payload)
                 state.selectedGroupRecommendation = null
         },
         setSelectedCatalog(state: AdditionalInfoState, action: PayloadAction<GroupCatalog>) {
@@ -89,13 +89,12 @@ const slice = createSlice({
         })
 
         builder.addCase(getGroupRecommendationThunk.fulfilled, (state, action) => {
-            state.groupRecommendations = action.payload.map(x => {
+            state.groupRecommendations = action.payload.recommendations.map(x => {
                 return {
-                    id: x.id,
-                    name: x.name,
-                    sort: x.sort,
                     selected: false,
-                    priceGroupId: x.priceGroupId
+                    productId: x.productId,
+                    sort: x.sort,
+                    name: x.name
                 }
             })
             state.selectedGroupRecommendation = null
@@ -105,34 +104,35 @@ const slice = createSlice({
         })
 
         builder.addCase(addRecommendationThunk.fulfilled, (state, action) => {
-            const index = state.allRecommendations.findIndex(x => x.id === action.meta.arg.productId)
-            const maxId = _.maxBy(state.groupRecommendations, x => x.sort)?.sort ?? 0
-            state.groupRecommendations.push({
-                id: state.allRecommendations[index].id,
-                name: state.allRecommendations[index].name,
-                priceGroupId: state.allRecommendations[index].priceGroupId,
-                sort: maxId + 1,
-                selected: false,
-            })
-            state.selectedRecommendation = null
-            state.allRecommendations.splice(index, 1)
+            for (const productId of action.meta.arg.productsIds) {
+                const index = state.allRecommendations.findIndex(x => x.id === productId)
+                const maxId = _.maxBy(state.groupRecommendations, x => x.sort)?.sort ?? 0
+                state.groupRecommendations.push({
+                    productId: state.allRecommendations[index].id,
+                    name: state.allRecommendations[index].name,
+                    sort: maxId + 1,
+                    selected: false,
+                })
+                state.selectedRecommendation = null
+                state.allRecommendations.splice(index, 1)
+            }
         })
         builder.addCase(addRecommendationThunk.rejected, (state, action) => {
             console.log(`Can't add recommendation. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
         builder.addCase(removeRecommendationThunk.fulfilled, (state, action) => {
-            const index = state.groupRecommendations.findIndex(x => x.id === action.meta.arg.productId)
+            const index = state.groupRecommendations.findIndex(x => x.productId === action.meta.arg.productId)
             const sort = state.groupRecommendations[index].sort!;
             state.groupRecommendations.forEach(x => {
                 if(x.sort! > sort)
                     x.sort! -= 1;
             })
-            if(state.allRecommendations.findIndex(x => x.id === state.groupRecommendations[index].id) === -1)
+            if(state.allRecommendations.findIndex(x => x.id === state.groupRecommendations[index].productId) === -1)
                 state.allRecommendations.push({
-                    id: state.groupRecommendations[index].id,
+                    id: state.groupRecommendations[index].productId,
                     name: state.groupRecommendations[index].name,
-                    priceGroupId: state.groupRecommendations[index].priceGroupId
+                    priceGroupId: state.allRecommendations[0]?.priceGroupId ?? 0
                 })
             state.groupRecommendations.splice(index, 1)
             state.selectedGroupRecommendation = null
@@ -142,8 +142,8 @@ const slice = createSlice({
         })
 
         builder.addCase(swapRecommendationSortThunk.fulfilled, (state, action) => {
-            const first = state.groupRecommendations.find(x => x.id === action.meta.arg.firstProductId)!
-            const second = state.groupRecommendations.find(x => x.id === action.meta.arg.secondProductId)!
+            const first = state.groupRecommendations.find(x => x.productId === action.meta.arg.firstProductId)!
+            const second = state.groupRecommendations.find(x => x.productId === action.meta.arg.secondProductId)!
             let temp = first.sort
             first.sort = second.sort
             second.sort = temp

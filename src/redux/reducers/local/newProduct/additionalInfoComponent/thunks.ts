@@ -3,27 +3,27 @@ import Api from "../../../../../api";
 
 export const getAllRecommendationThunk = createApiThunk({
     typePrefix: 'new-product/get-all-rec',
-    apiCall: Api.product.getAllRecommendations
+    apiCall: Api.recommendations.getAllRecommendations
 })
 
 export const getGroupRecommendationThunk = createApiThunk({
     typePrefix: 'new-product/get-group-rec',
-    apiCall: Api.product.getGroupRecommendations
+    apiCall: Api.recommendations.getGroupRecommendations
 })
 
 export const addRecommendationThunk = createApiThunk({
     typePrefix: 'new-product/add-rec',
-    apiCall: Api.product.addRecommendation
+    apiCall: Api.recommendations.addRecommendation
 })
 
 export const removeRecommendationThunk = createApiThunk({
     typePrefix: 'new-product/remove-rec',
-    apiCall: Api.product.removeRecommendation
+    apiCall: Api.recommendations.removeRecommendation
 })
 
 export const swapRecommendationSortThunk = createApiThunk({
     typePrefix: 'new-product/change-sort-rec',
-    apiCall: Api.product.swapRecommendationSort
+    apiCall: Api.recommendations.swapRecommendationSort
 })
 
 export const getProductGroupCatalogsThunk = createApiThunk({

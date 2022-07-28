@@ -203,4 +203,4 @@ function searchInTree(category: ICategoryIdentityModel, id: number): ICategoryId
 const actions = categorySlice.actions;
 const reducer = categorySlice.reducer;
 
-export {actions, reducer}
+export {actions, reducer};

@@ -76,6 +76,17 @@ export enum CatalogGroup {
     Printed = 1
 }
 
+export interface IGroupRecommendation {
+    productGroupId: string,
+    recommendations: IRecommendation[]
+}
+
+export interface IRecommendation {
+    productId: string,
+    name: string,
+    sort: number
+}
+
 export interface ICatalogGroup {
     id: number,
     name: string,
