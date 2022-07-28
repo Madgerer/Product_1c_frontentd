@@ -8,7 +8,8 @@ interface ISimpleSelectorProps<T> {
     options: T[],
     onChange: (value: number) => void,
     toOption: (value: T) => IOptionType
-    className: string | null
+    className?: string
+    height?: number
 }
 
 interface ISimpleSelectorStringProps<T> {
@@ -16,7 +17,8 @@ interface ISimpleSelectorStringProps<T> {
     options: T[],
     onChange: (value: string) => void,
     toOption: (value: T) => IStringOptionType
-    className: string | null
+    className?: string
+    height?: number
 }
 
 //type guard
@@ -41,6 +43,26 @@ function SimpleSelect<T>(props: ISimpleSelectorProps<T> | ISimpleSelectorStringP
             "::-webkit-scrollbar-thumb:hover": {
                 background: "#555"
             }
+        }),
+        control: base => ({
+            ...base,
+            height: props.height || 31,
+            minHeight: props.height || 31
+        }),
+        valueContainer: (provided, state) => ({
+            ...provided,
+            height: props.height || 31,
+            padding: "0 6px"
+        }),
+
+        input: (provided, state) => ({
+            ...provided,
+            margin: "0px"
+        }),
+
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            height: props.height || 31
         })
     }
 

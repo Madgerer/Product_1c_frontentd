@@ -97,8 +97,8 @@ export function TranslateSettings() {
                 </label>
             </form>
             <div className="buttons-wrapper">
-                <button type="button" className="btn btn-dark" style={{marginTop:15}} onClick={() => setTranslateCategoryChecked(true)}>Выделить все</button>
-                <button type="button" className="btn btn-dark" style={{marginTop:15}} onClick={() => setTranslateCategoryChecked(false)}>Очистить все</button>
+                <button type="button" className="btn btn-dark" style={{marginTop:15}} onClick={() => setTranslateCategoryChecked(true)}><span>Выделить все</span></button>
+                <button type="button" className="btn btn-dark" style={{marginTop:15}} onClick={() => setTranslateCategoryChecked(false)}><span>Очистить все</span></button>
             </div>
         </div>
     </div>

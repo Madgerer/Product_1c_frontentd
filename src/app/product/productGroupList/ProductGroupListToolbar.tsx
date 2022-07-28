@@ -40,14 +40,13 @@ function ProductGroupListToolbar() {
                     value={local.selectedCardType}
                     options={local.cardTypes}
                     onChange={e => changeSelected(e)}
-                    toOption={opt => opt}
-                    className={null}/>
+                    toOption={opt => opt} />
             </div>
             <div className="product-right-column-refresh-button">
                 <button id="refreshImages"
                         title="Обновить изображения к карточкам"
                         type="button"
-                        className="btn btn-dark">Обновить изображения
+                        className="btn btn-dark"><span>Обновить изображения</span>
                 </button>
             </div>
             <div className="ml-auto product-right-column-search">

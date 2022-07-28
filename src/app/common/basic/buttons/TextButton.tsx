@@ -2,7 +2,7 @@ import './TextButton.scss'
 
 export default function TextButton(props: ITextButtonProps) {
     return <button type="button" disabled={props.disabled ?? false} onClick={() => props.onClick()} className="btn btn-dark">
-        {props.text}
+        <span>{props.text}</span>
     </button>
 }
 

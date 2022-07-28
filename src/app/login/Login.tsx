@@ -73,7 +73,7 @@ function Login() {
                 <input type="password" className="form-control login-password" id="password" placeholder="Password" onChange={(s) => setPassword(s.currentTarget.value)} value={local.password}/>
                 <span className={passwordErrorClass}>{local.passwordInputStatus}</span>
             </div>
-            <button id="submit" disabled={isButtonDisabled} type="submit" className={"btn btn-dark"}>{buttonText}</button>
+            <button id="submit" disabled={isButtonDisabled} type="submit" className={"btn btn-dark"}><span>{buttonText}</span></button>
             <div className={onLoginErrorClass}>{local.errorText}</div>
         </form>
     </div>

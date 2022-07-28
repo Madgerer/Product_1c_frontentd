@@ -8,7 +8,8 @@ interface INullableSelectorProps<T> {
     onChange: (value: number | string | null) => void,
     toOption: (value: T ) => IOptionType | IStringOptionType
     className: string | null
-    placeholder: string
+    placeholder: string,
+    height?: number
 }
 
 export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
@@ -29,6 +30,26 @@ export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
             "::-webkit-scrollbar-thumb:hover": {
                 background: "#555"
             }
+        }),
+        control: base => ({
+            ...base,
+            height: props.height || 31,
+            minHeight: props.height || 31
+        }),
+        valueContainer: (provided, state) => ({
+            ...provided,
+            height: props.height || 31,
+            padding: "0 6px"
+        }),
+
+        input: (provided, state) => ({
+            ...provided,
+            margin: "0px"
+        }),
+
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            height: props.height || 31
         })
     }
 
