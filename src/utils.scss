@@ -99,14 +99,17 @@ tr {
 
 // черные кнопочки
 
-.btn.btn-dark {
-    font-size: 14px;
-    padding: 0;
-    height: 30px;
-    min-width: 30px;
+.new-product-toolbar__first-row-wrapper,
+.tab-content {
+    .btn.btn-dark {
+        font-size: 14px;
+        padding: 0;
+        height: 30px;
+        min-width: 30px;
 
-    span {
-        margin: 0 0.5em;
+        span {
+            margin: 0 0.5em;
+        }
     }
 }
 
