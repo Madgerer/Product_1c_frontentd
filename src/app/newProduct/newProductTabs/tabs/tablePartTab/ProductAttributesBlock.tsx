@@ -30,8 +30,15 @@ export default function ProductAttributesBlock() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        //мы должны загрузить все продукты без групп, в случае если у группы priceGroup=0 и нет продуктов
+        const priceGroup = productGroupState.productGroup.priceGroupId === 0
+            ? productGroupState.productGroup.priceGroupId === 0 && local.groupProducts.length == 0
+                ? null
+                : 0
+            : productGroupState.productGroup.priceGroupId
+
         dispatch(getProductsWithoutGroupThunk({
-            priceGroupId: productGroupState.productGroup.priceGroupId ?? null,
+            priceGroupId: priceGroup,
             languageId: languageState.selected.id
         }))
 
@@ -49,10 +56,11 @@ export default function ProductAttributesBlock() {
     useEffect(() => {
         //в случае если у группы нет продуктов, то и PriceGroup не должно быть
         if(local.groupProducts.length == 0)
-            dispatch(productGroupActions.setPriceGroup(null))
+            dispatch(productGroupActions.setPriceGroup(0))
         //при добавлении первого продукта мы присваиваем группе PriceGroup
-        if(local.groupProducts.length == 1)
+        if(local.groupProducts.length == 1) {
             dispatch(productGroupActions.setPriceGroup(local.groupProducts[0].priceGroupId))
+        }
     }, [local.groupProducts.length])
 
     const addProductToProductGroup = () => {

@@ -30,7 +30,7 @@ export default function NewProductSelectorBlock() {
     const setSeries = (seriesId: number | null) => dispatch(actions.setSelectedSeries(seriesId))
     const setSigns = (signId: number | null) => dispatch(actions.setSelectedSign(signId))
     const setAttribute = (attributeId: number | null) => dispatch(actions.setSelectedAttribute(attributeId))
-    const setPriceGroup = (sellmarkId: number | null) => dispatch(actions.setSelectedSellmark(sellmarkId))
+    const setSellmark = (sellmarkId: number | null) => dispatch(actions.setSelectedSellmark(sellmarkId))
 
     return <div className="new-product-selector-block">
         <NullableSelect value={local.selectedSeries}
@@ -54,7 +54,7 @@ export default function NewProductSelectorBlock() {
         <NullableSelect value={local.selectedSellmark}
                         options={local.sellmarks}
                         placeholder={"Торговая марка"}
-                        onChange={e => setPriceGroup(e as number)}
+                        onChange={e => setSellmark(e as number)}
                         toOption={ToOptionProvider.priceGroupToOption}
                         className={"selector"} />
     </div>

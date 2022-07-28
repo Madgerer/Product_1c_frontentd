@@ -15,6 +15,7 @@ import {AppState} from "../../../../../redux/reducers";
 import {actions, AdditionalInfoState} from "../../../../../redux/reducers/local/newProduct/additionalInfoComponent";
 import {LanguageState} from "../../../../../redux/reducers/languages";
 import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
+import {TableTabState} from "../../../../../redux/reducers/local/newProduct/tablePartComponent";
 
 export default function RecommendationBlock() {
 
@@ -26,6 +27,7 @@ export default function RecommendationBlock() {
 
     useEffect(() => {
         dispatch(getAllRecommendationThunk({
+            productGroupId: groupState.productGroup.id,
             priceGroupId: groupState.productGroup.priceGroupId!,
             search: '',
             languageId: languageState.selected.id
@@ -34,7 +36,7 @@ export default function RecommendationBlock() {
             languageId: languageState.selected.id,
             productGroupId: groupState.productGroup.id
         }))
-    }, [languageState.selected.id])
+    }, [languageState.selected.id, groupState.productGroup.priceGroupId])
 
     const setSelectedRec = (id: string) => dispatch(actions.setSelectedRec(id))
     const setSelectedGroupRed = (id: string) => dispatch(actions.setSelectedGroupRec(id))
