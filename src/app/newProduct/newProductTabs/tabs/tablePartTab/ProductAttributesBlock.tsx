@@ -68,6 +68,10 @@ export default function ProductAttributesBlock() {
             alert('Выберите продукт для добавления')
             return
         }
+        if(local.groupProducts.findIndex(x => x.id === local.selectedProduct!.id) > -1){
+            alert('Продукт уже добавлен')
+            return
+        }
         dispatch(addProductToProductGroupThunk({
             productGroupId: productGroupState.productGroup.id,
             productIds: [local.selectedProduct!.id]
