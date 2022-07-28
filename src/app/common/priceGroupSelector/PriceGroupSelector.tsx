@@ -11,7 +11,11 @@ const toOption = (priceGroup: IPriceGroup): IOptionType =>  {
     return {value: priceGroup.id, label: priceGroup.name};
 }
 
-function PriceGroupSelector() {
+interface IPriceGroupSelectorProps {
+    height?: number
+}
+
+function PriceGroupSelector(props: IPriceGroupSelectorProps) {
     const state = useSelector<AppState, PriceGroupState>(s => s.priceGroupsState);
     const dispatch = useDispatch();
     useEffect(() => {
@@ -31,6 +35,7 @@ function PriceGroupSelector() {
                          options={state.priceGroups}
                          className={"selector"}
                          onChange={newValue => changeSelected(newValue)}
+                         height={props.height}
                          value={state.selected}
     />
 }
