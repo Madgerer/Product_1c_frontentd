@@ -6,7 +6,7 @@ import {Table} from "react-bootstrap";
 import _ from "lodash";
 import {useEffect} from "react";
 import {
-    addRecommendationThunk,
+    addRecommendationsThunk,
     getAllRecommendationThunk,
     getGroupRecommendationThunk, removeRecommendationThunk, swapRecommendationSortThunk
 } from "../../../../../redux/reducers/local/newProduct/additionalInfoComponent/thunks";
@@ -52,7 +52,7 @@ export default function RecommendationBlock() {
             return;
         }
 
-        dispatch(addRecommendationThunk({
+        dispatch(addRecommendationsThunk({
             productGroupId: groupState.productGroup.id,
             productsIds: [local.selectedRecommendation.id!]
         }))

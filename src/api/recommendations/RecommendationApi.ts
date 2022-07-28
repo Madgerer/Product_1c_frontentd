@@ -9,7 +9,7 @@ export default class RecommendationApi extends BaseApi {
     getGroupRecommendations = async (data: {productGroupId: string, languageId: number}): Promise<IApplicationResponse<IGroupRecommendation>> =>
         this.sendQuery<IGroupRecommendation>('/api/recommendations/group', data, actionTypes.get, true);
 
-    addRecommendation = async (data: {productGroupId: string, productsIds: string[]}): Promise<IApplicationResponse<void>> =>
+    addRecommendations = async (data: {productGroupId: string, productsIds: string[]}): Promise<IApplicationResponse<void>> =>
         this.sendQuery<void>('/api/recommendations/add-recommendation', data, actionTypes.post, true);
 
     removeRecommendation = async (data: {productGroupId: string, productId: string}): Promise<IApplicationResponse<void>> =>

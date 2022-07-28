@@ -1,6 +1,7 @@
 import {IPictogram, IProductIdentity, IRecommendation} from "../../../../domain/types";
 import {ISelectable} from "../../../types";
 import {createSlice} from "@reduxjs/toolkit";
+import {getAllRecommendationThunk} from "./thunks";
 
 export type Recommendation = IProductIdentity & ISelectable
 
@@ -10,7 +11,7 @@ export type RecommendationsState = {
 
     searchString: string,
 
-    recommendationIds: [],
+    recommendationIds: string[],
     recommendations: {}
 }
 
@@ -29,5 +30,15 @@ const slice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
 
+    },
+    extraReducers: builder => {
+        builder.addCase(getAllRecommendationThunk.fulfilled, (state, action) => {
+            for (const rec of action.payload) {
+                state.recommendationIds.push(rec.id)
+            }
+        })
+        builder.addCase(getAllRecommendationThunk.rejected, (state, action) => {
+            console.log(`Can't load group recommendations. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
+        })
     }
 })

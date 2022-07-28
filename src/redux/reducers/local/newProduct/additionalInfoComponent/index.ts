@@ -3,7 +3,7 @@ import {ISelectable} from "../../../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addGroupToSiteThunk,
-    addRecommendationThunk, changeShowStatusThunk,
+    addRecommendationsThunk, changeShowStatusThunk,
     getAllRecommendationThunk,
     getGroupRecommendationThunk, getProductGroupCatalogsThunk, isProductOnSiteThunk, removeGroupFromSiteThunk,
     removeRecommendationThunk, swapRecommendationSortThunk
@@ -104,7 +104,7 @@ const slice = createSlice({
             console.log(`Can't load group recommendations. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(addRecommendationThunk.fulfilled, (state, action) => {
+        builder.addCase(addRecommendationsThunk.fulfilled, (state, action) => {
             for (const productId of action.meta.arg.productsIds) {
                 const index = state.allRecommendations.findIndex(x => x.id === productId)
                 const maxId = _.maxBy(state.groupRecommendations, x => x.sort)?.sort ?? 0
@@ -118,7 +118,7 @@ const slice = createSlice({
                 state.allRecommendations.splice(index, 1)
             }
         })
-        builder.addCase(addRecommendationThunk.rejected, (state, action) => {
+        builder.addCase(addRecommendationsThunk.rejected, (state, action) => {
             console.log(`Can't add recommendation. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 

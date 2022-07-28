@@ -6,7 +6,7 @@ import ToOptionProvider from "../../../../../utils/ToOptionProvider";
 import {useEffect} from "react";
 import {LanguageState} from "../../../../../redux/reducers/languages";
 import {
-    addRecommendationThunk,
+    addRecommendationsThunk,
     getAllRecommendationThunk,
     getGroupRecommendationThunk, removeRecommendationThunk, swapRecommendationSortThunk
 } from "../../../../../redux/reducers/local/newProduct/additionalInfoComponent/thunks";

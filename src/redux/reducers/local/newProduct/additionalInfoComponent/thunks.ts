@@ -11,9 +11,9 @@ export const getGroupRecommendationThunk = createApiThunk({
     apiCall: Api.recommendations.getGroupRecommendations
 })
 
-export const addRecommendationThunk = createApiThunk({
+export const addRecommendationsThunk = createApiThunk({
     typePrefix: 'new-product/add-rec',
-    apiCall: Api.recommendations.addRecommendation
+    apiCall: Api.recommendations.addRecommendations
 })
 
 export const removeRecommendationThunk = createApiThunk({
