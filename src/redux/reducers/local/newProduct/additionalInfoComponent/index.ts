@@ -1,4 +1,4 @@
-import {IProductGroupCatalog, IProductIdentity, IRecommendation} from "../../../../../domain/types";
+import {IPictogram, IProductGroupCatalog, IProductIdentity, IRecommendation} from "../../../../../domain/types";
 import {ISelectable} from "../../../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
@@ -36,6 +36,7 @@ export type AdditionalInfoState = {
 }
 
 const ALL_RECOMMENDATIONS_STATE: IProductIdentity[] = [{id: '-1', name: 'loading', priceGroupId: 0}]
+
 const INITIAL_STATE: AdditionalInfoState = {
     allRecommendations: ALL_RECOMMENDATIONS_STATE,
     selectedRecommendation: ALL_RECOMMENDATIONS_STATE[0],
