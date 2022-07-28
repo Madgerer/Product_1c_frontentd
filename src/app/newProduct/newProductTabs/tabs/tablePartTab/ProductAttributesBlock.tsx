@@ -230,7 +230,7 @@ export default function ProductAttributesBlock() {
             <FaButton onClick={() => replaceProductInGroup()} faType={"fa-pencil-square-o"}/>
             <FaButton onClick={() => removeProductFromGroup()} faType={"fa-minus"}/>
 
-            <input className="form-control"
+            <input className="form-control u-narrow-input"
                    type="text"
                    placeholder="Артикул"
                    value={local.article}
@@ -245,6 +245,7 @@ export default function ProductAttributesBlock() {
                             options={local.products}
                             onChange={(e) => setSelectedProduct(e as string)}
                             toOption={ToOptionProvider.productIdentityToOption}
+                            height={31}
                             noOptionsMessage={"No options"}
                             className={"selector selector--name"}/>
 
@@ -257,9 +258,10 @@ export default function ProductAttributesBlock() {
                           options={local.attributes}
                           onChange={(e) => setSelectedAttribute(e)}
                           className={"selector"}
+                          height={31}
                           toOption={ToOptionProvider.attributeToOption} />
 
-            <input className="form-control" type="text" id="columnName" disabled={true} placeholder="Атрибут"
+            <input className="form-control u-narrow-input" type="text" id="columnName" disabled={true} placeholder="Атрибут"
                    style={{width: 180, textAlign: "center"}}/>
 
             <FaButton onClick={() => changeAttributeOrder(-1)} faType={"fa-arrow-left"}/>

@@ -7,7 +7,13 @@ import {actions, WebSitesState} from "../../../redux/reducers/webSites";
 import ToOptionProvider from "../../../utils/ToOptionProvider";
 import {getWebsitesThunk} from "../../../redux/reducers/webSites/thunks";
 
-export default function WebsiteSelector() {
+interface IWebsiteSelectorProps {
+    height?: number
+}
+
+export default function WebsiteSelector(props: IWebsiteSelectorProps) {
+
+
 
     const state = useSelector<AppState, WebSitesState>(s => s.websitesState);
     const dispatch = useDispatch();
@@ -29,5 +35,6 @@ export default function WebsiteSelector() {
                          className={"selector"}
                          onChange={newValue => changeSelected(newValue)}
                          value={state.selected}
+                         height={props.height}
     />
 }

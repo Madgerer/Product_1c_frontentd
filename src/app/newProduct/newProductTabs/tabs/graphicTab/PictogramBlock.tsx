@@ -98,8 +98,9 @@ export default function PictogramBlock() {
                                 placeholder={"Выберите пиктограмму"}
                                 toOption={ToOptionProvider.pictogramToOption}
                                 options={_.orderBy(local.pictograms, x => x.sort)}
+                                height={31}
                                 onChange={e => setSelectedPictogram(e as number)}/>
-                <input className="form-control" type="text" disabled
+                <input className="form-control u-narrow-input" type="text" disabled
                        value={local.selectedGroupPictogram?.name ?? ""}
                        placeholder="Пиктограмма для удаления"
                        style={{width:400, textAlign: "center"}}/>

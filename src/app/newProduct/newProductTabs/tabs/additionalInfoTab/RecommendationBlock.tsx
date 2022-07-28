@@ -106,6 +106,7 @@ export default function RecommendationBlock() {
                                   toOption={ToOptionProvider.productIdentityToOption}
                                   className={"selector"}
                                   placeholder={"Наименование товара"}
+                                  height={31}
                                   noOptionsMessage={'Нет подходящих товаров'}/>
             <FaButton onClick={() => swapSort(-1)} faType={"fa-arrow-up"}/>
             <FaButton onClick={() => swapSort(1)} faType={"fa-arrow-down"}/>

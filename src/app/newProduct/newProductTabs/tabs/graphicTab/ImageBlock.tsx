@@ -100,8 +100,9 @@ export default function ImageBlock() {
                             onChange={id => setSelectedImageType(id as number)}
                             toOption={ToOptionProvider.imageTypeToOption}
                             className={"selector selector-choose-type"}
+                            height={31}
                             placeholder={"Выберите тип"}/>
-            <input className="form-control form-type-delete" type="text" placeholder="Тип для удаления" disabled value={local.selectedGroupType != null
+            <input className="form-control form-type-delete u-narrow-input" type="text" placeholder="Тип для удаления" disabled value={local.selectedGroupType != null
                 ? local.imageTypes.find(x => x.id === local.selectedGroupType!.id)!.name
                 : ""
             }/>
