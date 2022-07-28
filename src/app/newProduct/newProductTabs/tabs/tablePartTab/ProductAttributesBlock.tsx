@@ -58,7 +58,7 @@ export default function ProductAttributesBlock() {
         if(local.groupProducts.length == 0)
             dispatch(productGroupActions.setPriceGroup(0))
         //при добавлении первого продукта мы присваиваем группе PriceGroup
-        if(local.groupProducts.length == 1) {
+        if(local.groupProducts.length >= 1) {
             dispatch(productGroupActions.setPriceGroup(local.groupProducts[0].priceGroupId))
         }
     }, [local.groupProducts.length])
