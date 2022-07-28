@@ -175,7 +175,7 @@ export default function CatalogsBlock() {
                     <FaButton onClick={() => addCategory(CatalogGroup.Printed)} faType={"fa-plus"}/>
                     <FaButton onClick={() => changeCategory(CatalogGroup.Printed)} faType={"fa-pencil-square-o"}/>
                     <FaButton onClick={() => removeCategory(CatalogGroup.Printed)} faType={"fa-minus"}/>
-                    <CatalogSelector filter={CatalogFilter.Printed}/>
+                    <CatalogSelector filter={CatalogFilter.Printed} height={31}/>
                     <CategorySelectRow
                       shouldReset={local.shouldResetPrinted}
                       onReset={() => onCategoryRowReset(CatalogGroup.Printed)}
@@ -208,6 +208,7 @@ export default function CatalogsBlock() {
                     shouldReset={local.shouldResetWeb}
                     onReset={() => onCategoryRowReset(CatalogGroup.Web)}
                     categories={local.categoriesWeb}
+                    height={31}
                     onChange={(cat, level) => {setCategoryPath(cat, CatalogGroup.Web, level)}}/>
             </div>
             </div>

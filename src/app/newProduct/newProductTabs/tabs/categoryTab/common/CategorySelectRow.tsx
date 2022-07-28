@@ -10,6 +10,7 @@ interface IRowElementProps {
     onChange: (category: ICategory | null, level: number) => void;
     shouldReset: boolean;
     onReset: () => void;
+    height?: number
 }
 
 export default function CategorySelectRow(props: IRowElementProps) {
@@ -38,6 +39,7 @@ export default function CategorySelectRow(props: IRowElementProps) {
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector category-selector"}
+                        height={31}
                         placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0

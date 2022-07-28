@@ -33,12 +33,12 @@ export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
         }),
         control: base => ({
             ...base,
-            height: props.height || 31,
-            minHeight: props.height || 31
+            height: props.height || 38,
+            minHeight: props.height || 38
         }),
         valueContainer: (provided, state) => ({
             ...provided,
-            height: props.height || 31,
+            height: props.height || 38,
             padding: "0 6px"
         }),
 
@@ -49,7 +49,7 @@ export default function NullableSelect<T>(props: INullableSelectorProps<T>) {
 
         indicatorsContainer: (provided, state) => ({
             ...provided,
-            height: props.height || 31
+            height: props.height || 38
         })
     }
 

@@ -38,11 +38,13 @@ export default function NewProductSelectorBlock() {
                         placeholder={"Серия"}
                         onChange={e => setSeries(e as number)}
                         toOption={ToOptionProvider.seriesToOption}
+                        height={31}
                         className={"selector"} />
         <NullableSelect value={local.selectedSign}
                         options={local.signs}
                         placeholder={"Значок"}
                         onChange={e => setSigns(e as number)}
+                        height={31}
                         toOption={ToOptionProvider.signToOption}
                         className={"selector"} />
         <NullableSelect value={local.selectedAttribute}
@@ -50,12 +52,14 @@ export default function NewProductSelectorBlock() {
                         placeholder={"Главный аттрибут"}
                         onChange={e => setAttribute(e as number)}
                         toOption={ToOptionProvider.attributeToOption}
+                        height={31}
                         className={"selector"} />
         <NullableSelect value={local.selectedSellmark}
                         options={local.sellmarks}
                         placeholder={"Торговая марка"}
                         onChange={e => setSellmark(e as number)}
                         toOption={ToOptionProvider.priceGroupToOption}
+                        height={31}
                         className={"selector"} />
     </div>
 }

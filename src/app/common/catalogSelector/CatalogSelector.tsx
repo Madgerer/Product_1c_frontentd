@@ -42,11 +42,13 @@ function CatalogSelector(props: ICatalogSelectorGroups) {
                          className={"selector"}
                          onChange={newValue => changeSelected(newValue)}
                          value={state.selected}
+                         height={props.height}
     />
 }
 
 interface ICatalogSelectorGroups {
-    filter: CatalogFilter
+    filter: CatalogFilter,
+    height?: number
 }
 
 export enum CatalogFilter {

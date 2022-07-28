@@ -98,6 +98,7 @@ export default function ScopeBlock() {
                                 options={local.scopes}
                                 onChange={value => setSelectedScope(value as number)}
                                 toOption={ToOptionProvider.scopeToOption} className={"selector"}
+                                height={31}
                                 placeholder={"Выберите область применения"}/>
                 </div>
             </div>

@@ -36,7 +36,7 @@ export default function VideoModal() {
             <p>
                 Ссылка на видео (символы после "v="):
             </p>
-            <input type="text" onChange={e => setLink(e.currentTarget.value)} value={local.videoLink}/>
+            <input type="text" className="form-control" onChange={e => setLink(e.currentTarget.value)} value={local.videoLink}/>
         </Modal.Body>
         <Modal.Footer>
             <Button onClick={() => closeModal()}>Закрыть</Button>
