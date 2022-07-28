@@ -64,15 +64,25 @@ export default function GroupCatalogsBlock() {
     const addOrRemoveFromSite = () => {
         if(local.isOnSite)
             dispatch(removeGroupFromSiteThunk({productGroupId: productGroupState.productGroup.id, websiteId: websiteState.selected.id}))
-        else
+        else {
+            if(local.groupCatalogs.filter(value => value.webCategoryId !== null).length === 0)
+            {
+                alert('Добавьте группу к веб каталогу, прежде чем добавлять на сайт')
+                return;
+            }
             dispatch(addGroupToSiteThunk({productGroupId: productGroupState.productGroup.id, websiteId: websiteState.selected.id}))
+        }
     }
 
     return <div>
         <div>
             <TextButton text={"Показывать/Не показывать"} onClick={() => setShowStatus()}/>
             <WebsiteSelector/>
-            <TextButton text={!local.isOnSite ? "Добавить на сайт" : "Удалить с сайта"} onClick={() => addOrRemoveFromSite()}/>
+            {
+                local.isOnSite === null
+                    ? <></>
+                    : <TextButton text={!local.isOnSite ? "Добавить на сайт" : "Удалить с сайта"} onClick={() => addOrRemoveFromSite()}/>
+            }
         </div>
         <Table>
             <thead>

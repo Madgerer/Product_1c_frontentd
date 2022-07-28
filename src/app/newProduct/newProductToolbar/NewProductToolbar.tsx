@@ -104,9 +104,9 @@ export default function NewProductToolbar() {
                     : <></>
             }
             <LoadingFaButton isLoading={local.loadingState.isSaveLoading} onClick={createOrUpdate} faType={"fa-floppy-o"} title="Сохранить изменения"/>
-            <LoadingFaButton isLoading={local.loadingState.isRejectLoading} onClick={deleteOrDiscard} faType={"fa-trash"} title="далить карточку"/>
+            <LoadingFaButton isLoading={local.loadingState.isRejectLoading} onClick={deleteOrDiscard} faType={"fa-trash"} title="Удалить карточку"/>
             <button type="button" className="btn btn-dark btn-sm back-to-main" onClick={() => {window.close()}}><Link to={"/"} target="_blank">Вернуться на главную</Link></button>
-            <button type="button" className="btn btn-dark btn-sm">• в буффер обмена</button>
+            <button type="button" className="btn btn-dark btn-sm" onClick={() => navigator.clipboard.writeText("•")}>• в буффер обмена</button>
         </div>
         <NewProductSelectorBlock/>
     </>

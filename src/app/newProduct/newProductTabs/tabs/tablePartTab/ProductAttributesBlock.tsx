@@ -123,8 +123,10 @@ export default function ProductAttributesBlock() {
             alert("Выберите аттрибут для добавления")
             return
         }
-        if(local.attributesOrder.findIndex(x => x === local.selectedAttribute.id) !== -1)
+        if(local.attributesOrder.findIndex(x => x === local.selectedAttribute.id) !== -1) {
+            alert('Колонка уже добавлена')
             return;
+        }
 
         dispatch(addAttributeThunk({
             attributeId: local.selectedAttribute.id,
@@ -270,20 +272,20 @@ export default function ProductAttributesBlock() {
         <>
             <Table>
                 <thead>
-                <tr>
-                    <th>Порядок</th>
-                    <th>Код</th>
-                    <th>Наименование</th>
-                    {
-                        local.attributesOrder.map(x => {
-                            const attr = local.attributes.find(a => a.id == x)
-                            if(attr === undefined)
-                                return null
-                            return <th onClick={() => setColumnSelected(attr!.id)}
-                                       className={local.selectedAttributeColumn == attr!.id ? "bg-orange" : ""}>{attr!.name}</th>
-                        }).filter(x => x !== null)
-                    }
-                </tr>
+                    <tr>
+                        <th>Порядок</th>
+                        <th>Код</th>
+                        <th>Наименование</th>
+                        {
+                            local.attributesOrder.map(x => {
+                                const attr = local.attributes.find(a => a.id == x)
+                                if(attr === undefined)
+                                    return null
+                                return <th key={attr.id} onClick={() => setColumnSelected(attr!.id)}
+                                           className={local.selectedAttributeColumn == attr!.id ? "bg-orange" : ""}>{attr!.name}</th>
+                            }).filter(x => x !== null)
+                        }
+                    </tr>
                 </thead>
                 <tbody>
                 {
@@ -296,16 +298,16 @@ export default function ProductAttributesBlock() {
                         : <>
                             {
                                 local.groupProducts.map(x => {
-                                    return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""}>
+                                    return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""} key={x.id}>
                                         <td>{x.sort}</td>
                                         <td>{x.id}</td>
                                         <td>{x.name}</td>
                                         {
-                                            local.attributesOrder.map(a => {
+                                            local.attributesOrder.map((a, i) => {
                                                 const attrValue = x.attributeValues.find(x => x.id == a);
                                                 if(attrValue === undefined)
                                                     return null
-                                                return <td>
+                                                return <td key={x.id.toString() + i.toString()}>
                                                     <input type="text"
                                                            disabled={a === Constants.SortAttributeId}
                                                            value={attrValue?.value ?? ""}

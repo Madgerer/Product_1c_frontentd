@@ -11,8 +11,8 @@ export default class WebsitesApi extends BaseApi {
         this.sendQuery<boolean>('/api/websites/is-on-site', data, actionTypes.get, true);
 
     addGroupToSite = async (data: {productGroupId: string, websiteId: number}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/websites/add-group', data, actionTypes.get, true);
+        this.sendQuery<void>('/api/websites/add-group', data, actionTypes.post, true);
 
     removeFromSite = async (data: {productGroupId: string, websiteId: number}): Promise<IApplicationResponse<void>> =>
-        this.sendQuery<void>('/api/websites/add-group', data, actionTypes.get, true);
+        this.sendQuery<void>('/api/websites/remove-group', data, actionTypes.delete, true);
 }

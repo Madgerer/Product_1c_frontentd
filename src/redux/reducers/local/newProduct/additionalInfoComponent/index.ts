@@ -1,6 +1,6 @@
 import {IProductBase, IProductGroupCatalog, IProductIdentity} from "../../../../../domain/types";
 import {ISelectable} from "../../../../types";
-import {createSlice, original, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {
     addGroupToSiteThunk,
     addRecommendationThunk, changeShowStatusThunk,
@@ -32,7 +32,7 @@ export type AdditionalInfoState = {
     selectedGroupRecommendation: GroupRecommendation | null,
 
     groupCatalogs: GroupCatalog[] ,
-    isOnSite: boolean
+    isOnSite: boolean | null
 }
 
 const ALL_RECOMMENDATIONS_STATE: IProductIdentity[] = [{id: '-1', name: 'loading', priceGroupId: 0}]
@@ -46,7 +46,7 @@ const INITIAL_STATE: AdditionalInfoState = {
 
     groupCatalogs: [],
 
-    isOnSite: false
+    isOnSite: null
 }
 
 const slice = createSlice({
@@ -179,16 +179,19 @@ const slice = createSlice({
             console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(addGroupToSiteThunk.fulfilled, (state, action) => {
+        builder.addCase(addGroupToSiteThunk.fulfilled, (state) => {
             state.isOnSite = !state.isOnSite
             alert('Товар добавлен')
         })
         builder.addCase(addGroupToSiteThunk.rejected, (state, action) => {
+            if(action.payload?.statusCode == 409 || action.payload?.statusCode == 422)
+                alert(action.payload.exception)
             console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
 
-        builder.addCase(removeGroupFromSiteThunk.fulfilled, (state, action) => {
+        builder.addCase(removeGroupFromSiteThunk.fulfilled, (state) => {
             state.isOnSite = !state.isOnSite
+            alert('Товар удален с сайта')
         })
         builder.addCase(removeGroupFromSiteThunk.rejected, (state, action) => {
             console.log(`Can't change sort. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
