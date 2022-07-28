@@ -15,3 +15,8 @@ export const addRecommendationsThunk = createApiThunk({
     typePrefix: 'recommendations/add-rec',
     apiCall: Api.recommendations.addRecommendations
 })
+
+export const getOrReserveThunk = createApiThunk({
+    typePrefix: 'recommendations/get-or-reserve-product-group',
+    apiCall: Api.productGroups.getOrReserve
+})
