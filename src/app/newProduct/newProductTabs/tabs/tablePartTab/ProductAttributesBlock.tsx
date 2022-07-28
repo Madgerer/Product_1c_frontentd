@@ -278,7 +278,7 @@ export default function ProductAttributesBlock() {
             <FaButton onClick={() => changeAttributeOrder(1)} faType={"fa-arrow-right"}/>
 
             <button type="button" disabled={local.accumulatedChanges.length === 0} className="btn btn-dark" onClick={() => saveAttributeValues()}>
-                Сохранить
+                <span>Сохранить</span>
             </button>
         </div>
         <>
@@ -320,10 +320,13 @@ export default function ProductAttributesBlock() {
                                                 if(attrValue === undefined)
                                                     return null
                                                 return <td key={x.id.toString() + i.toString()}>
-                                                    <input type="text"
-                                                           disabled={a === Constants.SortAttributeId}
-                                                           value={attrValue?.value ?? ""}
-                                                           onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
+                                                    <div className="input-group-sm">
+                                                        <input type="text"
+                                                               className="form-control"
+                                                               disabled={a === Constants.SortAttributeId}
+                                                               value={attrValue?.value ?? ""}
+                                                               onChange={(e) => setAttributeValue(x.id, attrValue!.id, e.currentTarget.value)}/>
+                                                    </div>
                                                 </td>
                                             }).filter(x => x !== null)
                                         }

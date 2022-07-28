@@ -202,7 +202,7 @@ export default function CatalogsBlock() {
                     <i className="fa fa fa-minus" aria-hidden="true"/>
                 </button>
                 <button type="button" className="btn btn-dark" onClick={() => setCategoryAsMain()}>
-                    Сделать главной
+                    <span>Сделать главной</span>
                 </button>
                 <CategorySelectRow
                     shouldReset={local.shouldResetWeb}

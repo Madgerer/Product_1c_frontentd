@@ -4,6 +4,7 @@ import GraphicPartTab from "./tabs/graphicTab/GraphicPartTab";
 import AdditionalInfoTab from "./tabs/additionalInfoTab/AdditionalInfoTab";
 import React, {useState} from "react";
 import CategoryTab from "./tabs/categoryTab/CategoryTab";
+import "./newProductTabs.scss"
 
 enum TabKeys {
     Category= 'category',
@@ -21,7 +22,7 @@ export default function NewProductTabs() {
 
     return <Tabs activeKey={key}
                  onSelect={(k) => setKey(k!)}
-                 className="mb-3">
+                 className="tabs-wrapper">
         <Tab eventKey={TabKeys.Category.toString()} title="Категории">
             {
                 //избегаем unmount

@@ -12,10 +12,10 @@ export function TranslateForm() {
     }
 
     return <div className = "translate-form u-flex-column" >
-        <button className="btn btn-dark" style={{marginTop: 15}}>Выгрузка</button>
-        <button className="btn btn-dark" style={{marginTop: 15}}>Справочник переводов</button>
-        <button className="btn btn-dark" style={{marginTop: 15}}>Загрузить фразы на русском из 6 таблиц в БД</button>
-        <button className="btn btn-dark" style={{marginTop: 15}}>Загрузить фразы из файла в справочник переводов</button>
+        <button className="btn btn-dark" style={{marginTop: 15}}><span>Выгрузка</span></button>
+        <button className="btn btn-dark" style={{marginTop: 15}}><span>Справочник переводов</span></button>
+        <button className="btn btn-dark" style={{marginTop: 15}}><span>Загрузить фразы на русском из 6 таблиц в БД</span></button>
+        <button className="btn btn-dark" style={{marginTop: 15}}><span>Загрузить фразы из файла в справочник переводов</span></button>
         {/*<div className="form-group">
             <label htmlFor="FormControlFile">Выберите Excel файл для загрузки</label>
             <input type="file" className="form-control-file" enctype="multipart/form-data" name="excelFile"
@@ -33,15 +33,15 @@ export function TranslateForm() {
                     <span>Все фразы</span>
                 </label>
                     <button id="translatorPage" type="button" className="btn btn-dark" >
-                        Открыть форму для переводчика
+                        <span>Открыть форму для переводчика</span>
                     </button>
             </div>
         </form>
-        <button type="button" className="btn btn-dark" style={{marginTop:10}}>Загрузить
-            информацию на сайт
+        <button type="button" className="btn btn-dark" style={{marginTop:10}}><span>Загрузить
+            информацию на сайт</span>
         </button>
-        <button type="button" className="btn btn-dark" style={{marginTop:15}}>Сравнить контент
-            сайта с блоком каталогов
+        <button type="button" className="btn btn-dark" style={{marginTop:15}}><span>Сравнить контент
+            сайта с блоком каталогов</span>
         </button>
     </div>
 }

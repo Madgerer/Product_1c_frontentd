@@ -16,7 +16,8 @@ interface IFastNullableSelectorProps<T> {
     toOption: (value: T ) => IOptionType | IStringOptionType
     className: string | null
     placeholder: string
-    noOptionsMessage: string | null
+    noOptionsMessage: string | null,
+    height?: number
 }
 
 export default function FastNullableSelector<T>(props: IFastNullableSelectorProps<T>) {
@@ -47,6 +48,26 @@ export default function FastNullableSelector<T>(props: IFastNullableSelectorProp
             "::-webkit-scrollbar-thumb:hover": {
                 background: "#555"
             }
+        }),
+        control: base => ({
+            ...base,
+            height: props.height || 31,
+            minHeight: props.height || 31
+        }),
+        valueContainer: (provided, state) => ({
+            ...provided,
+            height: props.height || 31,
+            padding: "0 6px"
+        }),
+
+        input: (provided, state) => ({
+            ...provided,
+            margin: "0px"
+        }),
+
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            height: props.height || 31
         })
     }
 

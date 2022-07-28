@@ -112,10 +112,10 @@ export default function ImageBlock() {
             <input type="file" onChange={e => setFileFromEvent(e)} />
 
             <button type="button" className="btn btn-dark" onClick={() => openModel()}>
-                Добавить видео
+                <span>Добавить видео</span>
             </button>
             <button type="button" className="btn btn-dark" disabled={true}>
-                Обновить на сайте
+                <span>Обновить на сайте</span>
             </button>
         </div>
         <div className="image-block--tables-wrapper">

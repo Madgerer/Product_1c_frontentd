@@ -31,7 +31,9 @@ export default function CategoryGroupToolbar() {
 
     function updateCategoryName() {
         if(local.selectedCategory === null) {
-            alert("Выберите категорию")
+            alert("" +
+              "" +
+              "Выберите категорию")
             return
         }
         else {

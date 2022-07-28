@@ -75,7 +75,7 @@ export default function GroupCatalogsBlock() {
     }
 
     return <div>
-        <div>
+        <div className="u-buttons-wrapper">
             <TextButton text={"Показывать/Не показывать"} onClick={() => setShowStatus()}/>
             <WebsiteSelector/>
             {

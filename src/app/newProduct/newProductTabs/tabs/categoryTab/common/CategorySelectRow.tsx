@@ -37,7 +37,7 @@ export default function CategorySelectRow(props: IRowElementProps) {
                         options={props.categories}
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
-                        className={"selector"}
+                        className={"selector category-selector"}
                         placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
@@ -79,7 +79,7 @@ function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
                         options={props.categories}
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
-                        className={"selector"}
+                        className={"selector category-selector"}
                         placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
