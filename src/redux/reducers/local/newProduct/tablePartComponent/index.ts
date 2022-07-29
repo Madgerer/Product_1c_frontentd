@@ -11,7 +11,7 @@ import {
 import _ from "lodash";
 import Constants from "../../../../../domain/Constants";
 
-export type ProductWithAttributes = IProductWithAttributes & ISelectable
+export type ProductWithAttributes = IProductWithAttributes & ISelectable & {newIdentifier: string}
 
 export type TableTabState = {
     groupProducts: ProductWithAttributes[],
@@ -68,6 +68,12 @@ const slice = createSlice({
                 return;
             }
             state.selectedProduct = state.products.find(x => x.id === action.payload)!
+        },
+        setNewId(state: TableTabState, action: PayloadAction<{productId: string, newIdentifier: string}>) {
+            const product = state.groupProducts.find(x => x.id === action.payload.productId)
+            if(product === undefined)
+                return;
+            product.newIdentifier = action.payload.newIdentifier
         },
         setAttributeValue(state: TableTabState, action: PayloadAction<{productId: string, attributeId: number, value: string}>) {
             const product = state.groupProducts.find(x => x.id === action.payload.productId)
@@ -135,7 +141,8 @@ const slice = createSlice({
                 attributeValues: x.attributeValues,
                 sort: x.sort,
                 selected: false,
-                priceGroupId: x.priceGroupId
+                priceGroupId: x.priceGroupId,
+                newIdentifier: x.id
             }})
             state.attributesOrder = action.payload.attributesOrder!
         })
@@ -208,7 +215,8 @@ const slice = createSlice({
                 sort: productSort,
                 name: product!.name,
                 attributeValues: attributes,
-                priceGroupId: product!.priceGroupId
+                priceGroupId: product!.priceGroupId,
+                newIdentifier: product!.id
             })
         })
         builder.addCase(addProductToProductGroupThunk.rejected, (state, action) => {

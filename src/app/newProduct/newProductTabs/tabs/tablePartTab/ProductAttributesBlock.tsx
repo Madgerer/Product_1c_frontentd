@@ -234,6 +234,21 @@ export default function ProductAttributesBlock() {
     }))
     const setRowSelected = (id: string) => dispatch(actions.setProductRowSelected(id))
     const setColumnSelected = (id: number) => dispatch(actions.setSelectedColumn(id))
+    const setNewId = (productId: string, newId: string) => dispatch(actions.setNewId({productId: productId, newIdentifier: newId}))
+
+    const replaceProductInGroupOnEnter = (event, currId: string, newId: string) => {
+        if(event.key === 'Enter') {
+            dispatch(replaceProductInGroupThunk({
+                productGroupId: productGroupState.productGroup.id,
+                productId: currId,
+                newProductId: newId
+            }))
+        }
+        if(event.key === "Escape")
+        {
+            dispatch(setNewId(currId, currId))
+        }
+    }
 
     return <>
         <div className="product-attributes-block-buttons-header" >
@@ -314,7 +329,11 @@ export default function ProductAttributesBlock() {
                                 local.groupProducts.map(x => {
                                     return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""} key={x.id}>
                                         <td>{x.sort}</td>
-                                        <td>{x.id}</td>
+                                        <td>
+                                            <input value={x.newIdentifier}
+                                                   onChange={(e) => setNewId(x.id, e.currentTarget.value)}
+                                                   onKeyUp={event => replaceProductInGroupOnEnter(event, x.id, x.newIdentifier)}/>
+                                        </td>
                                         <td>{x.name}</td>
                                         {
                                             local.attributesOrder.map((a, i) => {
