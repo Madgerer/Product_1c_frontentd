@@ -3,7 +3,7 @@ import {useSearchParams} from "react-router-dom";
 import TextButton from "../common/basic/buttons/TextButton";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {actions, RecommendationsState} from "../../redux/reducers/local/recommendationsComponent";
+import {actions, Recommendation, RecommendationsState} from "../../redux/reducers/local/recommendationsComponent";
 import {
     addRecommendationsThunk,
     getAllPictogramsThunk, getAllRecommendationThunk,
@@ -11,6 +11,9 @@ import {
 } from "../../redux/reducers/local/recommendationsComponent/thunks";
 import {AppState} from "../../redux/reducers";
 import {LanguageState} from "../../redux/reducers/languages";
+import ToOptionProvider from "../../utils/ToOptionProvider";
+import NullableSelect from "../common/basic/selectors/NullableSelect";
+import {Table} from "react-bootstrap";
 
 export default function Recommendations() {
     const [searchParams] = useSearchParams();
@@ -44,13 +47,60 @@ export default function Recommendations() {
         }
     }, [local.productGroup])
 
+    const addRecommendations = () => {
+        const productsToAdd = local.recommendations.filter(x => x.selected)
+        if(productsToAdd.length === 0)
+        {
+            alert('Выберите продукты для добавления')
+            return
+        }
+        dispatch(addRecommendationsThunk({
+            productGroupId: paramGroupId!,
+            productsIds: productsToAdd.map(x => x.id)
+        }))
+    }
+
+    const setSelectedPictogram = (id: number | null) => {
+        dispatch(actions.setSelectedPictogram(id))
+    }
+
+    const setSelectedProduct = (recommendation: Recommendation) => {
+        dispatch(actions.setSelectedRecommendation(recommendation.id))
+    }
+
     return <>
         {
             paramGroupId === null
                 ? <>Переданы неверные аргументы</>
                 : <>
-                    <TextButton text={"Добавить"} onClick={() => {}}/>
-
+                    <TextButton text={"Добавить"} onClick={() => addRecommendations()}/>
+                    <NullableSelect value={local.selectedPictogram}
+                                  options={local.pictograms}
+                                  onChange={value => setSelectedPictogram(value as number)}
+                                  placeholder="Выберите группу пиктограм"
+                                  className="selector"
+                                  toOption={ToOptionProvider.pictogramToOption}
+                    />
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Код</th>
+                                <th>Наименование</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            local.recommendations.map(x => {
+                                return <tr onClick={() => setSelectedProduct(x)} className={x.selected ? "--selected" : ""}>
+                                    <td>{x.id}</td>
+                                    <td>{x.name}</td>
+                                    <td><input type={"checkbox"} checked={x.selected} readOnly={true}/></td>
+                                </tr>
+                            })
+                        }
+                        </tbody>
+                    </Table>
                 </>
         }
     </>

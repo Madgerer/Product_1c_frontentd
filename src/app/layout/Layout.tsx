@@ -9,6 +9,7 @@ import Tree from "../tree/Tree";
 import Translate from "../translates/Translate";
 import NewProduct from "../newProduct/NewProduct";
 import Bullfacts from "../bullfacts/Bullfacts";
+import Recommendations from "../recommendations/Recommendations";
 
 function Layout() {
 
@@ -21,7 +22,7 @@ function Layout() {
                 <Route path={"/tree"} element={<Tree/>}/>
                 <Route path={"/translate"} element={<Translate/>}/>
                 <Route path={"/new-product"} element={<NewProduct/>}/>
-                <Route path={"/new-product/:productGroupId"} element={<NewProduct/>}/>
+                <Route path={"/recommendations"} element={<Recommendations/>}/>
                 <Route path={"/try"} element={<Bullfacts/>}/>
                 <Route path={"/*"} element={<Navigate to="/products" replace />}/>
             </Routes>

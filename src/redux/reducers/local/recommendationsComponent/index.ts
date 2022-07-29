@@ -1,4 +1,4 @@
-import {IPictogram, IProductGroup, IProductIdentity, IRecommendation} from "../../../../domain/types";
+import {IPictogram, IProductGroup, IProductIdentity} from "../../../../domain/types";
 import {ISelectable} from "../../../types";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {addRecommendationsThunk, getAllPictogramsThunk, getAllRecommendationThunk, getOrReserveThunk} from "./thunks";
@@ -27,7 +27,12 @@ const slice = createSlice({
     name: 'recommendations',
     initialState: INITIAL_STATE,
     reducers: {
-        setSelectedPictogram(state: RecommendationsState, action: PayloadAction<number>) {
+        setSelectedPictogram(state: RecommendationsState, action: PayloadAction<number | null>) {
+            if(action.payload === null)
+            {
+                state.selectedPictogram = null
+                return
+            }
             const pictogram = state.pictograms.find(x => x.id === action.payload)
             state.selectedPictogram = pictogram!
         },
@@ -59,10 +64,8 @@ const slice = createSlice({
             console.log(`Can't load group recommendations. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(addRecommendationsThunk.fulfilled, (state, action) => {
-            for (const productsId of action.meta.arg.productsIds) {
-                const index = state.recommendations.findIndex(x => x.id === productsId)
-                state.recommendations = state.recommendations.splice(index, 1)
-            }
+            const addedProducts = action.meta.arg.productsIds;
+            state.recommendations = state.recommendations.filter(x => addedProducts.findIndex(a => a == x.id) === -1)
         })
         builder.addCase(addRecommendationsThunk.rejected, (state, action) => {
             console.log(`Can't add recommendations. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

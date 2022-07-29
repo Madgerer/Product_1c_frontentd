@@ -38,7 +38,6 @@ function Navbar() {
                             history.pathname == "/products"
                                 ?
                                     <Link to={"/new-product"} target="_blank" className="nav-button-new-card">Новая карточка</Link>
-
                                 : <></>
                         }
                     </ul>

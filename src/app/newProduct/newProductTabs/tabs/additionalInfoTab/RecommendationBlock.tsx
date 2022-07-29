@@ -15,17 +15,24 @@ import {AppState} from "../../../../../redux/reducers";
 import {actions, AdditionalInfoState} from "../../../../../redux/reducers/local/newProduct/additionalInfoComponent";
 import {LanguageState} from "../../../../../redux/reducers/languages";
 import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
-import {TableTabState} from "../../../../../redux/reducers/local/newProduct/tablePartComponent";
+import TextButton from "../../../../common/basic/buttons/TextButton";
+import {Link} from "react-router-dom";
 
 export default function RecommendationBlock() {
 
     const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const groupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
-
     const dispatch = useDispatch()
 
     useEffect(() => {
+        updateRecommendations()
+    }, [languageState.selected.id, groupState.productGroup.priceGroupId])
+
+    const setSelectedRec = (id: string) => dispatch(actions.setSelectedRec(id))
+    const setSelectedGroupRed = (id: string) => dispatch(actions.setSelectedGroupRec(id))
+
+    const updateRecommendations = () => {
         dispatch(getAllRecommendationThunk({
             productGroupId: groupState.productGroup.id,
             priceGroupId: groupState.productGroup.priceGroupId!,
@@ -36,10 +43,7 @@ export default function RecommendationBlock() {
             languageId: languageState.selected.id,
             productGroupId: groupState.productGroup.id
         }))
-    }, [languageState.selected.id, groupState.productGroup.priceGroupId])
-
-    const setSelectedRec = (id: string) => dispatch(actions.setSelectedRec(id))
-    const setSelectedGroupRed = (id: string) => dispatch(actions.setSelectedGroupRec(id))
+    }
 
     const addRec = () => {
         if(local.selectedRecommendation === null){
@@ -111,8 +115,10 @@ export default function RecommendationBlock() {
                                   noOptionsMessage={'Нет подходящих товаров'}/>
             <FaButton onClick={() => swapSort(-1)} faType={"fa-arrow-up"}/>
             <FaButton onClick={() => swapSort(1)} faType={"fa-arrow-down"}/>
-           {/* <TextButton text={"Добавить"}/>
-            <TextButton text={"Обновить"}/>*/}
+            <button className="btn btn-dark" value={"Добавить"}>
+                <Link to={`/recommendations?productGroupId=${groupState.productGroup.id}`} target="_blank">Добавить</Link>
+            </button>
+            <TextButton text={"Обновить"} onClick={() => updateRecommendations()}/>
         </div>
         <Table>
             <thead>

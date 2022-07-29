@@ -99,7 +99,7 @@ export default function NewProductToolbar() {
                 local.productGroup.wasCreate
                     ? <div className="input-checkboxes-wrapper">
                         <TextCheckbox onChange={setIsDescriptionChecked} text={"Описание"} isChecked={local.productGroup.isDescriptionChecked}/>
-                        <TextCheckbox onChange={setIsPhotoChecked} text={"Описание"} isChecked={local.productGroup.isImageChecked}/>
+                        <TextCheckbox onChange={setIsPhotoChecked} text={"Фото"} isChecked={local.productGroup.isImageChecked}/>
                     </div>
                     : <></>
             }
