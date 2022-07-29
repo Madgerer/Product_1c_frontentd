@@ -41,6 +41,9 @@ const slice = createSlice({
             if(recommendation === undefined)
                 return
             recommendation.selected = !recommendation.selected
+        },
+        setSearch(state: RecommendationsState, action: PayloadAction<string>) {
+            state.searchString = action.payload
         }
     },
     extraReducers: builder => {

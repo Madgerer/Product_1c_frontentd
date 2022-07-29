@@ -14,6 +14,7 @@ import {LanguageState} from "../../redux/reducers/languages";
 import ToOptionProvider from "../../utils/ToOptionProvider";
 import NullableSelect from "../common/basic/selectors/NullableSelect";
 import {Table} from "react-bootstrap";
+import {useDebouncedCallback} from "use-debounce";
 
 export default function Recommendations() {
     const [searchParams] = useSearchParams();
@@ -68,6 +69,9 @@ export default function Recommendations() {
         dispatch(actions.setSelectedRecommendation(recommendation.id))
     }
 
+    const setSearchString = (search: string) => dispatch(actions.setSearch(search))
+    const debouncedSetSearch = useDebouncedCallback(args => setSearchString(args), 500)
+
     return <>
         {
             paramGroupId === null
@@ -81,6 +85,7 @@ export default function Recommendations() {
                                   className="selector"
                                   toOption={ToOptionProvider.pictogramToOption}
                     />
+                    <input value={local.searchString} onChange={e => setSearchString(e.currentTarget.value)}/>
                     <Table>
                         <thead>
                             <tr>
@@ -91,8 +96,8 @@ export default function Recommendations() {
                         </thead>
                         <tbody>
                         {
-                            local.recommendations.map(x => {
-                                return <tr onClick={() => setSelectedProduct(x)} className={x.selected ? "--selected" : ""}>
+                            local.recommendations.filter(x => x.name.includes(local.searchString)).map(x => {
+                                return <tr onClick={() => debouncedSetSearch(x)} className={x.selected ? "--selected" : ""}>
                                     <td>{x.id}</td>
                                     <td>{x.name}</td>
                                     <td><input type={"checkbox"} checked={x.selected} readOnly={true}/></td>
