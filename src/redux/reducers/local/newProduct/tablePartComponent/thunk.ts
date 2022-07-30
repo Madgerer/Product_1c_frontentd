@@ -26,7 +26,7 @@ async (args, thunkAPI) => {
             return thunkAPI.rejectWithValue({exception: response.exception?.text ?? null, statusCode: response.status})
         }
 
-        const attributesOrder = (thunkAPI.getState() as AppState).local.newProductState.common.productGroup.attributesColumnOrder!
+        const attributesOrder = (thunkAPI.getState() as AppState).local.newProductComponent.common.productGroup.attributesColumnOrder!
         return {
             attributesOrder: attributesOrder,
             products: response.data!

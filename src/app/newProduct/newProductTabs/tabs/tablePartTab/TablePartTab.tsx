@@ -7,7 +7,7 @@ import {useEffect} from "react";
 import {IMountableProps} from "../../../../../redux/types";
 
 export default function TablePartTab(props: IMountableProps) {
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const dispatch = useDispatch()
 
     useEffect(() => {

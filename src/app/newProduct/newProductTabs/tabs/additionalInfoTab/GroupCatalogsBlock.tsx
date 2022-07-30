@@ -22,9 +22,9 @@ import _ from "lodash";
 
 export default function GroupCatalogsBlock() {
 
-    const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)
-    const categoryTabState = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductComponent.additionalInfoState)
+    const categoryTabState = useSelector<AppState, CategoriesTabState>(x => x.local.newProductComponent.categoryState)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const websiteState = useSelector<AppState, WebSitesState>(x => x.websitesState)
     const dispatch = useDispatch();
 

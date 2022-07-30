@@ -7,8 +7,8 @@ import {NewProductState} from "../../../../../redux/reducers/local/newProduct";
 import {uploadVideoThunk} from "../../../../../redux/reducers/local/newProduct/graphicTabComponent/thunks";
 
 export default function VideoModal() {
-    const local = useSelector<AppState, GraphicTabState>(x => x.local.newProductState.graphicTabState);
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const local = useSelector<AppState, GraphicTabState>(x => x.local.newProductComponent.graphicTabState);
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const dispatch = useDispatch()
 
     const closeModal = () => dispatch(actions.setShouldOpenModal())

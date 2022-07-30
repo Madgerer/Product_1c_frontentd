@@ -24,8 +24,8 @@ import FaButton from "../../../../common/basic/buttons/FaButton";
 import FastNullableSelector from "../../../../common/basic/selectors/FastNullableSelector";
 
 export default function ProductAttributesBlock() {
-    const local = useSelector<AppState, TableTabState>(x => x.local.newProductState.tableTabState)
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const local = useSelector<AppState, TableTabState>(x => x.local.newProductComponent.tableTabState)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const dispatch = useDispatch();
 

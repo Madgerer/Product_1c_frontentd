@@ -15,7 +15,7 @@ import TextCheckbox from "../../common/basic/checkboxes/TextCheckbox";
 import LoadingFaButton from "../../common/basic/buttons/LoadingFaButton";
 
 export default function NewProductToolbar() {
-    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState.common);
+    const local = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
     const dispatch = useDispatch();
     const navigate = useNavigate();

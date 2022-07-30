@@ -20,7 +20,7 @@ export default function Recommendations() {
     const [searchParams] = useSearchParams();
     const paramGroupId = searchParams.get('productGroupId');
     const dispatch = useDispatch();
-    const local = useSelector<AppState, RecommendationsState>(x => x.local.recommendationState)
+    const local = useSelector<AppState, RecommendationsState>(x => x.local.recommendationComponent)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
 
     useEffect(() => {

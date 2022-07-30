@@ -19,8 +19,8 @@ import VideoModal from "./VideoModal";
 
 export default function ImageBlock() {
     const staticServer = process.env.REACT_APP_STATIC_SERVER_API
-    const local = useSelector<AppState, GraphicTabState>(x => x.local.newProductState.graphicTabState)
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const local = useSelector<AppState, GraphicTabState>(x => x.local.newProductComponent.graphicTabState)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const dispatch = useDispatch();
     const [file, setFile] = useState<File | null>()
 

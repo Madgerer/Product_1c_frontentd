@@ -7,6 +7,7 @@ import {reducer as treeReducer} from "./treeComponent";
 import {reducer as translateReducer} from "./translateComponent";
 import {reducer as newProductReducer} from "../local/newProduct";
 import {reducer as recommendationReducer} from "./recommendationsComponent";
+import {reducer as bullfactReducer} from "./bullfactsComponent";
 
 export const localReducer = combineReducers({
     loginComponent: loginComponentReducer,
@@ -15,8 +16,9 @@ export const localReducer = combineReducers({
     categoryComponent: categoryReducer,
     treeComponent: treeReducer,
     translateComponent: translateReducer,
-    newProductState: newProductReducer,
-    recommendationState: recommendationReducer
+    newProductComponent: newProductReducer,
+    recommendationComponent: recommendationReducer,
+    bullfactsComponent: bullfactReducer
 })
 
 export default localReducer;

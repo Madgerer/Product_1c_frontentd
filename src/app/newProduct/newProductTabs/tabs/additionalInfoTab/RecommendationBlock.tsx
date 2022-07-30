@@ -20,9 +20,9 @@ import {Link} from "react-router-dom";
 
 export default function RecommendationBlock() {
 
-    const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductState.additionalInfoState)
+    const local = useSelector<AppState, AdditionalInfoState>(x => x.local.newProductComponent.additionalInfoState)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
-    const groupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const groupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const dispatch = useDispatch()
 
     useEffect(() => {

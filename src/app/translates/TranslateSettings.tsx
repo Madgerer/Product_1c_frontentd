@@ -49,7 +49,7 @@ export function TranslateSettings() {
 
     return <div className="translate-settings u-flex-column">
         <div className="translate-settings__select">
-            <SimpleSelect value={local.selectedLanguage} options={languageState.languages} onChange={setLocalLanguage} toOption={ToOptionProvider.websiteToOption} className={"selector"}/>
+            <SimpleSelect value={local.selectedLanguage} options={languageState.languages} onChange={setLocalLanguage} toOption={ToOptionProvider.languageToOption} className={"selector"}/>
         </div>
         <div className="translate-settings__select">
             <CatalogSelector filter={CatalogFilter.All}/>

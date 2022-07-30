@@ -14,7 +14,7 @@ import {LanguageState} from "../../../redux/reducers/languages";
 import ToOptionProvider from "../../../utils/ToOptionProvider";
 
 export default function NewProductSelectorBlock() {
-    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState.common);
+    const local = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common);
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
     const dispatch = useDispatch();
 

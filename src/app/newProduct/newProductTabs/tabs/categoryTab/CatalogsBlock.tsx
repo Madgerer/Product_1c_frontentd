@@ -24,8 +24,8 @@ import FaButton from "../../../../common/basic/buttons/FaButton";
 
 export default function CatalogsBlock() {
 
-    const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductComponent.categoryState)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const catalogState = useSelector<AppState, CatalogState>(x => x.catalogState)
     const dispatch = useDispatch();

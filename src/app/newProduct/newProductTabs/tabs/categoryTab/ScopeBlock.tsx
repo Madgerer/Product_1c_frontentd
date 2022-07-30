@@ -16,8 +16,8 @@ import {
 import _ from "lodash";
 
 export default function ScopeBlock() {
-    const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductState.categoryState)
-    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductState.common)
+    const local = useSelector<AppState, CategoriesTabState>(x => x.local.newProductComponent.categoryState)
+    const productGroupState = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common)
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState)
     const dispatch = useDispatch();
 

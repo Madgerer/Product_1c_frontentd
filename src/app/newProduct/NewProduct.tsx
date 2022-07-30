@@ -14,7 +14,7 @@ import {Spinner} from "react-bootstrap";
 
 export default function NewProduct() {
     const languageState = useSelector<AppState, LanguageState>(x => x.languageState);
-    const local = useSelector<AppState, NewProductState>(x => x.local.newProductState.common);
+    const local = useSelector<AppState, NewProductState>(x => x.local.newProductComponent.common);
     const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
     const paramGroupId = searchParams.get('productGroupId');
