@@ -3,7 +3,7 @@ import {IOptionType} from "../../../../app/common/basic/selectors/SimpleSelect";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {getTranslatesThunk, updateTranslateThunk} from "./thunks";
 
-export type Translate = ITranslate & { newTranslate: string }
+export type Translate = ITranslate
 
 export type BullfactState = {
     translates: {[K in string]: Translate},
@@ -78,12 +78,6 @@ const slice = createSlice({
         setTranslatedSource(state: BullfactState, action: PayloadAction<number>) {
             const translateSource = state.translateSources.find(x => x.value === action.payload)
             state.selectedTranslateSource = translateSource!
-        },
-        setNewTranslateValue(state: BullfactState, action: PayloadAction<{key: string, newValue: string}>) {
-            const translate = state.translates[action.payload.key]
-            if(translate === undefined)
-                return
-            translate.newTranslate = action.payload.newValue
         }
     },
     extraReducers: builder => {
@@ -95,7 +89,6 @@ const slice = createSlice({
                     translate: x.translate,
                     source: x.source,
                     sourceId: x.sourceId,
-                    newTranslate: x.translate
                 }
             })
         })
@@ -103,13 +96,13 @@ const slice = createSlice({
             console.log(`Can't get translates. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(updateTranslateThunk.fulfilled, (state, action) => {
-           /* const arg = action.meta.arg
-            const index = state.translates.findIndex(x => x.id === arg.translateId
-                                                        && x.source === arg.translateSource
-                                                        && x.sourceId === arg.sourceId)
-            if(index === -1)
+            const arg = action.meta.arg
+            const translate = Object.values(state.translates).find(x => x.id === arg.translateId
+                && x.source === arg.translateSource
+                && x.sourceId === arg.sourceId)
+            if(translate === undefined)
                 return
-            state.translates[index].translate = state.translates[index].newTranslate*/
+            translate.translate = arg.translate
         })
         builder.addCase(updateTranslateThunk.rejected, (state, action) => {
             console.log(`Can't update translates. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)

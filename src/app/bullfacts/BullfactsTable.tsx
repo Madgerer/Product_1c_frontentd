@@ -32,17 +32,17 @@ export default function BullfactsTable() {
         local.semanticSearch,
         catalogState.selected.id])
 
-    const updateValue = (translate: Translate) => {
+    const updateValue = (translate: Translate, newTranslateValue: string) => {
+        if(translate.translate === newTranslateValue)
+            return
         dispatch(updateTranslateThunk({
             translateSource: local.selectedTranslateSource.value,
             sourceId: translate.sourceId,
-            translate: translate.newTranslate,
+            translate: newTranslateValue,
             languageId: local.selectedLanguage.id,
             translateId: translate.id
         }))
     }
-
-    const setNewTranslateValue = (key: string, newValue: string) => dispatch(actions.setNewTranslateValue({key: key, newValue: newValue}))
 
     return <Table>
         <thead>
@@ -57,7 +57,7 @@ export default function BullfactsTable() {
         <tbody>
         {
             Object.keys(local.translates).map((x) => {
-                return <TableRow key={x} translate={local.translates[x]}/>
+                return <TableRow key={x} counter={x} translate={local.translates[x]} onEnterPressed={updateValue}/>
             })
         }
         </tbody>
@@ -65,31 +65,33 @@ export default function BullfactsTable() {
 }
 
 interface ITableRowProps {
-    key: string,
-    translate: Translate
+    counter: string,
+    translate: Translate,
+    onEnterPressed: (translate: Translate, newStrValue: string) => void
 }
 
 /**
  * Этот компонент нужен, чтобы не проводить изменения через стор и чтобы быстро рендерились изменения в инпуте
  **/
 function TableRow(props: ITableRowProps) {
-    const [translateValue, setTranslateValue] = useState(props.translate.newTranslate)
+    const [translateValue, setTranslateValue] = useState(props.translate.translate ?? "")
 
     const onKeyUp = (event) => {
         if(event.key === 'Enter') {
-
+            props.onEnterPressed(props.translate, translateValue)
         }
         if(event.key === "Escape")
         {
-            setTranslateValue(props.translate.newTranslate)
+            setTranslateValue(props.translate.translate)
         }
     }
 
-    return <tr key={props.key}>
+    return <tr key={props.counter}>
         <td>{props.translate.russian}</td>
-        <td>{props.key}</td>
+        <td>{props.counter}</td>
         <td><input value={translateValue}
-                   onChange={e => setTranslateValue(e.currentTarget.value)} onKeyUp={(e) => onKeyUp(e)}/></td>
+                   onChange={e => setTranslateValue(e.currentTarget.value)}
+                   onKeyUp={(e) => onKeyUp(e)}/></td>
         <td>{props.translate.source}</td>
         <td>{props.translate.sourceId}</td>
     </tr>
