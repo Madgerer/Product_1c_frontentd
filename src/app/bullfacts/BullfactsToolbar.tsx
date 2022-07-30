@@ -6,6 +6,7 @@ import {LanguageState} from "../../redux/reducers/languages";
 import SimpleSelect from "../common/basic/selectors/SimpleSelect";
 import ToOptionProvider from "../../utils/ToOptionProvider";
 import CatalogSelector, {CatalogFilter} from "../common/catalogSelector/CatalogSelector";
+import {useDebouncedCallback} from "use-debounce";
 
 export default function BullfactsToolbar() {
 
@@ -14,7 +15,11 @@ export default function BullfactsToolbar() {
     const dispatch = useDispatch();
 
     const setSearch = (search: string) => dispatch(actions.setSearch(search))
+    const debouncedSetSearch = useDebouncedCallback(args => setSearch(args), 500)
+
     const setSemanticSearch = (search: string) => dispatch(actions.setSemanticSearch(search))
+    const debouncedSetSemanticSearch = useDebouncedCallback(args => setSemanticSearch(args), 500)
+
     const setIsSemanticSearch = () => dispatch(actions.setIsSemanticSearch())
     const setLocalLanguage = (languageId: number) => {
         const language = languageState.languages.find(x => x.id == languageId);
@@ -25,22 +30,17 @@ export default function BullfactsToolbar() {
     const setTranslateSource = (value: number) => dispatch(actions.setTranslatedSource(value))
 
     return <div>
-        <input disabled={local.isSemanticSearch}
-               value={local.search}
+        <input disabled={local.isSemanticSearchDisabled}
                className="form-control"
-               onChange={e => setSearch(e.currentTarget.value)}
+               onChange={e => debouncedSetSearch(e.currentTarget.value)}
                type="search"
                placeholder="Поиск"/>
-        <TextCheckbox onChange={() => setIsSemanticSearch()} text={"Полнотекстовый поиск"} isChecked={local.isSemanticSearch}/>
-        {
-            local.isSemanticSearch
-                ? <input value={local.semanticSearch}
-                         onChange={e => setSemanticSearch(e.currentTarget.value)}
-                         className="form-control"
-                         type="search"
-                         placeholder="Поиск по смыслу"/>
-                : <></>
-        }
+        <TextCheckbox onChange={() => setIsSemanticSearch()} text={"Полнотекстовый поиск"} isChecked={local.isSemanticSearchDisabled}/>
+        <input
+            onChange={e => debouncedSetSemanticSearch(e.currentTarget.value)}
+            className="form-control"
+            type="search"
+            placeholder="Поиск по смыслу" hidden={!local.isSemanticSearchDisabled}/>
 
         <SimpleSelect value={local.selectedLanguage}
                       options={languageState.languages}

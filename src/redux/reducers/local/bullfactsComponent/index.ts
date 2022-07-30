@@ -6,7 +6,7 @@ import {getTranslatesThunk, updateTranslateThunk} from "./thunks";
 export type Translate = ITranslate & { newTranslate: string }
 
 export type BullfactState = {
-    translates: Translate[],
+    translates: {[K in string]: Translate},
     search: string,
     semanticSearch: string,
     selectedLanguage: ILanguage,
@@ -16,9 +16,12 @@ export type BullfactState = {
 
     translateSources: IOptionType[],
     selectedTranslateSource: IOptionType
+    sourceObject: {}
 
-    isSemanticSearch: boolean
+    isSemanticSearchDisabled: boolean,
 }
+
+const areEqual = (f: Translate, s: Translate): boolean => f.id === s.id && f.source === s.source && f.sourceId === s.sourceId
 
 const INITIAL_TRANSLATE_TYPES: IOptionType[] = [{value: 0, label: 'Все объекты'}, {value: 1, label: 'Пустые объекты'}]
 const INITIAL_TRANSLATE_SOURCES: IOptionType[] = [
@@ -31,9 +34,13 @@ const INITIAL_TRANSLATE_SOURCES: IOptionType[] = [
     {value: 6, label: 'PictGroupDesc'},
     {value: 7, label: 'ValueDescription'}
 ]
+const INITIAL_SOURCE_OBJECT = {}
+for (const source of INITIAL_TRANSLATE_SOURCES) {
+    INITIAL_SOURCE_OBJECT[source.value] = source.label
+}
 
 const INITIAL_STATE: BullfactState = {
-    translates: [],
+    translates: {},
     search: "",
     semanticSearch: "",
     selectedLanguage: {id: 1, name: "Английский"},
@@ -43,8 +50,9 @@ const INITIAL_STATE: BullfactState = {
 
     translateSources: INITIAL_TRANSLATE_SOURCES,
     selectedTranslateSource: INITIAL_TRANSLATE_SOURCES[0],
+    sourceObject: INITIAL_SOURCE_OBJECT, //INITIAL_TRANSLATE_SOURCES.reduce((o, k) => ({...o, ...k}), Object.create(null)),
 
-    isSemanticSearch: false
+    isSemanticSearchDisabled: false
 }
 
 const slice = createSlice({
@@ -52,7 +60,7 @@ const slice = createSlice({
     initialState: INITIAL_STATE,
     reducers: {
         setIsSemanticSearch(state: BullfactState) {
-            state.isSemanticSearch = !state.isSemanticSearch
+            state.isSemanticSearchDisabled = !state.isSemanticSearchDisabled
         },
         setSearch(state: BullfactState, action: PayloadAction<string>) {
             state.search = action.payload
@@ -70,12 +78,18 @@ const slice = createSlice({
         setTranslatedSource(state: BullfactState, action: PayloadAction<number>) {
             const translateSource = state.translateSources.find(x => x.value === action.payload)
             state.selectedTranslateSource = translateSource!
+        },
+        setNewTranslateValue(state: BullfactState, action: PayloadAction<{key: string, newValue: string}>) {
+            const translate = state.translates[action.payload.key]
+            if(translate === undefined)
+                return
+            translate.newTranslate = action.payload.newValue
         }
     },
     extraReducers: builder => {
         builder.addCase(getTranslatesThunk.fulfilled, (state, action) => {
-            state.translates = action.payload.map(x => {
-                return{
+            action.payload.map((x, i) => {
+                state.translates[i] = {
                     id: x.id,
                     russian: x.russian,
                     translate: x.translate,
@@ -89,13 +103,13 @@ const slice = createSlice({
             console.log(`Can't get translates. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
         })
         builder.addCase(updateTranslateThunk.fulfilled, (state, action) => {
-            const arg = action.meta.arg
+           /* const arg = action.meta.arg
             const index = state.translates.findIndex(x => x.id === arg.translateId
                                                         && x.source === arg.translateSource
                                                         && x.sourceId === arg.sourceId)
             if(index === -1)
                 return
-            state.translates[index].translate = state.translates[index].newTranslate
+            state.translates[index].translate = state.translates[index].newTranslate*/
         })
         builder.addCase(updateTranslateThunk.rejected, (state, action) => {
             console.log(`Can't update translates. Status code: '${action.payload?.statusCode}'. Text: '${action.payload?.exception}'`)
