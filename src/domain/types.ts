@@ -139,6 +139,14 @@ export interface IProductGroupSort {
     sort: number
 }
 
+export interface ITranslate {
+    id: number,
+    russian: string,
+    translate: string,
+    source: string,
+    sourceId: number
+}
+
 export interface ICardDistributionType extends IOptionType {
 
 }
