@@ -69,6 +69,9 @@ interface ITableRowProps {
     translate: Translate
 }
 
+/**
+ * Этот компонент нужен, чтобы не проводить изменения через стор и чтобы быстро рендерились изменения в инпуте
+ **/
 function TableRow(props: ITableRowProps) {
     const [translateValue, setTranslateValue] = useState(props.translate.newTranslate)
 
