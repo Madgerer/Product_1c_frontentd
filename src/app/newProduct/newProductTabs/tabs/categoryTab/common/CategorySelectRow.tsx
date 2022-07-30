@@ -39,11 +39,11 @@ export default function CategorySelectRow(props: IRowElementProps) {
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector category-selector"}
-                        height={31}
+                        height={props.height}
                         placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
-                ? <CategorySelectRowChild level={1} parent={selectedCategory} onChange={props.onChange} key={selectedCategory.id} categories={selectedCategory.children}/>
+                ? <CategorySelectRowChild level={1} parent={selectedCategory} onChange={props.onChange} height={props.height} key={selectedCategory.id} categories={selectedCategory.children}/>
                 : <></>
         }
     </>
@@ -53,7 +53,8 @@ interface ICategorySelectRowChildProps {
     categories: ICategory[],
     parent: ICategory,
     onChange: (category: ICategory | null, level: number) => void,
-    level: number
+    level: number,
+    height?: number
 }
 
 function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
@@ -82,6 +83,7 @@ function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
                         onChange={(e) => {onChange(e as number)}}
                         toOption={ToOptionProvider.categoryToOption}
                         className={"selector category-selector"}
+                        height={props.height}
                         placeholder={"Выберите категорию"}/>
         {
             selectedCategory != null && selectedCategory.children.length != 0
@@ -89,6 +91,7 @@ function CategorySelectRowChild(props: ICategorySelectRowChildProps) {
                                           parent={selectedCategory}
                                           onChange={props.onChange}
                                           key={selectedCategory.id}
+                                          height={props.height}
                                           categories={selectedCategory.children}/>
                 : <></>
         }

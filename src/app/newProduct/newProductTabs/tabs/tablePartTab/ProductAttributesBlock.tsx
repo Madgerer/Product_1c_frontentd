@@ -330,9 +330,11 @@ export default function ProductAttributesBlock() {
                                     return <tr onClick={() => setRowSelected(x.id)} className={x.selected ? "--selected" : ""} key={x.id}>
                                         <td>{x.sort}</td>
                                         <td>
-                                            <input value={x.newIdentifier}
-                                                   onChange={(e) => setNewId(x.id, e.currentTarget.value)}
-                                                   onKeyUp={event => replaceProductInGroupOnEnter(event, x.id, x.newIdentifier)}/>
+                                            <div className="input-group-sm">
+                                                <input className="form-control" value={x.newIdentifier}
+                                                       onChange={(e) => setNewId(x.id, e.currentTarget.value)}
+                                                       onKeyUp={event => replaceProductInGroupOnEnter(event, x.id, x.newIdentifier)}/>
+                                            </div>
                                         </td>
                                         <td>{x.name}</td>
                                         {

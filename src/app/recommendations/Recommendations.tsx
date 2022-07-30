@@ -76,22 +76,27 @@ export default function Recommendations() {
         {
             paramGroupId === null
                 ? <>Переданы неверные аргументы</>
-                : <>
+                : <div className="recommendations">
+                <div className="u-buttons-wrapper">
                     <TextButton text={"Добавить"} onClick={() => addRecommendations()}/>
                     <NullableSelect value={local.selectedPictogram}
-                                  options={local.pictograms}
-                                  onChange={value => setSelectedPictogram(value as number)}
-                                  placeholder="Выберите группу пиктограм"
-                                  className="selector"
-                                  toOption={ToOptionProvider.pictogramToOption}
+                                    options={local.pictograms}
+                                    onChange={value => setSelectedPictogram(value as number)}
+                                    placeholder="Выберите группу пиктограм"
+                                    className="selector"
+                                    toOption={ToOptionProvider.pictogramToOption}
                     />
-                    <input value={local.searchString} onChange={e => setSearchString(e.currentTarget.value)}/>
-                    <Table>
+                    <div className="search-wrapper">
+                        <input className="form-control" placeholder="Search..." value={local.searchString} onChange={e => setSearchString(e.currentTarget.value)}/>
+                    </div>
+                </div>
+
+                    <Table className="table-sm">
                         <thead>
                             <tr>
                                 <th>Код</th>
                                 <th>Наименование</th>
-                                <th></th>
+                                <th className="u-width-30"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -100,13 +105,13 @@ export default function Recommendations() {
                                 return <tr onClick={() => debouncedSetSearch(x)} className={x.selected ? "--selected" : ""}>
                                     <td>{x.id}</td>
                                     <td>{x.name}</td>
-                                    <td><input type={"checkbox"} checked={x.selected} readOnly={true}/></td>
+                                    <td className="checkbox-cell"><input type={"checkbox"} checked={x.selected} readOnly={true}/></td>
                                 </tr>
                             })
                         }
                         </tbody>
                     </Table>
-                </>
+                </div>
         }
     </>
 }
