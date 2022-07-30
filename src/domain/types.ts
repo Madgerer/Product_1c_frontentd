@@ -139,6 +139,18 @@ export interface IProductGroupSort {
     sort: number
 }
 
+export enum TranslateSource
+{
+    All = 0,
+    AttrNames = 1,
+    CatKat = 2,
+    CatWeb = 3,
+    GroupName = 4,
+    PictGroup = 5,
+    PictGroupDesc = 6,
+    ValueDescription = 7
+}
+
 export interface ITranslate {
     id: number,
     russian: string,
