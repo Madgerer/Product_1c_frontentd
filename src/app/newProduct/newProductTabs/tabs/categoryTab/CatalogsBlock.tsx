@@ -180,6 +180,7 @@ export default function CatalogsBlock() {
                       shouldReset={local.shouldResetPrinted}
                       onReset={() => onCategoryRowReset(CatalogGroup.Printed)}
                       categories={local.categoriesPrinted}
+                      height={31}
                       onChange={(cat, level) => {setCategoryPath(cat, CatalogGroup.Printed, level)}}/>
                 </div>
                 </div>

@@ -116,7 +116,7 @@ export default function RecommendationBlock() {
             <FaButton onClick={() => swapSort(-1)} faType={"fa-arrow-up"}/>
             <FaButton onClick={() => swapSort(1)} faType={"fa-arrow-down"}/>
             <button className="btn btn-dark" value={"Добавить"}>
-                <Link to={`/recommendations?productGroupId=${groupState.productGroup.id}`} target="_blank">Добавить</Link>
+                <span><Link to={`/recommendations?productGroupId=${groupState.productGroup.id}`} target="_blank">Добавить</Link></span>
             </button>
             <TextButton text={"Обновить"} onClick={() => updateRecommendations()}/>
         </div>

@@ -99,7 +99,7 @@ export default function GroupCatalogsBlock() {
             {
                 _.orderBy(local.groupCatalogs, value => value.webCategoryId).map(x => {
                     const key = `${x.catalogCategoryId}${x.webCategoryId}${x.catalogParentCategoryId}${x.catalogName}`
-                    return <tr onClick={() => setSelected(x)} className={x.selected ? "--selected" : ""} key={key}>
+                    return <tr onClick={() => setSelected(x)} className={x.selected ? "--selected --grey" : ""} key={key}>
                         <td>
                             <input type={"checkbox"} readOnly={true} checked={x.selected}/>
                         </td>

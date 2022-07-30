@@ -90,6 +90,11 @@ tr {
     &.--selected {
         background-color: #007bff;
         color: white;
+
+        &.--grey {
+            background-color: #00000013;
+            color: black;
+        }
     }
 }
 
